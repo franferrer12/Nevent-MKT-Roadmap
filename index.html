@@ -1,10 +1,9 @@
-🎯 HTML COMPLETO - FASE 1 BLOQUE 2
 <invoke name="artifacts">
 <parameter name="command">create</parameter>
 <parameter name="type">application/vnd.ant.code</parameter>
 <parameter name="language">html</parameter>
-<parameter name="id">index-html-fase1-bloque2</parameter>
-<parameter name="title">index.html - Fase 1 Bloque 2 (Panel de Usuarios)</parameter>
+<parameter name="id">index-html-fase1-completa</parameter>
+<parameter name="title">index.html - Fase 1 COMPLETA (Con Notificaciones)</parameter>
 <parameter name="content"><!DOCTYPE html>
 <html lang="es">
 <head>
@@ -155,7 +154,7 @@ body {
 }
 
 /* ============================================
-   MAIN APP STYLES (hidden until login)
+   MAIN APP STYLES
 ============================================ */
 #mainApp {
   display: none;
@@ -199,6 +198,7 @@ h1 {
   font-size: 14px;
   font-weight: 500;
   transition: all 0.2s;
+  position: relative;
 }
 
 .btn:hover {
@@ -213,6 +213,100 @@ h1 {
 
 .btn-primary:hover {
   background: #d40080;
+}
+
+/* Notification badge */
+.notification-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--danger);
+  color: white;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* Notifications panel */
+.notifications-panel {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 400px;
+  height: 100vh;
+  background: var(--card);
+  border-left: 1px solid var(--stroke);
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.5);
+  transition: right 0.3s ease;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+}
+
+.notifications-panel.active {
+  right: 0;
+}
+
+.panel-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--stroke);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.notifications-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+}
+
+.notification-item {
+  background: var(--bg);
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.notification-item:hover {
+  border-color: var(--accent1);
+}
+
+.notification-item.unread {
+  border-left: 3px solid var(--accent1);
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 6px;
+}
+
+.notification-type {
+  font-size: 18px;
+}
+
+.notification-time {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.notification-message {
+  font-size: 14px;
+  color: var(--ink);
+  margin-bottom: 4px;
 }
 
 .stats {
@@ -510,6 +604,11 @@ h1 {
   .stats {
     grid-template-columns: 1fr;
   }
+
+  .notifications-panel {
+    width: 100%;
+    right: -100%;
+  }
 }
   </style>
 </head>
@@ -564,6 +663,10 @@ h1 {
         <div class="header-actions">
           <button class="btn" onclick="exportData()">📥 Exportar</button>
           <button class="btn" onclick="syncData()">🔄 Sincronizar</button>
+          <button class="btn" onclick="toggleNotifications()" id="notificationsBtn">
+            🔔
+            <span class="notification-badge" id="notifCount" style="display: none;">0</span>
+          </button>
           <button class="btn btn-primary" onclick="openAddActionModal()">➕ Nueva Acción</button>
           <button class="btn" onclick="openUsersModal()" id="manageUsersBtn" style="display: none; background: var(--accent2); border-color: var(--accent2);">👥 Usuarios</button>
           <button class="btn logout-btn" onclick="handleLogout()">🚪 Salir</button>
@@ -590,6 +693,23 @@ h1 {
 
   <div class="timeline" id="timeline"></div>
 </div>
+  </div>
+  <!-- Notifications Panel -->
+  <div class="notifications-panel" id="notificationsPanel">
+    <div class="panel-header">
+      <h3>🔔 Notificaciones</h3>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn" onclick="markAllNotificationsAsRead()" style="padding: 6px 12px; font-size: 12px;">
+          Marcar todas
+        </button>
+        <button class="close-btn" onclick="toggleNotifications()">&times;</button>
+      </div>
+    </div>
+    <div class="notifications-list" id="notificationsList">
+      <p style="text-align: center; color: var(--muted); padding: 40px;">
+        No tienes notificaciones
+      </p>
+    </div>
   </div>
   <!-- Modal for Add/Edit Action -->
   <div id="actionModal" class="modal">
@@ -666,7 +786,7 @@ h1 {
   </form>
 </div>
   </div>
-  <!-- Modal de Gestión de Usuarios (Solo Admin) -->
+  <!-- Modal de Gestión de Usuarios -->
   <div id="usersModal" class="modal">
     <div class="modal-content" style="max-width: 900px;">
       <div class="modal-header">
@@ -702,28 +822,220 @@ h1 {
     </div>
   </div>
   
-  <div id="usersContent">
-    <!-- Contenido dinámico según tab -->
-  </div>
+  <div id="usersContent"></div>
 </div>
   </div>
   <script>
     // ============================================
-    // SUPABASE CONFIGURATION (HARDCODED)
+    // SUPABASE CONFIGURATION
     // ============================================
     const SUPABASE_URL = 'https://tvbqzqripcevaryquhfg.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2YnF6cXJpcGNldmFyeXF1aGZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxNTI4MzEsImV4cCI6MjA3NDcyODgzMX0.BVHINkyJtK4mwRLX1Nt7_gJbd3ht2qGfvqLvmehkyIM';
     
     let supabase;
     let currentUser = null;
-    let currentUserRole = null; // 'admin', 'editor', 'viewer'
+    let currentUserRole = null;
 
-    // Initialize Supabase
     try {
       supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       console.log('✅ Supabase initialized');
     } catch (error) {
       console.error('❌ Error initializing Supabase:', error);
+    }
+
+    // ============================================
+    // FASE 1 BLOQUE 3: NOTIFICACIONES
+    // ============================================
+
+    async function loadNotifications() {
+      try {
+        const { data, error } = await supabase
+          .from('notifications')
+          .select('*')
+          .eq('user_id', currentUser.id)
+          .order('created_at', { ascending: false })
+          .limit(50);
+        
+        if (error) throw error;
+        
+        const unread = data ? data.filter(n => !n.read).length : 0;
+        
+        // Actualizar badge
+        const badge = document.getElementById('notifCount');
+        if (unread > 0) {
+          badge.textContent = unread > 99 ? '99+' : unread;
+          badge.style.display = 'block';
+        } else {
+          badge.style.display = 'none';
+        }
+        
+        // Renderizar lista
+        renderNotifications(data || []);
+        
+        console.log(`✅ Notificaciones cargadas: ${data?.length || 0} (${unread} sin leer)`);
+      } catch (error) {
+        console.error('❌ Error loading notifications:', error);
+      }
+    }
+
+    function renderNotifications(notifications) {
+      const list = document.getElementById('notificationsList');
+      
+      if (!notifications || notifications.length === 0) {
+        list.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 40px;">No tienes notificaciones</p>';
+        return;
+      }
+      
+      const icons = {
+        assigned: '👤',
+        deadline: '⏰',
+        overdue: '⚠️',
+        updated: '✏️',
+        mention: '💬'
+      };
+      
+      const html = notifications.map(notif => {
+        const icon = icons[notif.type] || '🔔';
+        const time = formatTimeAgo(notif.created_at);
+        const unreadClass = notif.read ? '' : 'unread';
+        
+        return `
+          <div class="notification-item ${unreadClass}" onclick="markNotificationAsRead('${notif.id}', '${notif.action_id}')">
+            <div class="notification-header">
+              <span class="notification-type">${icon}</span>
+              <span class="notification-time">${time}</span>
+            </div>
+            <div class="notification-message">${notif.message}</div>
+          </div>
+        `;
+      }).join('');
+      
+      list.innerHTML = html;
+    }
+
+    function formatTimeAgo(timestamp) {
+      const now = new Date();
+      const then = new Date(timestamp);
+      const diff = Math.floor((now - then) / 1000); // segundos
+      
+      if (diff < 60) return 'Ahora';
+      if (diff < 3600) return `Hace ${Math.floor(diff / 60)}m`;
+      if (diff < 86400) return `Hace ${Math.floor(diff / 3600)}h`;
+      if (diff < 604800) return `Hace ${Math.floor(diff / 86400)}d`;
+      return then.toLocaleDateString('es-ES');
+    }
+
+    async function markNotificationAsRead(notificationId, actionId) {
+      try {
+        await supabase
+          .from('notifications')
+          .update({ read: true })
+          .eq('id', notificationId);
+        
+        await loadNotifications();
+        
+        // Si la notificación tiene action_id, scroll a esa acción
+        if (actionId) {
+          toggleNotifications(); // Cerrar panel
+          // TODO: Scroll to action (implementar si es necesario)
+        }
+      } catch (error) {
+        console.error('Error marking notification as read:', error);
+      }
+    }
+
+    async function markAllNotificationsAsRead() {
+      try {
+        await supabase
+          .from('notifications')
+          .update({ read: true })
+          .eq('user_id', currentUser.id)
+          .eq('read', false);
+        
+        await loadNotifications();
+      } catch (error) {
+        console.error('Error marking all as read:', error);
+      }
+    }
+
+    function toggleNotifications() {
+      const panel = document.getElementById('notificationsPanel');
+      panel.classList.toggle('active');
+    }
+
+    async function createNotification(userId, type, actionId, message) {
+      try {
+        await supabase
+          .from('notifications')
+          .insert({
+            user_id: userId,
+            type: type,
+            action_id: actionId,
+            message: message
+          });
+        
+        console.log(`📬 Notificación creada: ${type} para usuario ${userId}`);
+      } catch (error) {
+        console.error('Error creating notification:', error);
+      }
+    }
+
+    // Setup Realtime para notificaciones
+    function setupNotificationsRealtime() {
+      supabase
+        .channel('notifications_changes')
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications',
+          filter: `user_id=eq.${currentUser.id}`
+        }, payload => {
+          console.log('🔔 Nueva notificación recibida:', payload);
+          loadNotifications();
+        })
+        .subscribe();
+    }
+
+    // Verificar deadlines próximos (ejecutar al login)
+    async function checkUpcomingDeadlines() {
+      try {
+        const today = new Date();
+        const threeDaysLater = new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000);
+        const todayStr = today.toISOString().split('T')[0];
+        const threeDaysStr = threeDaysLater.toISOString().split('T')[0];
+        
+        const { data: actions } = await supabase
+          .from('roadmap_actions')
+          .select('*')
+          .gte('deadline', todayStr)
+          .lte('deadline', threeDaysStr)
+          .neq('status', 'Completado');
+        
+        if (actions && actions.length > 0) {
+          for (const action of actions) {
+            // Verificar si ya existe notificación de deadline para esta acción
+            const { data: existing } = await supabase
+              .from('notifications')
+              .select('id')
+              .eq('user_id', currentUser.id)
+              .eq('action_id', action.id)
+              .eq('type', 'deadline')
+              .single();
+            
+            if (!existing) {
+              const daysLeft = Math.ceil((new Date(action.deadline) - today) / (1000 * 60 * 60 * 24));
+              await createNotification(
+                currentUser.id,
+                'deadline',
+                action.id,
+                `La tarea "${action.title}" vence en ${daysLeft} día${daysLeft !== 1 ? 's' : ''}`
+              );
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error checking deadlines:', error);
+      }
     }
 
     // ============================================
@@ -746,44 +1058,30 @@ h1 {
         updateUIBasedOnRole();
       } catch (error) {
         console.error('❌ Error al cargar rol:', error);
-        currentUserRole = 'viewer'; // Por defecto
+        currentUserRole = 'viewer';
         updateUIBasedOnRole();
       }
     }
 
     function updateUIBasedOnRole() {
-      // Esperar a que el DOM esté listo
       setTimeout(() => {
-        const addActionBtn = document.querySelector('.btn-primary'); // Botón "Nueva Acción"
-        const actionButtons = document.querySelectorAll('.action-buttons'); // Botones editar/eliminar
+        const addActionBtn = document.querySelector('.btn-primary');
+        const actionButtons = document.querySelectorAll('.action-buttons');
         
-        // Mostrar badge del rol en header
         showRoleBadge();
         
         if (currentUserRole === 'viewer') {
-          // VIEWER: Solo lectura
           if (addActionBtn) addActionBtn.style.display = 'none';
-          actionButtons.forEach(btns => {
-            btns.style.display = 'none';
-          });
-          
+          actionButtons.forEach(btns => btns.style.display = 'none');
           console.log('🔒 Modo VIEWER activado (solo lectura)');
         } else if (currentUserRole === 'editor') {
-          // EDITOR: Puede crear/editar/eliminar acciones
           if (addActionBtn) addActionBtn.style.display = 'inline-flex';
-          actionButtons.forEach(btns => {
-            btns.style.display = 'flex';
-          });
-          
+          actionButtons.forEach(btns => btns.style.display = 'flex');
           console.log('✏️ Modo EDITOR activado');
         } else if (currentUserRole === 'admin') {
-          // ADMIN: Acceso completo + botón gestionar usuarios
           if (addActionBtn) addActionBtn.style.display = 'inline-flex';
-          actionButtons.forEach(btns => {
-            btns.style.display = 'flex';
-          });
+          actionButtons.forEach(btns => btns.style.display = 'flex');
           
-          // Mostrar botón de gestión de usuarios
           const manageUsersBtn = document.getElementById('manageUsersBtn');
           if (manageUsersBtn) manageUsersBtn.style.display = 'inline-flex';
           
@@ -793,11 +1091,9 @@ h1 {
     }
 
     function showRoleBadge() {
-      // Buscar si ya existe el badge
       let badge = document.getElementById('roleBadge');
       
       if (!badge) {
-        // Crear badge si no existe
         badge = document.createElement('span');
         badge.id = 'roleBadge';
         badge.style.cssText = `
@@ -808,14 +1104,12 @@ h1 {
           margin-left: 12px;
         `;
         
-        // Insertar en el header después del título
         const header = document.querySelector('header h1');
         if (header) {
           header.parentNode.insertBefore(badge, header.nextSibling);
         }
       }
       
-      // Actualizar contenido y color según rol
       const roleConfig = {
         admin: { text: '👑 Admin', bg: 'rgba(168, 85, 247, 0.2)', color: '#a855f7' },
         editor: { text: '✏️ Editor', bg: 'rgba(59, 130, 246, 0.2)', color: '#3b82f6' },
@@ -832,7 +1126,6 @@ h1 {
     // FASE 1 BLOQUE 2: GESTIÓN DE USUARIOS
     // ============================================
 
-    // Logging de actividad
     async function logUserActivity(actionType, actionId = null, metadata = {}) {
       try {
         await supabase
@@ -850,7 +1143,6 @@ h1 {
       }
     }
 
-    // Abrir modal de usuarios
     function openUsersModal() {
       if (currentUserRole !== 'admin') {
         alert('Solo los administradores pueden acceder a esta función');
@@ -861,14 +1153,11 @@ h1 {
       switchUsersTab('all');
     }
 
-    // Cerrar modal de usuarios
     function closeUsersModal() {
       document.getElementById('usersModal').classList.remove('active');
     }
 
-    // Cambiar tab
     function switchUsersTab(tab) {
-      // Actualizar estilos de tabs
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.style.borderBottomColor = 'transparent';
         btn.style.color = 'var(--muted)';
@@ -882,7 +1171,6 @@ h1 {
         activeTab.style.fontWeight = '600';
       }
       
-      // Cargar contenido según tab
       if (tab === 'all') {
         loadAllUsers();
       } else if (tab === 'pending') {
@@ -892,13 +1180,11 @@ h1 {
       }
     }
 
-    // Cargar todos los usuarios
     async function loadAllUsers() {
       const content = document.getElementById('usersContent');
       content.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 20px;">Cargando usuarios...</p>';
       
       try {
-        // Obtener usuarios de user_approvals
         const { data: users, error } = await supabase
           .from('user_approvals')
           .select('*')
@@ -911,7 +1197,6 @@ h1 {
           return;
         }
         
-        // Renderizar tabla de usuarios
         let html = `
           <table style="width: 100%; border-collapse: collapse;">
             <thead>
@@ -964,11 +1249,7 @@ h1 {
           `;
         });
         
-        html += `
-            </tbody>
-          </table>
-        `;
-        
+        html += `</tbody></table>`;
         content.innerHTML = html;
         
       } catch (error) {
@@ -977,7 +1258,6 @@ h1 {
       }
     }
 
-    // Cargar usuarios pendientes
     async function loadPendingUsers() {
       const content = document.getElementById('usersContent');
       content.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 20px;">Cargando usuarios pendientes...</p>';
@@ -1034,7 +1314,6 @@ h1 {
       }
     }
 
-    // Cargar actividad de usuarios
     async function loadUserActivity() {
       const content = document.getElementById('usersContent');
       content.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 20px;">Cargando actividad...</p>';
@@ -1053,7 +1332,6 @@ h1 {
           return;
         }
         
-        // Obtener emails de los usuarios
         const userIds = [...new Set(activities.map(a => a.user_id))];
         const { data: users } = await supabase
           .from('user_approvals')
@@ -1105,7 +1383,6 @@ h1 {
       }
     }
 
-    // Aprobar usuario
     async function approveUser(userId) {
       if (!confirm('¿Aprobar este usuario?')) return;
       
@@ -1131,7 +1408,6 @@ h1 {
       }
     }
 
-    // Rechazar usuario
     async function rejectUser(userId) {
       if (!confirm('¿Rechazar y eliminar este usuario?')) return;
       
@@ -1152,12 +1428,10 @@ h1 {
       }
     }
 
-    // Cambiar rol de usuario
     async function changeUserRole(userId, newRole) {
       if (!newRole) return;
       
       if (!confirm(`¿Cambiar el rol de este usuario a "${newRole}"?`)) {
-        // Reset select
         event.target.value = '';
         return;
       }
@@ -1193,11 +1467,9 @@ h1 {
       const loginBtn = document.getElementById('loginBtn');
       const errorDiv = document.getElementById('loginError');
       
-      // Reset error
       errorDiv.classList.remove('show');
       errorDiv.textContent = '';
       
-      // Disable button
       loginBtn.disabled = true;
       loginBtn.textContent = 'Iniciando sesión...';
       
@@ -1209,18 +1481,18 @@ h1 {
         
         if (error) throw error;
         
-        // Save user
         currentUser = data.user;
         console.log('✅ Login exitoso:', currentUser.email);
         
-        // Hide login, show app
         document.getElementById('loginPage').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
         
-        // Load data and user role
         await loadUserRole();
         await loadData();
         setupRealtimeSync();
+        await loadNotifications();
+        setupNotificationsRealtime();
+        await checkUpcomingDeadlines();
         await logUserActivity('login', null, { email: currentUser.email });
         
       } catch (error) {
@@ -1232,7 +1504,6 @@ h1 {
       }
     }
 
-    // Logout
     async function handleLogout() {
       try {
         await supabase.auth.signOut();
@@ -1246,7 +1517,6 @@ h1 {
       }
     }
 
-    // Check if user is already logged in
     async function checkSession() {
       try {
         const { data: { session } } = await supabase.auth.getSession();
@@ -1257,6 +1527,9 @@ h1 {
           await loadUserRole();
           await loadData();
           setupRealtimeSync();
+          await loadNotifications();
+          setupNotificationsRealtime();
+          await checkUpcomingDeadlines();
           await logUserActivity('login', null, { email: currentUser.email });
         }
       } catch (error) {
@@ -1292,7 +1565,6 @@ h1 {
 
         if (error) throw error;
 
-        // Reset data
         roadmapData.quarters = {
           'Q4 2025': [],
           'Q1 2026': [],
@@ -1301,7 +1573,6 @@ h1 {
           'Q4 2026': []
         };
 
-        // Populate data
         if (data) {
           data.forEach(item => {
             if (roadmapData.quarters[item.quarter]) {
@@ -1445,7 +1716,6 @@ h1 {
         });
       });
 
-      // Aplicar permisos de rol después de renderizar
       updateUIBasedOnRole();
     }
 
@@ -1456,134 +1726,172 @@ h1 {
 
       Object.values(roadmapData.quarters).forEach(actions => {
         total += actions.length;
-        actions.forEach(action => {
-          if (action.status === 'Completado') completed++;
-          if (action.responsable) responsables.add(action.responsable);
-        });
-      });
+        action.status === 'Completado') completed++;
+if (action.responsable) responsables.add(action.responsable);
+});
+});
+  document.getElementById('totalActions').textContent = total;
+  document.getElementById('completedActions').textContent = completed;
+  document.getElementById('totalResponsables').textContent = responsables.size;
+  document.getElementById('globalProgress').textContent = total > 0 ? Math.round((completed / total) * 100) + '%' : '0%';
+}
 
-      document.getElementById('totalActions').textContent = total;
-      document.getElementById('completedActions').textContent = completed;
-      document.getElementById('totalResponsables').textContent = responsables.size;
-      document.getElementById('globalProgress').textContent = total > 0 ? Math.round((completed / total) * 100) + '%' : '0%';
-    }
+function openAddActionModal() {
+  editingAction = null;
+  document.getElementById('modalTitle').textContent = 'Nueva Acción';
+  document.getElementById('actionForm').reset();
+  document.getElementById('actionModal').classList.add('active');
+}
 
-    function openAddActionModal() {
-      editingAction = null;
-      document.getElementById('modalTitle').textContent = 'Nueva Acción';
-      document.getElementById('actionForm').reset();
-      document.getElementById('actionModal').classList.add('active');
-    }
+function editAction(actionId, quarter) {
+  const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
+  if (!action) return;
 
-    function editAction(actionId, quarter) {
-      const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
-      if (!action) return;
+  editingAction = { action, quarter };
+  document.getElementById('modalTitle').textContent = 'Editar Acción';
+  
+  document.getElementById('quarterSelect').value = quarter;
+  document.getElementById('categorySelect').value = action.category;
+  document.getElementById('titleInput').value = action.title;
+  document.getElementById('descriptionInput').value = action.description || '';
+  document.getElementById('prioritySelect').value = action.priority;
+  document.getElementById('statusSelect').value = action.status;
+  document.getElementById('responsableInput').value = action.responsable || '';
+  document.getElementById('deadlineInput').value = action.deadline || '';
+  
+  document.getElementById('actionModal').classList.add('active');
+}
 
-      editingAction = { action, quarter };
-      document.getElementById('modalTitle').textContent = 'Editar Acción';
+async function saveAction(event) {
+  event.preventDefault();
+
+  const quarter = document.getElementById('quarterSelect').value;
+  const actionData = {
+    id: editingAction ? editingAction.action.id : generateId(),
+    category: document.getElementById('categorySelect').value,
+    title: document.getElementById('titleInput').value,
+    description: document.getElementById('descriptionInput').value,
+    priority: document.getElementById('prioritySelect').value,
+    status: document.getElementById('statusSelect').value,
+    responsable: document.getElementById('responsableInput').value,
+    deadline: document.getElementById('deadlineInput').value,
+    subtasks: editingAction ? editingAction.action.subtasks : []
+  };
+
+  // Detectar si cambió el responsable (para notificación)
+  if (editingAction) {
+    const oldAction = editingAction.action;
+    const oldQuarter = editingAction.quarter;
+    
+    // Si cambió el responsable, crear notificación
+    if (oldAction.responsable !== actionData.responsable && actionData.responsable) {
+      // Buscar user_id del responsable
+      const { data: user } = await supabase
+        .from('user_approvals')
+        .select('user_id')
+        .ilike('email', `${actionData.responsable}%`)
+        .single();
       
-      document.getElementById('quarterSelect').value = quarter;
-      document.getElementById('categorySelect').value = action.category;
-      document.getElementById('titleInput').value = action.title;
-      document.getElementById('descriptionInput').value = action.description || '';
-      document.getElementById('prioritySelect').value = action.priority;
-      document.getElementById('statusSelect').value = action.status;
-      document.getElementById('responsableInput').value = action.responsable || '';
-      document.getElementById('deadlineInput').value = action.deadline || '';
-      
-      document.getElementById('actionModal').classList.add('active');
-    }
-
-    async function saveAction(event) {
-      event.preventDefault();
-
-      const quarter = document.getElementById('quarterSelect').value;
-      const actionData = {
-        id: editingAction ? editingAction.action.id : generateId(),
-        category: document.getElementById('categorySelect').value,
-        title: document.getElementById('titleInput').value,
-        description: document.getElementById('descriptionInput').value,
-        priority: document.getElementById('prioritySelect').value,
-        status: document.getElementById('statusSelect').value,
-        responsable: document.getElementById('responsableInput').value,
-        deadline: document.getElementById('deadlineInput').value,
-        subtasks: editingAction ? editingAction.action.subtasks : []
-      };
-
-      if (editingAction) {
-        const oldQuarter = editingAction.quarter;
-        roadmapData.quarters[oldQuarter] = roadmapData.quarters[oldQuarter].filter(a => a.id !== actionData.id);
-        await logUserActivity('update_action', actionData.id, { title: actionData.title });
-      } else {
-        await logUserActivity('create_action', actionData.id, { title: actionData.title });
-      }
-
-      roadmapData.quarters[quarter].push(actionData);
-      await saveToSupabase(actionData, quarter);
-      
-      closeModal();
-      renderTimeline();
-      updateStats();
-    }
-
-    async function deleteAction(actionId, quarter) {
-      if (!confirm('¿Eliminar esta acción?')) return;
-
-      const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
-      
-      roadmapData.quarters[quarter] = roadmapData.quarters[quarter].filter(a => a.id !== actionId);
-      await deleteFromSupabase(actionId);
-      await logUserActivity('delete_action', actionId, { title: action?.title });
-      
-      renderTimeline();
-      updateStats();
-    }
-
-    async function toggleSubtask(actionId, subtaskId, quarter) {
-      const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
-      if (!action) return;
-
-      const subtask = action.subtasks.find(st => st.id === subtaskId);
-      if (subtask) {
-        subtask.completed = !subtask.completed;
-
-        const allCompleted = action.subtasks.every(st => st.completed);
-        const someCompleted = action.subtasks.some(st => st.completed);
-
-        if (allCompleted) {
-          action.status = 'Completado';
-        } else if (someCompleted) {
-          action.status = 'En curso';
-        } else {
-          action.status = 'Pendiente';
-        }
-
-        await saveToSupabase(action, quarter);
-        renderTimeline();
-        updateStats();
+      if (user) {
+        await createNotification(
+          user.user_id,
+          'assigned',
+          actionData.id,
+          `Se te asignó la tarea: "${actionData.title}"`
+        );
       }
     }
+    
+    roadmapData.quarters[oldQuarter] = roadmapData.quarters[oldQuarter].filter(a => a.id !== actionData.id);
+    await logUserActivity('update_action', actionData.id, { title: actionData.title });
+  } else {
+    // Nueva acción - crear notificación si tiene responsable
+    if (actionData.responsable) {
+      const { data: user } = await supabase
+        .from('user_approvals')
+        .select('user_id')
+        .ilike('email', `${actionData.responsable}%`)
+        .single();
+      
+      if (user) {
+        await createNotification(
+          user.user_id,
+          'assigned',
+          actionData.id,
+          `Nueva tarea asignada: "${actionData.title}"`
+        );
+      }
+    }
+    
+    await logUserActivity('create_action', actionData.id, { title: actionData.title });
+  }
 
-    function closeModal() {
-      document.getElementById('actionModal').classList.remove('active');
+  roadmapData.quarters[quarter].push(actionData);
+  await saveToSupabase(actionData, quarter);
+  
+  closeModal();
+  renderTimeline();
+  updateStats();
+}
+
+async function deleteAction(actionId, quarter) {
+  if (!confirm('¿Eliminar esta acción?')) return;
+
+  const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
+  
+  roadmapData.quarters[quarter] = roadmapData.quarters[quarter].filter(a => a.id !== actionId);
+  await deleteFromSupabase(actionId);
+  await logUserActivity('delete_action', actionId, { title: action?.title });
+  
+  renderTimeline();
+  updateStats();
+}
+
+async function toggleSubtask(actionId, subtaskId, quarter) {
+  const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
+  if (!action) return;
+
+  const subtask = action.subtasks.find(st => st.id === subtaskId);
+  if (subtask) {
+    subtask.completed = !subtask.completed;
+
+    const allCompleted = action.subtasks.every(st => st.completed);
+    const someCompleted = action.subtasks.some(st => st.completed);
+
+    if (allCompleted) {
+      action.status = 'Completado';
+    } else if (someCompleted) {
+      action.status = 'En curso';
+    } else {
+      action.status = 'Pendiente';
     }
 
-    function exportData() {
-      const dataStr = JSON.stringify(roadmapData, null, 2);
-      const dataBlob = new Blob([dataStr], { type: 'application/json' });
-      const url = URL.createObjectURL(dataBlob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `roadmap_${new Date().toISOString().split('T')[0]}.json`;
-      link.click();
-    }
+    await saveToSupabase(action, quarter);
+    renderTimeline();
+    updateStats();
+  }
+}
 
-    // ============================================
-    // INITIALIZE
-    // ============================================
-    window.addEventListener('DOMContentLoaded', () => {
-      checkSession();
-    });
+function closeModal() {
+  document.getElementById('actionModal').classList.remove('active');
+}
+
+function exportData() {
+  const dataStr = JSON.stringify(roadmapData, null, 2);
+  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(dataBlob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `roadmap_${new Date().toISOString().split('T')[0]}.json`;
+  link.click();
+}
+
+// ============================================
+// INITIALIZE
+// ============================================
+window.addEventListener('DOMContentLoaded', () => {
+  checkSession();
+});
   </script>
 </body>
 </html>
