@@ -596,6 +596,12 @@
         right: -100%;
       }
     }
+    /* ============================================ */
+/* DEPARTAMENTOS */
+/* ============================================ */
+.departments-grid {
+  /* ... todo el CSS que te di ... */
+}
   </style>
 </head>
 <body>
@@ -652,6 +658,18 @@
           </button>
           <button class="btn btn-primary" onclick="openAddActionModal()">➕ Nueva Acción</button>
           <button class="btn" onclick="openUsersModal()" id="manageUsersBtn" style="display: none; background: var(--accent2); border-color: var(--accent2);">👥 Usuarios</button>
+          <button 
+  id="manageDepartmentsBtn" 
+  class="btn" 
+  onclick="openDepartmentsModal()"
+  style="
+    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+    color: white;
+    display: none;
+  "
+>
+  📁 Departamentos
+</button>
           <button class="btn logout-btn" onclick="handleLogout()">🚪 Salir</button>
         </div>
       </header>
@@ -695,6 +713,22 @@
       </p>
     </div>
   </div>
+  </div>
+<!-- FIN del modal de usuarios -->
+
+<!-- ============================================ -->
+<!-- MODAL: GESTIÓN DE DEPARTAMENTOS -->
+<!-- ============================================ -->
+<div id="departmentsModal" class="modal">
+  <!-- ... todo el código del modal ... -->
+</div>
+
+<!-- ============================================ -->
+<!-- MODAL: FORMULARIO DE DEPARTAMENTO -->
+<!-- ============================================ -->
+<div id="departmentFormModal" class="modal">
+  <!-- ... todo el código del formulario ... -->
+</div>
 
   <div id="actionModal" class="modal">
     <div class="modal-content">
@@ -1120,7 +1154,10 @@ async function checkOverdueActions() {
           
           const manageUsersBtn = document.getElementById('manageUsersBtn');
           if (manageUsersBtn) manageUsersBtn.style.display = 'inline-flex';
-          
+           document.getElementById('manageDepartmentsBtn').style.display = 'inline-flex';
+    }
+  }, 100);
+}         
           console.log('👑 Modo ADMIN activado (acceso completo)');
         }
       }, 100);
@@ -1517,6 +1554,7 @@ async function checkOverdueActions() {
         document.getElementById('mainApp').style.display = 'block';
         
         await loadUserRole();
+        await loadDepartments();
         await loadData();
         setupRealtimeSync();
         await loadNotifications();
@@ -1791,6 +1829,17 @@ async function checkOverdueActions() {
       
       document.getElementById('actionModal').classList.add('active');
     }
+    // ============================================
+// SISTEMA DE DEPARTAMENTOS
+// ============================================
+
+let allDepartments = [];
+
+async function loadDepartments() {
+  // ... todo el código que te di ...
+}
+
+// ... resto de funciones de departamentos ...
 
     async function saveAction(event) {
       event.preventDefault();
