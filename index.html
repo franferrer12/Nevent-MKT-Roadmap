@@ -1,265 +1,603 @@
-<!doctype html>
-<html lang="es" data-theme="dark">
+<!DOCTYPE html>
+<html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Roadmap Nevent 2025–2026</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🚀 Roadmap Nevent 2025-2026</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    :root{
-      --bg:#0A0A0A; --card:#141414; --ink:#FFFFFF; --muted:#BBBBBB; --stroke:#333;
-      --accent1:#EC008C; --accent2:#5CC2E5; --accent3:#91194a; --brand:#EC008C;
-      --prio-high:#e74c3c; --prio-med:#f1c40f; --prio-low:#2ecc71;
-      --success:#2ecc71; --warning:#f39c12; --danger:#e74c3c; --info:#3498db;
+    :root {
+      --bg: #0A0A0A;
+      --card: #141414;
+      --ink: #FFFFFF;
+      --muted: #BBBBBB;
+      --stroke: #333;
+      --accent1: #EC008C;
+      --accent2: #5CC2E5;
+      --brand: #EC008C;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
     }
-    html[data-theme="light"]{
-      --bg:#F7F7F9; --card:#FFFFFF; --ink:#0B0B0F; --muted:#60646c; --stroke:#E6E6EC;
-      --accent1:#D40A80; --accent2:#2E97B6; --accent3:#7d1240; --brand:#D40A80;
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    *{box-sizing:border-box; margin:0; padding:0}
-    body{background:var(--bg); color:var(--ink); font:15px/1.6 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; transition:background 0.3s ease}
-    .wrap{max-width:1800px; margin:20px auto; padding:20px;}
-    
-    .header{text-align:center; padding:40px 20px; background:linear-gradient(135deg, var(--accent1), var(--accent2)); border-radius:20px; margin-bottom:30px; box-shadow:0 10px 40px rgba(0,0,0,0.3); position:relative}
-    h1{font-size:clamp(28px, 5vw, 42px); font-weight:900; color:#fff; margin:0; text-shadow:2px 2px 4px rgba(0,0,0,0.3)}
-    .subtitle{color:rgba(255,255,255,0.9); margin-top:8px; font-size:16px}
-    .sync-status{position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.3); padding:8px 16px; border-radius:20px; font-size:13px; display:flex; align-items:center; gap:8px}
-    .sync-indicator{width:10px; height:10px; border-radius:50%; background:var(--success); animation:pulse 2s infinite}
-    .sync-indicator.offline{background:var(--danger); animation:none}
-    @keyframes pulse{0%,100%{opacity:1} 50%{opacity:0.5}}
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
 
-    .config-banner{background:var(--warning); color:#000; padding:16px; text-align:center; border-radius:12px; margin-bottom:20px; font-weight:600}
-    .config-banner button{background:#000; color:#fff; border:none; padding:8px 20px; border-radius:8px; cursor:pointer; font-weight:700; margin-left:10px}
-    .config-banner button:hover{opacity:0.8}
+    /* ============================================
+       LOGIN PAGE STYLES
+    ============================================ */
+    #loginPage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      background: linear-gradient(135deg, var(--bg) 0%, #1a1a1a 100%);
+    }
 
-    .topbar{display:flex; gap:12px; justify-content:center; align-items:center; flex-wrap:wrap; margin-bottom:25px; position:sticky; top:10px; z-index:100; background:var(--card); padding:15px; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,0.15); border:2px solid var(--stroke)}
-    .btn{border:2px solid var(--stroke); background:var(--card); color:var(--ink); padding:10px 16px; border-radius:12px; cursor:pointer; font-weight:600; transition:all 0.3s ease; display:inline-flex; align-items:center; gap:8px; font-size:14px}
-    .btn:hover{transform:translateY(-2px); box-shadow:0 4px 12px rgba(236,0,140,0.3); border-color:var(--brand)}
-    .btn:active{transform:translateY(0)}
-    .btn.primary{background:var(--brand); color:#fff; border-color:var(--brand)}
-    .btn.primary:hover{background:var(--accent3)}
-    .btn.success{background:var(--success); color:#fff; border-color:var(--success)}
-    .btn.danger{background:var(--danger); color:#fff; border-color:var(--danger)}
-    .btn:disabled{opacity:0.5; cursor:not-allowed}
+    .login-container {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
 
-    .theme-toggle{display:flex; align-items:center; gap:10px}
-    .switch{position:relative; width:60px; height:30px; background:var(--stroke); border-radius:999px; cursor:pointer; transition:background 0.3s}
-    .switch:hover{background:var(--accent2)}
-    .switch input{display:none}
-    .knob{position:absolute; top:3px; left:3px; width:24px; height:24px; border-radius:50%; background:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow:0 2px 8px rgba(0,0,0,0.2)}
-    .switch input:checked + .knob{left:33px; background:#000; color:#fff}
+    .login-logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
 
-    /* Modal */
-    .modal{display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.7); animation:fadeIn 0.3s}
-    .modal.active{display:flex; align-items:center; justify-content:center}
-    .modal-content{background:var(--card); border:2px solid var(--stroke); border-radius:20px; padding:30px; max-width:600px; width:90%; max-height:90vh; overflow-y:auto; animation:slideUp 0.3s}
-    @keyframes fadeIn{from{opacity:0} to{opacity:1}}
-    @keyframes slideUp{from{transform:translateY(50px); opacity:0} to{transform:translateY(0); opacity:1}}
-    .modal-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:20px}
-    .modal-header h2{color:var(--accent2); font-size:24px}
-    .modal-close{cursor:pointer; font-size:28px; color:var(--muted); transition:color 0.2s}
-    .modal-close:hover{color:var(--danger)}
-    
-    .form-group{margin-bottom:20px}
-    .form-group label{display:block; margin-bottom:8px; font-weight:600; color:var(--accent2)}
-    .form-group input, .form-group select, .form-group textarea{width:100%; padding:12px; border-radius:10px; border:2px solid var(--stroke); background:var(--bg); color:var(--ink); font-size:14px; font-family:inherit}
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus{outline:none; border-color:var(--accent2)}
-    .form-group textarea{min-height:100px; resize:vertical}
-    .form-group.inline{display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px}
-    
-    .subtask-list{display:flex; flex-direction:column; gap:8px}
-    .subtask-item{display:flex; gap:8px; align-items:center}
-    .subtask-item input{flex:1}
-    .subtask-item button{padding:8px; border:none; background:var(--danger); color:#fff; border-radius:8px; cursor:pointer}
+    .login-logo h1 {
+      font-size: 32px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
 
-    /* Timeline */
-    .timeline-container{margin-top:30px}
-    .quarter-section{margin-bottom:40px; background:var(--card); border:2px solid var(--stroke); border-radius:20px; padding:24px}
-    .quarter-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:20px}
-    .quarter-header h2{color:var(--accent2); font-size:28px}
-    .quarter-actions{display:flex; gap:10px}
-    
-    .actions-grid{display:grid; gap:20px; grid-template-columns:repeat(auto-fill, minmax(350px, 1fr))}
-    .action-card{background:rgba(255,255,255,0.03); border:2px solid var(--stroke); border-radius:16px; padding:20px; transition:all 0.3s; position:relative}
-    .action-card:hover{transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,0.3); border-color:var(--accent1)}
-    .action-card.completed{opacity:0.7; border-color:var(--success)}
-    
-    .action-header{display:flex; justify-content:space-between; align-items:start; margin-bottom:12px}
-    .action-title{font-size:18px; font-weight:700; color:var(--accent1); flex:1; padding-right:10px}
-    .action-badges{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px}
-    .badge{font-size:11px; padding:4px 8px; border-radius:6px; font-weight:700; text-transform:uppercase}
-    .badge.priority-high{background:var(--prio-high); color:#fff}
-    .badge.priority-med{background:var(--prio-med); color:#000}
-    .badge.priority-low{background:var(--prio-low); color:#fff}
-    .badge.status{background:var(--info); color:#fff}
-    .badge.status-completed{background:var(--success)}
-    .badge.status-progress{background:var(--warning); color:#000}
-    
-    .action-description{color:var(--muted); font-size:14px; margin-bottom:12px; line-height:1.6}
-    .action-meta{display:flex; flex-direction:column; gap:6px; font-size:13px; margin-bottom:12px}
-    .action-meta div{display:flex; align-items:center; gap:6px}
-    .action-meta .responsable{color:var(--accent2); font-weight:600}
-    .action-meta .deadline{color:var(--accent3); font-weight:600}
-    
-    .subtasks-list{margin:12px 0; padding-left:8px}
-    .subtasks-list li{margin:6px 0; list-style:none; display:flex; align-items:center; gap:8px; padding:6px; border-radius:6px; transition:background 0.2s}
-    .subtasks-list li:hover{background:rgba(255,255,255,0.05)}
-    .subtasks-list input{margin:0; width:18px; height:18px; cursor:pointer; accent-color:var(--accent2)}
-    .subtasks-list label{cursor:pointer; flex:1; transition:all 0.2s}
-    .subtasks-list input:checked + label{text-decoration:line-through; opacity:0.6}
-    
-    .progress-bar{height:10px; background:rgba(255,255,255,0.1); border-radius:999px; overflow:hidden; margin-top:12px}
-    .progress-fill{height:100%; background:linear-gradient(90deg, var(--accent2), var(--accent1)); transition:width 0.5s}
-    
-    .action-footer{display:flex; gap:8px; margin-top:12px; padding-top:12px; border-top:1px solid var(--stroke)}
-    .action-footer button{flex:1; padding:8px; border:none; border-radius:8px; cursor:pointer; font-size:12px; font-weight:600; transition:all 0.2s}
-    .action-footer .btn-edit{background:var(--info); color:#fff}
-    .action-footer .btn-delete{background:var(--danger); color:#fff}
-    .action-footer button:hover{opacity:0.8; transform:translateY(-2px)}
+    .login-logo p {
+      color: var(--muted);
+      font-size: 14px;
+    }
 
-    .notifications{position:fixed; top:20px; right:20px; z-index:1001; display:flex; flex-direction:column; gap:10px; max-width:350px}
-    .notification{background:var(--card); border:2px solid var(--accent2); border-radius:12px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,0.3); animation:slideInRight 0.3s; display:flex; align-items:start; gap:12px}
-    .notification.warning{border-color:var(--warning)}
-    .notification.error{border-color:var(--danger)}
-    .notification.success{border-color:var(--success)}
-    .notification .icon{font-size:24px}
-    .notification .content{flex:1; font-size:14px}
-    .notification .close{cursor:pointer; opacity:0.6; transition:opacity 0.2s; font-size:20px; line-height:1}
-    .notification .close:hover{opacity:1}
-    @keyframes slideInRight{from{transform:translateX(400px); opacity:0} to{transform:translateX(0); opacity:1}}
+    .form-group {
+      margin-bottom: 20px;
+    }
 
-    .summary{display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px; margin:25px 0}
-    .summary-item{background:var(--card); border:1px solid var(--stroke); border-radius:16px; padding:20px; text-align:center; transition:all 0.3s ease; cursor:pointer}
-    .summary-item:hover{transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,0.2); border-color:var(--accent2)}
-    .summary-item .icon{font-size:32px; margin-bottom:10px}
-    .summary-item h2{margin:8px 0; font-size:28px; color:var(--accent2); font-weight:800}
-    .summary-item p{margin:4px 0 0; color:var(--muted); font-size:14px}
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--ink);
+      font-weight: 500;
+      font-size: 14px;
+    }
 
-    .empty-state{text-align:center; padding:60px 20px; color:var(--muted)}
-    .empty-state .icon{font-size:64px; margin-bottom:16px; opacity:0.5}
-    .empty-state h3{font-size:20px; margin-bottom:8px}
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg);
+      border: 1px solid var(--stroke);
+      border-radius: 8px;
+      color: var(--ink);
+      font-size: 15px;
+      transition: all 0.2s;
+    }
 
-    .loading{display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index:2000}
-    .loading.active{display:block}
-    .spinner{width:60px; height:60px; border:6px solid var(--stroke); border-top-color:var(--accent2); border-radius:50%; animation:spin 1s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent1);
+      box-shadow: 0 0 0 3px rgba(236, 0, 140, 0.1);
+    }
 
-    @media(max-width:768px){
-      .wrap{padding:15px}
-      .actions-grid{grid-template-columns:1fr}
-      .topbar{flex-direction:column; position:relative; top:0}
-      .btn{width:100%}
-      .sync-status{position:static; margin-top:10px}
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent1);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 10px;
+    }
+
+    .login-btn:hover {
+      background: #d40080;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(236, 0, 140, 0.3);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .login-btn:disabled {
+      background: var(--stroke);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .error-message {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 16px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    /* ============================================
+       MAIN APP STYLES (hidden until login)
+    ============================================ */
+    #mainApp {
+      display: none;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    h1 {
+      font-size: 36px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      color: var(--ink);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--stroke);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--accent1);
+      border-color: var(--accent1);
+    }
+
+    .btn-primary:hover {
+      background: #d40080;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent1);
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .quarter {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .quarter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .quarter-title {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .actions-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .action-card {
+      background: var(--bg);
+      border: 1px solid var(--stroke);
+      border-radius: 8px;
+      padding: 16px;
+      transition: all 0.2s;
+    }
+
+    .action-card:hover {
+      border-color: var(--accent1);
+      transform: translateX(4px);
+    }
+
+    .action-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+
+    .action-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .action-category {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(236, 0, 140, 0.1);
+      color: var(--accent1);
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .action-meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .priority-badge {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .priority-Alta {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--danger);
+    }
+
+    .priority-Media {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--warning);
+    }
+
+    .priority-Baja {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .status-Completado {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+
+    .status-En.curso {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--warning);
+    }
+
+    .status-Pendiente {
+      background: rgba(156, 163, 175, 0.2);
+      color: var(--muted);
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      padding: 32px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .modal-title {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .close-btn:hover {
+      background: var(--stroke);
+      color: var(--ink);
+    }
+
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      background: var(--bg);
+      border: 1px solid var(--stroke);
+      border-radius: 8px;
+      color: var(--ink);
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .subtasks {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--stroke);
+    }
+
+    .subtask {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      margin: 4px 0;
+      background: var(--card);
+      border-radius: 6px;
+    }
+
+    .subtask input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .action-buttons button {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 6px;
+      border: 1px solid var(--stroke);
+      background: var(--bg);
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .action-buttons button:hover {
+      background: var(--stroke);
+    }
+
+    .logout-btn {
+      background: var(--danger) !important;
+      border-color: var(--danger) !important;
+      color: white !important;
+    }
+
+    .logout-btn:hover {
+      background: #dc2626 !important;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 12px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .header-actions {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="header">
-      <div class="sync-status" id="syncStatus">
-        <div class="sync-indicator" id="syncIndicator"></div>
-        <span id="syncText">Sin configurar</span>
+  
+  <!-- ============================================
+       LOGIN PAGE
+  ============================================ -->
+  <div id="loginPage">
+    <div class="login-container">
+      <div class="login-logo">
+        <h1>🚀 Roadmap Nevent</h1>
+        <p>2025-2026</p>
       </div>
-      <h1>🚀 Roadmap Nevent 2025–2026</h1>
-      <div class="subtitle">Sistema sincronizado en tiempo real con Supabase</div>
-    </div>
-
-    <div class="notifications" id="notifications"></div>
-    <div class="loading" id="loading"><div class="spinner"></div></div>
-
-    <!-- Config Banner -->
-    <div class="config-banner" id="configBanner" style="display:none">
-      ⚠️ Supabase no configurado. Los datos solo se guardan localmente.
-      <button onclick="openConfigModal()">⚙️ Configurar ahora</button>
-    </div>
-
-    <div class="topbar">
-      <button class="btn primary" onclick="openAddActionModal()">➕ Nueva Acción</button>
-      <button class="btn" onclick="syncNow()" id="btnSync">🔄 Sincronizar</button>
-      <button class="btn" onclick="openConfigModal()">⚙️ Config Supabase</button>
-      <button class="btn" onclick="exportData()">📥 Exportar</button>
-      <button class="btn danger" onclick="resetAllData()">🗑️ Reset</button>
-      <div class="theme-toggle">
-        <label class="switch">
-          <input type="checkbox" id="themeSwitch"/>
-          <span class="knob">🌙</span>
-        </label>
-      </div>
-    </div>
-
-    <div class="summary">
-      <div class="summary-item">
-        <div class="icon">📋</div>
-        <h2 id="sum-actions">0</h2>
-        <p>Acciones totales</p>
-      </div>
-      <div class="summary-item">
-        <div class="icon">✅</div>
-        <h2 id="sum-done">0</h2>
-        <p>Completadas</p>
-      </div>
-      <div class="summary-item">
-        <div class="icon">👥</div>
-        <h2 id="sum-resp">0</h2>
-        <p>Responsables</p>
-      </div>
-      <div class="summary-item">
-        <div class="icon">📊</div>
-        <h2 id="sum-progress">0%</h2>
-        <p>Progreso global</p>
-      </div>
-    </div>
-
-    <div class="timeline-container" id="timelineContainer"></div>
-  </div>
-
-  <!-- Config Modal -->
-  <div id="configModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>⚙️ Configuración Supabase</h2>
-        <span class="modal-close" onclick="closeConfigModal()">&times;</span>
-      </div>
-      <form id="configForm" onsubmit="saveConfig(event)">
+      
+      <form id="loginForm" onsubmit="handleLogin(event)">
         <div class="form-group">
-          <label>Project URL</label>
-          <input type="url" id="supabaseUrl" placeholder="https://xxxxx.supabase.co" required>
-          <small style="color:var(--muted); font-size:12px">Encuéntralo en: Settings → API → Project URL</small>
+          <label for="loginEmail">Email</label>
+          <input 
+            type="email" 
+            id="loginEmail" 
+            placeholder="tu.email@nevent.es"
+            required
+            autocomplete="email"
+          />
         </div>
+        
         <div class="form-group">
-          <label>Anon Public Key</label>
-          <input type="text" id="supabaseKey" placeholder="eyJhbGci..." required>
-          <small style="color:var(--muted); font-size:12px">Encuéntralo en: Settings → API → anon public</small>
+          <label for="loginPassword">Contraseña</label>
+          <input 
+            type="password" 
+            id="loginPassword" 
+            placeholder="••••••••"
+            required
+            autocomplete="current-password"
+          />
         </div>
-        <div style="background:rgba(92,194,229,0.1); padding:16px; border-radius:12px; margin:16px 0">
-          <strong style="color:var(--accent2)">📚 Tutorial rápido:</strong>
-          <ol style="margin:10px 0 0 20px; line-height:2">
-            <li>Ve a <a href="https://supabase.com" target="_blank" style="color:var(--accent2)">supabase.com</a></li>
-            <li>Sign up (gratis)</li>
-            <li>New Project → Guarda la password</li>
-            <li>Settings → API → Copia URL y Key</li>
-            <li>Pégalos aquí arriba</li>
-          </ol>
-        </div>
-        <div style="display:flex; gap:12px">
-          <button type="button" class="btn" onclick="closeConfigModal()" style="flex:1">Cancelar</button>
-          <button type="submit" class="btn primary" style="flex:1">💾 Guardar</button>
-        </div>
+        
+        <button type="submit" class="login-btn" id="loginBtn">
+          Iniciar sesión
+        </button>
+        
+        <div id="loginError" class="error-message"></div>
       </form>
     </div>
   </div>
 
-  <!-- Action Modal -->
+  <!-- ============================================
+       MAIN APPLICATION
+  ============================================ -->
+  <div id="mainApp">
+    <div class="container">
+      <header>
+        <h1>🚀 Roadmap Nevent 2025-2026</h1>
+        <div class="header-actions">
+          <button class="btn" onclick="exportData()">📥 Exportar</button>
+          <button class="btn" onclick="syncData()">🔄 Sincronizar</button>
+          <button class="btn btn-primary" onclick="openAddActionModal()">➕ Nueva Acción</button>
+          <button class="btn logout-btn" onclick="handleLogout()">🚪 Salir</button>
+        </div>
+      </header>
+
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-label">Acciones totales</div>
+          <div class="stat-value" id="totalActions">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Completadas</div>
+          <div class="stat-value" id="completedActions">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Responsables</div>
+          <div class="stat-value" id="totalResponsables">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Progreso global</div>
+          <div class="stat-value" id="globalProgress">0%</div>
+        </div>
+      </div>
+
+      <div class="timeline" id="timeline"></div>
+    </div>
+  </div>
+
+  <!-- Modal for Add/Edit Action -->
   <div id="actionModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 id="modalTitle">Nueva Acción</h2>
-        <span class="modal-close" onclick="closeActionModal()">&times;</span>
+        <h2 class="modal-title" id="modalTitle">Nueva Acción</h2>
+        <button class="close-btn" onclick="closeModal()">&times;</button>
       </div>
+      
       <form id="actionForm" onsubmit="saveAction(event)">
-        <input type="hidden" id="actionId">
-        <input type="hidden" id="actionQuarter">
-        
         <div class="form-group">
           <label>Trimestre</label>
           <select id="quarterSelect" required>
@@ -271,74 +609,161 @@
           </select>
         </div>
 
-        <div class="form-group inline">
-          <div>
-            <label>Categoría</label>
-            <select id="categorySelect" required>
-              <option value="Marketing">Marketing</option>
-              <option value="Customer Success">Customer Success</option>
-              <option value="Expansión">Expansión</option>
-              <option value="Producto">Producto</option>
-              <option value="Ventas">Ventas</option>
-            </select>
-          </div>
-          <div>
-            <label>Prioridad</label>
-            <select id="prioritySelect" required>
-              <option value="Alta">Alta</option>
-              <option value="Media">Media</option>
-              <option value="Baja">Baja</option>
-            </select>
-          </div>
+        <div class="form-group">
+          <label>Categoría</label>
+          <select id="categorySelect" required>
+            <option value="Marketing">Marketing</option>
+            <option value="Customer Success">Customer Success</option>
+            <option value="Expansión">Expansión</option>
+            <option value="Producto">Producto</option>
+            <option value="Ventas">Ventas</option>
+            <option value="Operaciones">Operaciones</option>
+          </select>
         </div>
 
         <div class="form-group">
           <label>Título</label>
-          <input type="text" id="titleInput" required placeholder="Ej: Email frío creativo">
+          <input type="text" id="titleInput" placeholder="Ej: Email frío creativo" required />
         </div>
 
         <div class="form-group">
           <label>Descripción</label>
-          <textarea id="descriptionInput" required placeholder="Describe la acción..."></textarea>
-        </div>
-
-        <div class="form-group inline">
-          <div>
-            <label>Responsable</label>
-            <input type="text" id="responsableInput" required placeholder="Nombre">
-          </div>
-          <div>
-            <label>Deadline</label>
-            <input type="date" id="deadlineInput" required>
-          </div>
+          <textarea id="descriptionInput" placeholder="Describe la acción..."></textarea>
         </div>
 
         <div class="form-group">
-          <label>Subtareas</label>
-          <div class="subtask-list" id="subtaskList"></div>
-          <button type="button" class="btn" onclick="addSubtaskField()" style="margin-top:10px; width:100%">➕ Agregar Subtarea</button>
+          <label>Prioridad</label>
+          <select id="prioritySelect">
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Baja">Baja</option>
+          </select>
         </div>
 
-        <div style="display:flex; gap:12px; margin-top:24px">
-          <button type="button" class="btn" onclick="closeActionModal()" style="flex:1">Cancelar</button>
-          <button type="submit" class="btn primary" style="flex:1">💾 Guardar</button>
+        <div class="form-group">
+          <label>Estado</label>
+          <select id="statusSelect">
+            <option value="Pendiente">Pendiente</option>
+            <option value="En curso">En curso</option>
+            <option value="Completado">Completado</option>
+          </select>
         </div>
+
+        <div class="form-group">
+          <label>Responsable</label>
+          <input type="text" id="responsableInput" placeholder="Ej: Fran" />
+        </div>
+
+        <div class="form-group">
+          <label>Fecha límite</label>
+          <input type="date" id="deadlineInput" />
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
+          💾 Guardar
+        </button>
       </form>
     </div>
   </div>
 
-  <!-- Supabase SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
   <script>
-    // =============== SUPABASE CONFIG ===============
-    let supabase = null;
-    let supabaseConfig = {
-      url: '',
-      key: ''
-    };
+    // ============================================
+    // SUPABASE CONFIGURATION (HARDCODED)
+    // ============================================
+    const SUPABASE_URL = 'https://tvbqzqripcevaryquhfg.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2YnF6cXJpcGNldmFyeXF1aGZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxNTI4MzEsImV4cCI6MjA3NDcyODgzMX0.BVHINkyJtK4mwRLX1Nt7_gJbd3ht2qGfvqLvmehkyIM';
+    
+    let supabase;
+    let currentUser = null;
 
-    // =============== DATA STRUCTURE ===============
+    // Initialize Supabase
+    try {
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      console.log('✅ Supabase initialized');
+    } catch (error) {
+      console.error('❌ Error initializing Supabase:', error);
+    }
+
+    // ============================================
+    // LOGIN FUNCTIONALITY
+    // ============================================
+    async function handleLogin(event) {
+      event.preventDefault();
+      
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const loginBtn = document.getElementById('loginBtn');
+      const errorDiv = document.getElementById('loginError');
+      
+      // Reset error
+      errorDiv.classList.remove('show');
+      errorDiv.textContent = '';
+      
+      // Disable button
+      loginBtn.disabled = true;
+      loginBtn.textContent = 'Iniciando sesión...';
+      
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+        
+        if (error) throw error;
+        
+        // Save user
+        currentUser = data.user;
+        console.log('✅ Login exitoso:', currentUser.email);
+        
+        // Hide login, show app
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        
+        // Load data
+        await loadData();
+        setupRealtimeSync();
+        
+      } catch (error) {
+        console.error('❌ Error en login:', error);
+        errorDiv.textContent = error.message || 'Error al iniciar sesión. Verifica tus credenciales.';
+        errorDiv.classList.add('show');
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Iniciar sesión';
+      }
+    }
+
+    // Logout
+    async function handleLogout() {
+      try {
+        await supabase.auth.signOut();
+        currentUser = null;
+        document.getElementById('loginPage').style.display = 'flex';
+        document.getElementById('mainApp').style.display = 'none';
+        console.log('✅ Sesión cerrada');
+      } catch (error) {
+        console.error('❌ Error al cerrar sesión:', error);
+      }
+    }
+
+    // Check if user is already logged in
+    async function checkSession() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          currentUser = session.user;
+          document.getElementById('loginPage').style.display = 'none';
+          document.getElementById('mainApp').style.display = 'block';
+          await loadData();
+          setupRealtimeSync();
+        }
+      } catch (error) {
+        console.error('❌ Error checking session:', error);
+      }
+    }
+
+    // ============================================
+    // ROADMAP DATA MANAGEMENT
+    // ============================================
     let roadmapData = {
       quarters: {
         'Q4 2025': [],
@@ -349,320 +774,48 @@
       }
     };
 
-    // =============== INITIALIZATION ===============
-    async function init() {
-      setupTheme();
-      loadSupabaseConfig();
-      await loadData();
-      renderTimeline();
-      updateSummary();
-      
-      // Setup realtime subscriptions if configured
-      if (supabase) {
-        setupRealtimeSync();
-      }
-      
-      setTimeout(() => {
-        showNotification('👋 Sistema listo', 'success', 2000);
-      }, 500);
+    let editingAction = null;
+
+    function generateId() {
+      return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     }
 
-    // =============== SUPABASE SETUP ===============
-    function loadSupabaseConfig() {
-      try {
-        const saved = localStorage.getItem('supabase_config');
-        if (saved) {
-          supabaseConfig = JSON.parse(saved);
-          if (supabaseConfig.url && supabaseConfig.key) {
-            initSupabase();
-            document.getElementById('configBanner').style.display = 'none';
-          } else {
-            document.getElementById('configBanner').style.display = 'block';
-            updateSyncStatus('offline', 'Sin configurar');
-          }
-        } else {
-          document.getElementById('configBanner').style.display = 'block';
-          updateSyncStatus('offline', 'Sin configurar');
-        }
-      } catch (e) {
-        console.error('Error loading config:', e);
-      }
-    }
-
-    function initSupabase() {
-      try {
-        supabase = window.supabase.createClient(supabaseConfig.url, supabaseConfig.key);
-        updateSyncStatus('online', 'Conectado');
-        checkDatabase();
-      } catch (e) {
-        console.error('Error initializing Supabase:', e);
-        updateSyncStatus('offline', 'Error conexión');
-        showNotification('Error al conectar con Supabase', 'error');
-      }
-    }
-
-    async function checkDatabase() {
-      if (!supabase) return;
-      
-      try {
-        // Check if table exists, if not, we'll create it via SQL editor instruction
-        const { data, error } = await supabase
-          .from('roadmap_actions')
-          .select('count')
-          .limit(1);
-        
-        if (error) {
-          if (error.message.includes('relation "roadmap_actions" does not exist')) {
-            showNotification('⚠️ Necesitas crear la tabla en Supabase. Ve al SQL Editor', 'warning', 0);
-            showDatabaseSetupInstructions();
-          }
-        }
-      } catch (e) {
-        console.error('Error checking database:', e);
-      }
-    }
-
-    function showDatabaseSetupInstructions() {
-      const sql = `
--- Copia y pega este SQL en: Supabase → SQL Editor → New Query
-
-CREATE TABLE roadmap_actions (
-  id TEXT PRIMARY KEY,
-  quarter TEXT NOT NULL,
-  category TEXT NOT NULL,
-  title TEXT NOT NULL,
-  description TEXT,
-  priority TEXT,
-  status TEXT,
-  responsable TEXT,
-  deadline DATE,
-  subtasks JSONB,
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW()
-);
-
--- Enable realtime
-ALTER PUBLICATION supabase_realtime ADD TABLE roadmap_actions;
-      `;
-      
-      showNotification(`
-        <strong>📋 Configuración de Base de Datos</strong><br><br>
-        1. Ve a tu proyecto en Supabase<br>
-        2. Click en "SQL Editor" (izquierda)<br>
-        3. "New Query"<br>
-        4. Copia y pega el SQL de la consola<br>
-        5. Click "Run"<br><br>
-        <button onclick="navigator.clipboard.writeText(\`${sql}\`); showNotification('SQL copiado al portapapeles', 'success')" 
-                style="background:var(--success); color:#fff; border:none; padding:8px 16px; border-radius:8px; cursor:pointer">
-          📋 Copiar SQL
-        </button>
-      `, 'info', 0);
-      
-      console.log('=== SQL PARA SUPABASE ===');
-      console.log(sql);
-      console.log('========================');
-    }
-
-    function saveConfig(event) {
-      event.preventDefault();
-      
-      supabaseConfig.url = document.getElementById('supabaseUrl').value.trim();
-      supabaseConfig.key = document.getElementById('supabaseKey').value.trim();
-      
-      localStorage.setItem('supabase_config', JSON.stringify(supabaseConfig));
-      
-      initSupabase();
-      closeConfigModal();
-      
-      showNotification('✅ Configuración guardada. Sincronizando...', 'success');
-      
-      setTimeout(() => {
-        syncNow();
-      }, 1000);
-    }
-
-    function openConfigModal() {
-      document.getElementById('supabaseUrl').value = supabaseConfig.url || '';
-      document.getElementById('supabaseKey').value = supabaseConfig.key || '';
-      document.getElementById('configModal').classList.add('active');
-    }
-
-    function closeConfigModal() {
-      document.getElementById('configModal').classList.remove('active');
-    }
-
-    // =============== REALTIME SYNC ===============
-    function setupRealtimeSync() {
-      if (!supabase) return;
-      
-      const channel = supabase
-        .channel('roadmap_changes')
-        .on('postgres_changes', 
-          { event: '*', schema: 'public', table: 'roadmap_actions' },
-          (payload) => {
-            console.log('Realtime update:', payload);
-            loadData();
-            renderTimeline();
-            updateSummary();
-            showNotification('🔄 Datos actualizados', 'info', 2000);
-          }
-        )
-        .subscribe();
-    }
-
-    async function syncNow() {
-      if (!supabase) {
-        showNotification('Supabase no configurado', 'warning');
-        return;
-      }
-      
-      showLoading(true);
-      updateSyncStatus('syncing', 'Sincronizando...');
-      
-      try {
-        // Upload local data to Supabase
-        const allActions = [];
-        Object.keys(roadmapData.quarters).forEach(quarter => {
-          roadmapData.quarters[quarter].forEach(action => {
-            allActions.push({
-              id: action.id,
-              quarter: quarter,
-              category: action.category,
-              title: action.title,
-              description: action.description,
-              priority: action.priority,
-              status: action.status,
-              responsable: action.responsable,
-              deadline: action.deadline,
-              subtasks: action.subtasks
-            });
-          });
-        });
-        
-        if (allActions.length > 0) {
-          const { error } = await supabase
-            .from('roadmap_actions')
-            .upsert(allActions, { onConflict: 'id' });
-          
-          if (error) throw error;
-        }
-        
-        // Download data from Supabase
-        await loadData();
-        renderTimeline();
-        updateSummary();
-        
-        updateSyncStatus('online', 'Sincronizado ✓');
-        showNotification('✅ Sincronización completada', 'success');
-      } catch (e) {
-        console.error('Sync error:', e);
-        updateSyncStatus('offline', 'Error sync');
-        showNotification('Error al sincronizar: ' + e.message, 'error');
-      } finally {
-        showLoading(false);
-      }
-    }
-
-    function updateSyncStatus(status, text) {
-      const indicator = document.getElementById('syncIndicator');
-      const textEl = document.getElementById('syncText');
-      
-      indicator.className = 'sync-indicator';
-      if (status === 'offline') {
-        indicator.classList.add('offline');
-      }
-      
-      textEl.textContent = text;
-    }
-
-    // =============== DATA PERSISTENCE ===============
     async function loadData() {
       try {
-        if (supabase) {
-          // Load from Supabase
-          const { data, error } = await supabase
-            .from('roadmap_actions')
-            .select('*')
-            .order('created_at', { ascending: true });
-          
-          if (error) {
-            console.error('Supabase error:', error);
-            // Fallback to localStorage
-            loadFromLocalStorage();
-            return;
-          }
-          
-          if (data && data.length > 0) {
-            // Reset quarters
-            Object.keys(roadmapData.quarters).forEach(q => {
-              roadmapData.quarters[q] = [];
-            });
-            
-            // Populate from Supabase
-            data.forEach(row => {
-              if (roadmapData.quarters[row.quarter]) {
-                roadmapData.quarters[row.quarter].push({
-                  id: row.id,
-                  category: row.category,
-                  title: row.title,
-                  description: row.description,
-                  priority: row.priority,
-                  status: row.status,
-                  responsable: row.responsable,
-                  deadline: row.deadline,
-                  subtasks: row.subtasks || []
-                });
-              }
-            });
-            
-            // Also save to localStorage as backup
-            saveToLocalStorage();
-          } else {
-            loadFromLocalStorage();
-          }
-        } else {
-          loadFromLocalStorage();
+        const { data, error } = await supabase
+          .from('roadmap_actions')
+          .select('*')
+          .order('created_at', { ascending: true });
+
+        if (error) throw error;
+
+        // Reset data
+        roadmapData.quarters = {
+          'Q4 2025': [],
+          'Q1 2026': [],
+          'Q2 2026': [],
+          'Q3 2026': [],
+          'Q4 2026': []
+        };
+
+        // Populate data
+        if (data) {
+          data.forEach(item => {
+            if (roadmapData.quarters[item.quarter]) {
+              roadmapData.quarters[item.quarter].push(item);
+            }
+          });
         }
-      } catch (e) {
-        console.error('Error loading data:', e);
-        loadFromLocalStorage();
-      }
-    }
 
-    function loadFromLocalStorage() {
-      const saved = localStorage.getItem('nevent_roadmap_data');
-      if (saved) {
-        roadmapData = JSON.parse(saved);
-      } else {
-        // Sample data
-        roadmapData.quarters['Q4 2025'] = [{
-          id: generateId(),
-          category: 'Marketing',
-          title: 'Email frío creativo',
-          description: 'Email frío + caso Holika + demo-bait ROI.',
-          priority: 'Alta',
-          status: 'Pendiente',
-          responsable: 'Fran',
-          deadline: '2025-11-30',
-          subtasks: [
-            { id: generateId(), text: 'Copy + secuencia', completed: false },
-            { id: generateId(), text: 'Segmentación base', completed: false }
-          ]
-        }];
-        saveToLocalStorage();
+        renderTimeline();
+        updateStats();
+        console.log('✅ Datos cargados desde Supabase');
+      } catch (error) {
+        console.error('❌ Error loading data:', error);
       }
-    }
-
-    function saveToLocalStorage() {
-      localStorage.setItem('nevent_roadmap_data', JSON.stringify(roadmapData));
     }
 
     async function saveToSupabase(action, quarter) {
-      if (!supabase) {
-        saveToLocalStorage();
-        return;
-      }
-      
       try {
         const { error } = await supabase
           .from('roadmap_actions')
@@ -671,410 +824,254 @@ ALTER PUBLICATION supabase_realtime ADD TABLE roadmap_actions;
             quarter: quarter,
             category: action.category,
             title: action.title,
-            description: action.description,
+            description: action.description || '',
             priority: action.priority,
             status: action.status,
-            responsable: action.responsable,
-            deadline: action.deadline,
-            subtasks: action.subtasks,
+            responsable: action.responsable || '',
+            deadline: action.deadline || null,
+            subtasks: action.subtasks || [],
             updated_at: new Date().toISOString()
           }, { onConflict: 'id' });
-        
+
         if (error) throw error;
-        
-        saveToLocalStorage();
-      } catch (e) {
-        console.error('Error saving to Supabase:', e);
-        showNotification('Error al guardar en Supabase', 'error');
-        saveToLocalStorage();
+        console.log('✅ Guardado en Supabase');
+      } catch (error) {
+        console.error('❌ Error saving to Supabase:', error);
+        alert('Error al guardar: ' + error.message);
       }
     }
 
     async function deleteFromSupabase(actionId) {
-      if (!supabase) return;
-      
       try {
         const { error } = await supabase
           .from('roadmap_actions')
           .delete()
           .eq('id', actionId);
-        
+
         if (error) throw error;
-      } catch (e) {
-        console.error('Error deleting from Supabase:', e);
+        console.log('✅ Eliminado de Supabase');
+      } catch (error) {
+        console.error('❌ Error deleting from Supabase:', error);
       }
     }
 
-    function generateId() {
-      return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    function setupRealtimeSync() {
+      supabase
+        .channel('roadmap_changes')
+        .on('postgres_changes', { 
+          event: '*', 
+          schema: 'public', 
+          table: 'roadmap_actions' 
+        }, payload => {
+          console.log('🔄 Cambio detectado:', payload);
+          loadData();
+        })
+        .subscribe();
     }
 
-    // =============== THEME ===============
-    function setupTheme() {
-      const saved = localStorage.getItem('nevent_theme');
-      if (saved) document.documentElement.setAttribute('data-theme', saved);
-      
-      const checkbox = document.getElementById('themeSwitch');
-      const current = document.documentElement.getAttribute('data-theme') || 'dark';
-      checkbox.checked = (current === 'light');
-      updateKnobIcon();
-      
-      checkbox.addEventListener('change', () => {
-        const next = checkbox.checked ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('nevent_theme', next);
-        updateKnobIcon();
-      });
+    async function syncData() {
+      await loadData();
+      alert('✅ Datos sincronizados');
     }
 
-    function updateKnobIcon() {
-      const checkbox = document.getElementById('themeSwitch');
-      const knob = document.querySelector('.knob');
-      knob.textContent = checkbox.checked ? '🌞' : '🌙';
-    }
-
-    // =============== RENDER TIMELINE ===============
     function renderTimeline() {
-      const container = document.getElementById('timelineContainer');
-      container.innerHTML = '';
+      const timeline = document.getElementById('timeline');
+      timeline.innerHTML = '';
 
       Object.keys(roadmapData.quarters).forEach(quarter => {
         const actions = roadmapData.quarters[quarter];
         
-        const section = document.createElement('div');
-        section.className = 'quarter-section';
-        section.innerHTML = `
+        const quarterDiv = document.createElement('div');
+        quarterDiv.className = 'quarter';
+        quarterDiv.innerHTML = `
           <div class="quarter-header">
-            <h2>${quarter}</h2>
-            <div class="quarter-actions">
-              <button class="btn success" onclick="openAddActionModal('${quarter}')">➕ Nueva</button>
-            </div>
+            <h2 class="quarter-title">${quarter}</h2>
+            <span style="color: var(--muted);">${actions.length} acciones</span>
           </div>
-          <div class="actions-grid" id="actions-${quarter.replace(/\s/g, '-')}"></div>
+          <div class="actions-grid" id="actions-${quarter}"></div>
         `;
         
-        container.appendChild(section);
+        timeline.appendChild(quarterDiv);
+
+        const actionsGrid = document.getElementById(`actions-${quarter}`);
         
-        if (actions.length === 0) {
-          const grid = section.querySelector('.actions-grid');
-          grid.innerHTML = `
-            <div class="empty-state">
-              <div class="icon">📭</div>
-              <h3>No hay acciones aquí</h3>
+        actions.forEach(action => {
+          const actionCard = document.createElement('div');
+          actionCard.className = 'action-card';
+          actionCard.innerHTML = `
+            <div class="action-header">
+              <div>
+                <div class="action-title">${action.title}</div>
+                <span class="action-category">${action.category}</span>
+              </div>
+              <span class="status-badge status-${action.status.replace(' ', '.')}">${action.status}</span>
+            </div>
+            
+            ${action.description ? `<p style="color: var(--muted); font-size: 14px; margin: 8px 0;">${action.description}</p>` : ''}
+            
+            <div class="action-meta">
+              <span class="priority-badge priority-${action.priority}">
+                ${action.priority === 'Alta' ? '🔴' : action.priority === 'Media' ? '🟡' : '🟢'} ${action.priority}
+              </span>
+              ${action.responsable ? `<span>👤 ${action.responsable}</span>` : ''}
+              ${action.deadline ? `<span>📅 ${action.deadline}</span>` : ''}
+            </div>
+
+            ${action.subtasks && action.subtasks.length > 0 ? `
+              <div class="subtasks">
+                ${action.subtasks.map(st => `
+                  <div class="subtask">
+                    <input 
+                      type="checkbox" 
+                      ${st.completed ? 'checked' : ''} 
+                      onchange="toggleSubtask('${action.id}', '${st.id}', '${quarter}')"
+                    />
+                    <span style="${st.completed ? 'text-decoration: line-through; color: var(--muted);' : ''}">${st.text}</span>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+
+            <div class="action-buttons">
+              <button onclick="editAction('${action.id}', '${quarter}')">✏️ Editar</button>
+              <button onclick="deleteAction('${action.id}', '${quarter}')">🗑️ Eliminar</button>
             </div>
           `;
-        } else {
-          renderActions(quarter, actions);
-        }
+          
+          actionsGrid.appendChild(actionCard);
+        });
       });
     }
 
-    function renderActions(quarter, actions) {
-      const grid = document.getElementById('actions-' + quarter.replace(/\s/g, '-'));
-      
-      actions.forEach(action => {
-        const card = createActionCard(action, quarter);
-        grid.appendChild(card);
+    function updateStats() {
+      let total = 0;
+      let completed = 0;
+      let responsables = new Set();
+
+      Object.values(roadmapData.quarters).forEach(actions => {
+        total += actions.length;
+        actions.forEach(action => {
+          if (action.status === 'Completado') completed++;
+          if (action.responsable) responsables.add(action.responsable);
+        });
       });
+
+      document.getElementById('totalActions').textContent = total;
+      document.getElementById('completedActions').textContent = completed;
+      document.getElementById('totalResponsables').textContent = responsables.size;
+      document.getElementById('globalProgress').textContent = total > 0 ? Math.round((completed / total) * 100) + '%' : '0%';
     }
 
-    function createActionCard(action, quarter) {
-      const card = document.createElement('div');
-      card.className = 'action-card';
-      card.dataset.actionId = action.id;
-      
-      if (action.status === 'Completado') card.classList.add('completed');
-      
-      const completedCount = action.subtasks.filter(st => st.completed).length;
-      const totalCount = action.subtasks.length;
-      const progress = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
-      
-      const subtasksHtml = action.subtasks.map(st => `
-        <li>
-          <input type="checkbox" 
-                 id="st-${st.id}" 
-                 ${st.completed ? 'checked' : ''} 
-                 onchange="toggleSubtask('${action.id}', '${st.id}', '${quarter}')">
-          <label for="st-${st.id}">${st.text}</label>
-        </li>
-      `).join('');
-      
-      card.innerHTML = `
-        <div class="action-header">
-          <div class="action-title">${action.title}</div>
-        </div>
-        <div class="action-badges">
-          <span class="badge priority-${action.priority.toLowerCase()}">${action.priority}</span>
-          <span class="badge status status-${action.status.toLowerCase().replace(/\s/g, '-')}">${action.status}</span>
-          <span class="badge">${action.category}</span>
-        </div>
-        <div class="action-description">${action.description}</div>
-        <div class="action-meta">
-          <div><span>👤</span> <span class="responsable">${action.responsable}</span></div>
-          <div><span>📅</span> <span class="deadline">${formatDate(action.deadline)}</span></div>
-        </div>
-        ${action.subtasks.length > 0 ? `
-          <ul class="subtasks-list">${subtasksHtml}</ul>
-          <div class="progress-bar">
-            <div class="progress-fill" style="width:${progress}%"></div>
-          </div>
-          <div style="font-size:12px; color:var(--muted); margin-top:6px">${completedCount}/${totalCount} (${progress}%)</div>
-        ` : ''}
-        <div class="action-footer">
-          <button class="btn-edit" onclick="editAction('${action.id}', '${quarter}')">✏️ Editar</button>
-          <button class="btn-delete" onclick="deleteAction('${action.id}', '${quarter}')">🗑️ Eliminar</button>
-        </div>
-      `;
-      
-      return card;
-    }
-
-    function formatDate(dateStr) {
-      const date = new Date(dateStr);
-      return date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
-    }
-
-    // =============== MODAL MANAGEMENT ===============
-    function openAddActionModal(quarter = '') {
+    function openAddActionModal() {
+      editingAction = null;
       document.getElementById('modalTitle').textContent = 'Nueva Acción';
       document.getElementById('actionForm').reset();
-      document.getElementById('actionId').value = '';
-      document.getElementById('actionQuarter').value = '';
-      
-      if (quarter) document.getElementById('quarterSelect').value = quarter;
-      
-      document.getElementById('subtaskList').innerHTML = '';
-      addSubtaskField();
-      
       document.getElementById('actionModal').classList.add('active');
     }
 
     function editAction(actionId, quarter) {
       const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
       if (!action) return;
-      
+
+      editingAction = { action, quarter };
       document.getElementById('modalTitle').textContent = 'Editar Acción';
-      document.getElementById('actionId').value = actionId;
-      document.getElementById('actionQuarter').value = quarter;
+      
       document.getElementById('quarterSelect').value = quarter;
       document.getElementById('categorySelect').value = action.category;
-      document.getElementById('prioritySelect').value = action.priority;
       document.getElementById('titleInput').value = action.title;
-      document.getElementById('descriptionInput').value = action.description;
-      document.getElementById('responsableInput').value = action.responsable;
-      document.getElementById('deadlineInput').value = action.deadline;
-      
-      const subtaskList = document.getElementById('subtaskList');
-      subtaskList.innerHTML = '';
-      action.subtasks.forEach(st => addSubtaskField(st.text));
+      document.getElementById('descriptionInput').value = action.description || '';
+      document.getElementById('prioritySelect').value = action.priority;
+      document.getElementById('statusSelect').value = action.status;
+      document.getElementById('responsableInput').value = action.responsable || '';
+      document.getElementById('deadlineInput').value = action.deadline || '';
       
       document.getElementById('actionModal').classList.add('active');
     }
 
-    function closeActionModal() {
-      document.getElementById('actionModal').classList.remove('active');
-    }
-
-    function addSubtaskField(text = '') {
-      const subtaskList = document.getElementById('subtaskList');
-      const div = document.createElement('div');
-      div.className = 'subtask-item';
-      div.innerHTML = `
-        <input type="text" placeholder="Nombre de la subtarea" value="${text}">
-        <button type="button" onclick="this.parentElement.remove()">🗑️</button>
-      `;
-      subtaskList.appendChild(div);
-    }
-
-    // =============== CRUD OPERATIONS ===============
     async function saveAction(event) {
       event.preventDefault();
-      showLoading(true);
-      
-      const actionId = document.getElementById('actionId').value;
-      const oldQuarter = document.getElementById('actionQuarter').value;
+
       const quarter = document.getElementById('quarterSelect').value;
-      
-      const subtaskInputs = document.querySelectorAll('#subtaskList input[type="text"]');
-      const subtasks = Array.from(subtaskInputs)
-        .map(input => input.value.trim())
-        .filter(text => text)
-        .map(text => ({ id: generateId(), text, completed: false }));
-      
       const actionData = {
-        id: actionId || generateId(),
+        id: editingAction ? editingAction.action.id : generateId(),
         category: document.getElementById('categorySelect').value,
         title: document.getElementById('titleInput').value,
         description: document.getElementById('descriptionInput').value,
         priority: document.getElementById('prioritySelect').value,
-        status: 'Pendiente',
+        status: document.getElementById('statusSelect').value,
         responsable: document.getElementById('responsableInput').value,
         deadline: document.getElementById('deadlineInput').value,
-        subtasks
+        subtasks: editingAction ? editingAction.action.subtasks : []
       };
-      
-      if (actionId) {
-        if (oldQuarter && oldQuarter !== quarter) {
-          roadmapData.quarters[oldQuarter] = roadmapData.quarters[oldQuarter].filter(a => a.id !== actionId);
-          if (supabase) await deleteFromSupabase(actionId);
-        }
-        
-        const index = roadmapData.quarters[quarter].findIndex(a => a.id === actionId);
-        if (index >= 0) {
-          const oldAction = roadmapData.quarters[quarter][index];
-          actionData.status = oldAction.status;
-          actionData.subtasks.forEach(newSt => {
-            const oldSt = oldAction.subtasks.find(ost => ost.text === newSt.text);
-            if (oldSt) newSt.completed = oldSt.completed;
-          });
-          roadmapData.quarters[quarter][index] = actionData;
-        } else {
-          roadmapData.quarters[quarter].push(actionData);
-        }
-        
-        showNotification('✅ Acción actualizada', 'success');
-      } else {
-        roadmapData.quarters[quarter].push(actionData);
-        showNotification('✅ Acción creada', 'success');
+
+      if (editingAction) {
+        const oldQuarter = editingAction.quarter;
+        roadmapData.quarters[oldQuarter] = roadmapData.quarters[oldQuarter].filter(a => a.id !== actionData.id);
       }
-      
+
+      roadmapData.quarters[quarter].push(actionData);
       await saveToSupabase(actionData, quarter);
+      
+      closeModal();
       renderTimeline();
-      updateSummary();
-      closeActionModal();
-      showLoading(false);
+      updateStats();
     }
 
     async function deleteAction(actionId, quarter) {
       if (!confirm('¿Eliminar esta acción?')) return;
-      
-      showLoading(true);
+
       roadmapData.quarters[quarter] = roadmapData.quarters[quarter].filter(a => a.id !== actionId);
-      
       await deleteFromSupabase(actionId);
-      saveToLocalStorage();
       
       renderTimeline();
-      updateSummary();
-      showNotification('🗑️ Acción eliminada', 'info');
-      showLoading(false);
+      updateStats();
     }
 
     async function toggleSubtask(actionId, subtaskId, quarter) {
       const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
       if (!action) return;
-      
+
       const subtask = action.subtasks.find(st => st.id === subtaskId);
       if (subtask) {
         subtask.completed = !subtask.completed;
-        
-        const completedCount = action.subtasks.filter(st => st.completed).length;
-        const totalCount = action.subtasks.length;
-        
-        if (completedCount === totalCount && totalCount > 0) {
+
+        const allCompleted = action.subtasks.every(st => st.completed);
+        const someCompleted = action.subtasks.some(st => st.completed);
+
+        if (allCompleted) {
           action.status = 'Completado';
-        } else if (completedCount > 0) {
+        } else if (someCompleted) {
           action.status = 'En curso';
         } else {
           action.status = 'Pendiente';
         }
-        
+
         await saveToSupabase(action, quarter);
         renderTimeline();
-        updateSummary();
+        updateStats();
       }
     }
 
-    // =============== SUMMARY ===============
-    function updateSummary() {
-      let totalActions = 0, completedActions = 0, totalSubtasks = 0, completedSubtasks = 0;
-      const responsables = new Set();
-      
-      Object.values(roadmapData.quarters).forEach(actions => {
-        actions.forEach(action => {
-          totalActions++;
-          if (action.status === 'Completado') completedActions++;
-          responsables.add(action.responsable);
-          action.subtasks.forEach(st => {
-            totalSubtasks++;
-            if (st.completed) completedSubtasks++;
-          });
-        });
-      });
-      
-      const progress = totalSubtasks > 0 ? Math.round((completedSubtasks / totalSubtasks) * 100) : 0;
-      
-      document.getElementById('sum-actions').textContent = totalActions;
-      document.getElementById('sum-done').textContent = completedActions;
-      document.getElementById('sum-resp').textContent = responsables.size;
-      document.getElementById('sum-progress').textContent = progress + '%';
+    function closeModal() {
+      document.getElementById('actionModal').classList.remove('active');
     }
 
-    // =============== EXPORT ===============
     function exportData() {
       const dataStr = JSON.stringify(roadmapData, null, 2);
-      const blob = new Blob([dataStr], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
       const link = document.createElement('a');
       link.href = url;
       link.download = `roadmap_${new Date().toISOString().split('T')[0]}.json`;
       link.click();
-      showNotification('📥 Exportado', 'success');
     }
 
-    async function resetAllData() {
-      if (!confirm('⚠️ ¿BORRAR TODO?')) return;
-      if (!confirm('¿Realmente quieres borrar todo?')) return;
-      
-      showLoading(true);
-      
-      if (supabase) {
-        const { error } = await supabase.from('roadmap_actions').delete().neq('id', '');
-      }
-      
-      roadmapData = {
-        quarters: {
-          'Q4 2025': [], 'Q1 2026': [], 'Q2 2026': [], 'Q3 2026': [], 'Q4 2026': []
-        }
-      };
-      
-      saveToLocalStorage();
-      renderTimeline();
-      updateSummary();
-      showNotification('🗑️ Todo eliminado', 'info');
-      showLoading(false);
-    }
-
-    // =============== UI HELPERS ===============
-    function showLoading(show) {
-      document.getElementById('loading').classList.toggle('active', show);
-    }
-
-    function showNotification(message, type = 'info', duration = 5000) {
-      const container = document.getElementById('notifications');
-      const notif = document.createElement('div');
-      notif.className = `notification ${type}`;
-      
-      const icons = {info: 'ℹ️', warning: '⚠️', error: '❌', success: '✅'};
-      notif.innerHTML = `
-        <span class="icon">${icons[type]}</span>
-        <div class="content">${message}</div>
-        <span class="close" onclick="this.parentElement.remove()">×</span>
-      `;
-      
-      container.appendChild(notif);
-      if (duration > 0) setTimeout(() => notif.remove(), duration);
-    }
-
-    // Close modals on outside click
-    window.onclick = function(event) {
-      if (event.target.classList.contains('modal')) {
-        event.target.classList.remove('active');
-      }
-    }
-
-    // Initialize
-    document.addEventListener('DOMContentLoaded', init);
+    // ============================================
+    // INITIALIZE
+    // ============================================
+    window.addEventListener('DOMContentLoaded', () => {
+      checkSession();
+    });
   </script>
 </body>
 </html>
