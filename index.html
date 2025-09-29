@@ -573,6 +573,116 @@
       background: #dc2626 !important;
     }
 
+    /* ============================================ */
+    /* DEPARTAMENTOS */
+    /* ============================================ */
+
+    .departments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 10px;
+    }
+
+    .department-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+    }
+
+    .department-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      transform: translateY(-2px);
+    }
+
+    .dept-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .dept-icon {
+      font-size: 32px;
+      line-height: 1;
+    }
+
+    .dept-name {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .dept-description {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 0 0 16px 0;
+      line-height: 1.5;
+      min-height: 42px;
+    }
+
+    .dept-actions {
+      display: flex;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px solid var(--stroke);
+    }
+
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 13px;
+      border-radius: 6px;
+      border: 1px solid var(--stroke);
+      background: var(--card);
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-small:hover {
+      background: var(--stroke);
+      transform: scale(1.02);
+    }
+
+    .btn-small.btn-secondary {
+      color: var(--muted);
+    }
+
+    .form-row {
+      display: flex;
+      gap: 16px;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+    }
+
+    input[type="color"] {
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid var(--stroke);
+      cursor: pointer;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn-secondary {
+      background: var(--bg);
+      border: 1px solid var(--stroke);
+      color: var(--ink);
+    }
+
+    .btn-secondary:hover {
+      background: var(--stroke);
+    }
+
     @media (max-width: 768px) {
       .container {
         padding: 12px;
@@ -595,13 +705,11 @@
         width: 100%;
         right: -100%;
       }
+
+      .departments-grid {
+        grid-template-columns: 1fr;
+      }
     }
-    /* ============================================ */
-/* DEPARTAMENTOS */
-/* ============================================ */
-.departments-grid {
-  /* ... todo el CSS que te di ... */
-}
   </style>
 </head>
 <body>
@@ -659,17 +767,17 @@
           <button class="btn btn-primary" onclick="openAddActionModal()">➕ Nueva Acción</button>
           <button class="btn" onclick="openUsersModal()" id="manageUsersBtn" style="display: none; background: var(--accent2); border-color: var(--accent2);">👥 Usuarios</button>
           <button 
-  id="manageDepartmentsBtn" 
-  class="btn" 
-  onclick="openDepartmentsModal()"
-  style="
-    background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
-    color: white;
-    display: none;
-  "
->
-  📁 Departamentos
-</button>
+            id="manageDepartmentsBtn" 
+            class="btn" 
+            onclick="openDepartmentsModal()"
+            style="
+              background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+              color: white;
+              display: none;
+            "
+          >
+            📁 Departamentos
+          </button>
           <button class="btn logout-btn" onclick="handleLogout()">🚪 Salir</button>
         </div>
       </header>
@@ -713,23 +821,8 @@
       </p>
     </div>
   </div>
-  </div>
-<!-- FIN del modal de usuarios -->
 
-<!-- ============================================ -->
-<!-- MODAL: GESTIÓN DE DEPARTAMENTOS -->
-<!-- ============================================ -->
-<div id="departmentsModal" class="modal">
-  <!-- ... todo el código del modal ... -->
-</div>
-
-<!-- ============================================ -->
-<!-- MODAL: FORMULARIO DE DEPARTAMENTO -->
-<!-- ============================================ -->
-<div id="departmentFormModal" class="modal">
-  <!-- ... todo el código del formulario ... -->
-</div>
-
+  <!-- MODAL: ACCIÓN -->
   <div id="actionModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -806,6 +899,7 @@
     </div>
   </div>
 
+  <!-- MODAL: USUARIOS -->
   <div id="usersModal" class="modal">
     <div class="modal-content" style="max-width: 900px;">
       <div class="modal-header">
@@ -846,6 +940,94 @@
     </div>
   </div>
 
+  <!-- MODAL: GESTIÓN DE DEPARTAMENTOS -->
+  <div id="departmentsModal" class="modal">
+    <div class="modal-content" style="max-width: 900px;">
+      <div class="modal-header">
+        <h2>📁 Gestionar Departamentos</h2>
+        <button class="close-btn" onclick="closeDepartmentsModal()">&times;</button>
+      </div>
+      
+      <div class="modal-actions" style="margin-bottom: 20px;">
+        <button class="btn btn-primary" onclick="openNewDepartmentModal()">
+          ➕ Nuevo Departamento
+        </button>
+      </div>
+      
+      <div id="departmentsList">
+        <!-- Lista dinámica de departamentos -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: FORMULARIO DE DEPARTAMENTO -->
+  <div id="departmentFormModal" class="modal">
+    <div class="modal-content" style="max-width: 600px;">
+      <div class="modal-header">
+        <h2 id="departmentFormTitle">📁 Nuevo Departamento</h2>
+        <button class="close-btn" onclick="closeDepartmentFormModal()">&times;</button>
+      </div>
+      
+      <form id="departmentForm" onsubmit="saveDepartment(event)">
+        <input type="hidden" id="departmentId">
+        
+        <div class="form-group">
+          <label for="deptName">Nombre del Departamento *</label>
+          <input 
+            type="text" 
+            id="deptName" 
+            required 
+            placeholder="Ej: Marketing"
+            maxlength="50"
+          >
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group" style="flex: 1;">
+            <label for="deptIcon">Icono (Emoji) *</label>
+            <input 
+              type="text" 
+              id="deptIcon" 
+              required 
+              placeholder="📢"
+              maxlength="4"
+            >
+            <small style="color: var(--muted); font-size: 12px;">Un emoji que represente el departamento</small>
+          </div>
+          
+          <div class="form-group" style="flex: 1;">
+            <label for="deptColor">Color *</label>
+            <input 
+              type="color" 
+              id="deptColor" 
+              required 
+              value="#8B5CF6"
+            >
+            <small style="color: var(--muted); font-size: 12px;">Color para identificar el departamento</small>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="deptDescription">Descripción</label>
+          <textarea 
+            id="deptDescription" 
+            rows="3"
+            placeholder="Breve descripción del departamento y su función..."
+          ></textarea>
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" onclick="closeDepartmentFormModal()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">
+            💾 Guardar Departamento
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
     const SUPABASE_URL = 'https://tvbqzqripcevaryquhfg.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2YnF6cXJpcGNldmFyeXF1aGZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxNTI4MzEsImV4cCI6MjA3NDcyODgzMX0.BVHINkyJtK4mwRLX1Nt7_gJbd3ht2qGfvqLvmehkyIM';
@@ -853,6 +1035,7 @@
     let supabase;
     let currentUser = null;
     let currentUserRole = null;
+    let allDepartments = [];
 
     try {
       supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -860,6 +1043,207 @@
     } catch (error) {
       console.error('❌ Error initializing Supabase:', error);
     }
+
+    // ============================================
+    // SISTEMA DE DEPARTAMENTOS
+    // ============================================
+
+    async function loadDepartments() {
+      try {
+        const { data, error } = await supabase
+          .from('departments')
+          .select('*')
+          .eq('is_active', true)
+          .order('name', { ascending: true });
+        
+        if (error) throw error;
+        
+        allDepartments = data || [];
+        console.log('✅ Departamentos cargados:', allDepartments.length);
+        
+        return allDepartments;
+      } catch (error) {
+        console.error('❌ Error cargando departamentos:', error);
+        return [];
+      }
+    }
+
+    function getDepartmentById(departmentId) {
+      return allDepartments.find(d => d.id === departmentId);
+    }
+
+    function getDepartmentColor(departmentId) {
+      const dept = getDepartmentById(departmentId);
+      return dept ? dept.color : '#6B7280';
+    }
+
+    function getDepartmentIcon(departmentId) {
+      const dept = getDepartmentById(departmentId);
+      return dept ? dept.icon : '📋';
+    }
+
+    async function openDepartmentsModal() {
+      if (currentUserRole !== 'admin') {
+        alert('⚠️ Solo los administradores pueden gestionar departamentos');
+        return;
+      }
+      
+      await loadDepartments();
+      
+      document.getElementById('departmentsModal').classList.add('active');
+      renderDepartmentsList();
+    }
+
+    function closeDepartmentsModal() {
+      document.getElementById('departmentsModal').classList.remove('active');
+    }
+
+    function renderDepartmentsList() {
+      const container = document.getElementById('departmentsList');
+      
+      if (allDepartments.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 40px;">No hay departamentos creados</p>';
+        return;
+      }
+      
+      const html = `
+        <div class="departments-grid">
+          ${allDepartments.map(dept => `
+            <div class="department-card" style="border-left: 4px solid ${dept.color}">
+              <div class="dept-header">
+                <span class="dept-icon">${dept.icon}</span>
+                <h3 class="dept-name">${dept.name}</h3>
+              </div>
+              <p class="dept-description">${dept.description || 'Sin descripción'}</p>
+              <div class="dept-actions">
+                <button onclick="editDepartment(${dept.id})" class="btn-small">✏️ Editar</button>
+                <button onclick="toggleDepartmentStatus(${dept.id})" class="btn-small btn-secondary">
+                  ${dept.is_active ? '🚫 Desactivar' : '✅ Activar'}
+                </button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      
+      container.innerHTML = html;
+    }
+
+    function openNewDepartmentModal() {
+      document.getElementById('departmentFormModal').classList.add('active');
+      document.getElementById('departmentFormTitle').textContent = '📁 Nuevo Departamento';
+      document.getElementById('departmentForm').reset();
+      document.getElementById('departmentId').value = '';
+    }
+
+    async function editDepartment(departmentId) {
+      const dept = getDepartmentById(departmentId);
+      
+      if (!dept) {
+        alert('❌ Departamento no encontrado');
+        return;
+      }
+      
+      document.getElementById('departmentFormModal').classList.add('active');
+      document.getElementById('departmentFormTitle').textContent = '✏️ Editar Departamento';
+      
+      document.getElementById('departmentId').value = dept.id;
+      document.getElementById('deptName').value = dept.name;
+      document.getElementById('deptIcon').value = dept.icon;
+      document.getElementById('deptColor').value = dept.color;
+      document.getElementById('deptDescription').value = dept.description || '';
+    }
+
+    async function saveDepartment(event) {
+      event.preventDefault();
+      
+      const departmentId = document.getElementById('departmentId').value;
+      const name = document.getElementById('deptName').value.trim();
+      const icon = document.getElementById('deptIcon').value.trim();
+      const color = document.getElementById('deptColor').value;
+      const description = document.getElementById('deptDescription').value.trim();
+      
+      if (!name || !icon || !color) {
+        alert('⚠️ Por favor completa los campos obligatorios');
+        return;
+      }
+      
+      try {
+        const deptData = {
+          name: name,
+          icon: icon,
+          color: color,
+          description: description,
+          updated_at: new Date().toISOString()
+        };
+        
+        if (departmentId) {
+          const { error } = await supabase
+            .from('departments')
+            .update(deptData)
+            .eq('id', departmentId);
+          
+          if (error) throw error;
+          
+          alert('✅ Departamento actualizado correctamente');
+        } else {
+          const { error } = await supabase
+            .from('departments')
+            .insert([deptData]);
+          
+          if (error) throw error;
+          
+          alert('✅ Departamento creado correctamente');
+        }
+        
+        await loadDepartments();
+        renderDepartmentsList();
+        closeDepartmentFormModal();
+        
+      } catch (error) {
+        console.error('❌ Error guardando departamento:', error);
+        alert('❌ Error al guardar: ' + error.message);
+      }
+    }
+
+    function closeDepartmentFormModal() {
+      document.getElementById('departmentFormModal').classList.remove('active');
+    }
+
+    async function toggleDepartmentStatus(departmentId) {
+      const dept = getDepartmentById(departmentId);
+      
+      if (!dept) return;
+      
+      const newStatus = !dept.is_active;
+      const action = newStatus ? 'activar' : 'desactivar';
+      
+      if (!confirm(`¿Seguro que quieres ${action} el departamento "${dept.name}"?`)) {
+        return;
+      }
+      
+      try {
+        const { error } = await supabase
+          .from('departments')
+          .update({ is_active: newStatus })
+          .eq('id', departmentId);
+        
+        if (error) throw error;
+        
+        alert(`✅ Departamento ${newStatus ? 'activado' : 'desactivado'}`);
+        
+        await loadDepartments();
+        renderDepartmentsList();
+        
+      } catch (error) {
+        console.error('❌ Error:', error);
+        alert('❌ Error al cambiar estado: ' + error.message);
+      }
+    }
+
+    // ============================================
+    // NOTIFICACIONES
+    // ============================================
 
     async function loadNotifications() {
       try {
@@ -991,126 +1375,97 @@
     }
 
     function setupNotificationsRealtime() {
-  supabase
-    .channel('notifications_changes')
-    .on('postgres_changes', {
-      event: 'INSERT',
-      schema: 'public',
-      table: 'notifications'
-    }, payload => {
-      // Filtrar en el callback en lugar del channel
-      if (payload.new && payload.new.user_id === currentUser.id) {
-        console.log('🔔 Nueva notificación recibida:', payload);
-        loadNotifications();
-      }
-    })
-    .subscribe();
-}
-async function checkUpcomingDeadlines() {
-  try {
-    const today = new Date();
-    const threeDaysLater = new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000);
-    const todayStr = today.toISOString().split('T')[0];
-    const threeDaysStr = threeDaysLater.toISOString().split('T')[0];
-    
-    const { data: actions } = await supabase
-      .from('roadmap_actions')
-      .select('*')
-      .gte('deadline', todayStr)
-      .lte('deadline', threeDaysStr)
-      .neq('status', 'Completado');
-    
-    if (actions && actions.length > 0) {
-      for (const action of actions) {
-        const { data: existing } = await supabase
-          .from('notifications')
-          .select('id')
-          .eq('user_id', currentUser.id)
-          .eq('action_id', action.id)
-          .eq('type', 'deadline')
-          .single();
-        
-        if (!existing) {
-          const daysLeft = Math.ceil((new Date(action.deadline) - today) / (1000 * 60 * 60 * 24));
-          await createNotification(
-            currentUser.id,
-            'deadline',
-            action.id,
-            `La tarea "${action.title}" vence en ${daysLeft} día${daysLeft !== 1 ? 's' : ''}`
-          );
-        }
-      }
+      supabase
+        .channel('notifications_changes')
+        .on('postgres_changes', {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications'
+        }, payload => {
+          if (payload.new && payload.new.user_id === currentUser.id) {
+            console.log('🔔 Nueva notificación recibida:', payload);
+            loadNotifications();
+          }
+        })
+        .subscribe();
     }
-  } catch (error) {
-    console.error('Error checking deadlines:', error);
-  }
-}
 
-async function checkOverdueActions() {
-  try {
-    const today = new Date().toISOString().split('T')[0];
-    
-    const { data: actions } = await supabase
-      .from('roadmap_actions')
-      .select('*')
-      .lt('deadline', today)
-      .neq('status', 'Completado');
-    
-    if (actions && actions.length > 0) {
-      const { data: existing } = await supabase
-        .from('notifications')
-        .select('id')
-        .eq('user_id', currentUser.id)
-        .eq('type', 'overdue')
-        .gte('created_at', today)
-        .single();
-      
-      if (!existing) {
-        await createNotification(
-          currentUser.id,
-          'overdue',
-          null,
-          `Tienes ${actions.length} tarea${actions.length !== 1 ? 's' : ''} atrasada${actions.length !== 1 ? 's' : ''}`
-        );
+    async function checkUpcomingDeadlines() {
+      try {
+        const today = new Date();
+        const threeDaysLater = new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000);
+        const todayStr = today.toISOString().split('T')[0];
+        const threeDaysStr = threeDaysLater.toISOString().split('T')[0];
+        
+        const { data: actions } = await supabase
+          .from('roadmap_actions')
+          .select('*')
+          .gte('deadline', todayStr)
+          .lte('deadline', threeDaysStr)
+          .neq('status', 'Completado');
+        
+        if (actions && actions.length > 0) {
+          for (const action of actions) {
+            const { data: existing } = await supabase
+              .from('notifications')
+              .select('id')
+              .eq('user_id', currentUser.id)
+              .eq('action_id', action.id)
+              .eq('type', 'deadline')
+              .single();
+            
+            if (!existing) {
+              const daysLeft = Math.ceil((new Date(action.deadline) - today) / (1000 * 60 * 60 * 24));
+              await createNotification(
+                currentUser.id,
+                'deadline',
+                action.id,
+                `La tarea "${action.title}" vence en ${daysLeft} día${daysLeft !== 1 ? 's' : ''}`
+              );
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error checking deadlines:', error);
       }
     }
-  } catch (error) {
-    console.error('Error checking overdue actions:', error);
-  }
-}
+
     async function checkOverdueActions() {
-  try {
-    const today = new Date().toISOString().split('T')[0];
-    
-    const { data: actions } = await supabase
-      .from('roadmap_actions')
-      .select('*')
-      .lt('deadline', today)
-      .neq('status', 'Completado');
-    
-    if (actions && actions.length > 0) {
-      // Verificar si ya existe notificación de overdue para hoy
-      const { data: existing } = await supabase
-        .from('notifications')
-        .select('id')
-        .eq('user_id', currentUser.id)
-        .eq('type', 'overdue')
-        .gte('created_at', today)
-        .single();
-      
-      if (!existing) {
-        await createNotification(
-          currentUser.id,
-          'overdue',
-          null,
-          `Tienes ${actions.length} tarea${actions.length !== 1 ? 's' : ''} atrasada${actions.length !== 1 ? 's' : ''}`
-        );
+      try {
+        const today = new Date().toISOString().split('T')[0];
+        
+        const { data: actions } = await supabase
+          .from('roadmap_actions')
+          .select('*')
+          .lt('deadline', today)
+          .neq('status', 'Completado');
+        
+        if (actions && actions.length > 0) {
+          const { data: existing } = await supabase
+            .from('notifications')
+            .select('id')
+            .eq('user_id', currentUser.id)
+            .eq('type', 'overdue')
+            .gte('created_at', today)
+            .single();
+          
+          if (!existing) {
+            await createNotification(
+              currentUser.id,
+              'overdue',
+              null,
+              `Tienes ${actions.length} tarea${actions.length !== 1 ? 's' : ''} atrasada${actions.length !== 1 ? 's' : ''}`
+            );
+          }
+        }
+      } catch (error) {
+        console.error('Error checking overdue actions:', error);
       }
     }
-  } catch (error) {
-    console.error('Error checking overdue actions:', error);
-  }
-}
+
+    // ============================================
+    // SISTEMA DE ROLES
+    // ============================================
 
     async function loadUserRole() {
       try {
@@ -1154,10 +1509,10 @@ async function checkOverdueActions() {
           
           const manageUsersBtn = document.getElementById('manageUsersBtn');
           if (manageUsersBtn) manageUsersBtn.style.display = 'inline-flex';
-           document.getElementById('manageDepartmentsBtn').style.display = 'inline-flex';
-    }
-  }, 100);
-}         
+          
+          const manageDepartmentsBtn = document.getElementById('manageDepartmentsBtn');
+          if (manageDepartmentsBtn) manageDepartmentsBtn.style.display = 'inline-flex';
+          
           console.log('👑 Modo ADMIN activado (acceso completo)');
         }
       }, 100);
@@ -1211,6 +1566,10 @@ async function checkOverdueActions() {
         console.error('Error logging activity:', error);
       }
     }
+
+    // ============================================
+    // GESTIÓN DE USUARIOS
+    // ============================================
 
     function openUsersModal() {
       if (currentUserRole !== 'admin') {
@@ -1393,577 +1752,3 @@ async function checkOverdueActions() {
           .select('*')
           .order('timestamp', { ascending: false })
           .limit(50);
-        
-        if (error) throw error;
-        
-        if (!activities || activities.length === 0) {
-          content.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 40px;">No hay actividad registrada</p>';
-          return;
-        }
-        
-        const userIds = [...new Set(activities.map(a => a.user_id))];
-        const { data: users } = await supabase
-          .from('user_approvals')
-          .select('user_id, email')
-          .in('user_id', userIds);
-        
-        const userMap = {};
-        if (users) {
-          users.forEach(u => {
-            userMap[u.user_id] = u.email;
-          });
-        }
-        
-        let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
-        
-        activities.forEach(activity => {
-          const date = new Date(activity.timestamp).toLocaleString('es-ES');
-          const actionIcons = {
-            login: '🔐',
-            create_action: '➕',
-            update_action: '✏️',
-            delete_action: '🗑️',
-            approve_user: '✓',
-            change_role: '🔄'
-          };
-          
-          const icon = actionIcons[activity.action_type] || '📝';
-          const email = userMap[activity.user_id] || 'Usuario desconocido';
-          
-          html += `
-            <div style="background: var(--bg); border: 1px solid var(--stroke); border-radius: 6px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <span style="font-size: 20px;">${icon}</span>
-                <div>
-                  <div style="font-size: 14px;"><strong>${email}</strong> - ${activity.action_type}</div>
-                  <div style="font-size: 12px; color: var(--muted);">${date}</div>
-                </div>
-              </div>
-            </div>
-          `;
-        });
-        
-        html += '</div>';
-        content.innerHTML = html;
-        
-      } catch (error) {
-        console.error('Error loading activity:', error);
-        content.innerHTML = '<p style="text-align: center; color: var(--danger); padding: 40px;">Error al cargar actividad</p>';
-      }
-    }
-
-    async function approveUser(userId) {
-      if (!confirm('¿Aprobar este usuario?')) return;
-      
-      try {
-        const { error } = await supabase
-          .from('user_approvals')
-          .update({ 
-            approved: true, 
-            approved_at: new Date().toISOString() 
-          })
-          .eq('id', userId);
-        
-        if (error) throw error;
-        
-        await logUserActivity('approve_user', null, { approved_user_id: userId });
-        
-        alert('✓ Usuario aprobado');
-        switchUsersTab('all');
-        
-      } catch (error) {
-        console.error('Error approving user:', error);
-        alert('Error al aprobar usuario: ' + error.message);
-      }
-    }
-
-    async function rejectUser(userId) {
-      if (!confirm('¿Rechazar y eliminar este usuario?')) return;
-      
-      try {
-        const { error } = await supabase
-          .from('user_approvals')
-          .delete()
-          .eq('id', userId);
-        
-        if (error) throw error;
-        
-        alert('✓ Usuario rechazado y eliminado');
-        switchUsersTab('pending');
-        
-      } catch (error) {
-        console.error('Error rejecting user:', error);
-        alert('Error al rechazar usuario: ' + error.message);
-      }
-    }
-
-    async function changeUserRole(userId, newRole) {
-      if (!newRole) return;
-      
-      if (!confirm(`¿Cambiar el rol de este usuario a "${newRole}"?`)) {
-        event.target.value = '';
-        return;
-      }
-      
-      try {
-        const { error } = await supabase
-          .from('user_approvals')
-          .update({ role: newRole })
-          .eq('id', userId);
-        
-        if (error) throw error;
-        
-        await logUserActivity('change_role', null, { user_id: userId, new_role: newRole });
-        
-        alert(`✓ Rol cambiado a ${newRole}`);
-        switchUsersTab('all');
-        
-      } catch (error) {
-        console.error('Error changing role:', error);
-        alert('Error al cambiar rol: ' + error.message);
-        event.target.value = '';
-      }
-    }
-
-    async function handleLogin(event) {
-      event.preventDefault();
-      
-      const email = document.getElementById('loginEmail').value;
-      const password = document.getElementById('loginPassword').value;
-      const loginBtn = document.getElementById('loginBtn');
-      const errorDiv = document.getElementById('loginError');
-      
-      errorDiv.classList.remove('show');
-      errorDiv.textContent = '';
-      
-      loginBtn.disabled = true;
-      loginBtn.textContent = 'Iniciando sesión...';
-      
-      try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: email,
-          password: password
-        });
-        
-        if (error) throw error;
-        
-        currentUser = data.user;
-        console.log('✅ Login exitoso:', currentUser.email);
-        
-        document.getElementById('loginPage').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
-        
-        await loadUserRole();
-        await loadDepartments();
-        await loadData();
-        setupRealtimeSync();
-        await loadNotifications();
-        setupNotificationsRealtime();
-        await checkUpcomingDeadlines();
-        await checkOverdueActions();
-        await logUserActivity('login', null, { email: currentUser.email });
-        
-      } catch (error) {
-        console.error('❌ Error en login:', error);
-        errorDiv.textContent = error.message || 'Error al iniciar sesión. Verifica tus credenciales.';
-        errorDiv.classList.add('show');
-        loginBtn.disabled = false;
-        loginBtn.textContent = 'Iniciar sesión';
-      }
-    }
-
-    async function handleLogout() {
-      try {
-        await supabase.auth.signOut();
-        currentUser = null;
-        currentUserRole = null;
-        document.getElementById('loginPage').style.display = 'flex';
-        document.getElementById('mainApp').style.display = 'none';
-        console.log('✅ Sesión cerrada');
-      } catch (error) {
-        console.error('❌ Error al cerrar sesión:', error);
-      }
-    }
-
-    async function checkSession() {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-          currentUser = session.user;
-          document.getElementById('loginPage').style.display = 'none';
-          document.getElementById('mainApp').style.display = 'block';
-          await loadUserRole();
-          await loadData();
-          setupRealtimeSync();
-          await loadNotifications();
-          setupNotificationsRealtime();
-          await checkUpcomingDeadlines();
-          await checkOverdueActions();
-          await logUserActivity('login', null, { email: currentUser.email });
-        }
-      } catch (error) {
-        console.error('❌ Error checking session:', error);
-      }
-    }
-
-    let roadmapData = {
-      quarters: {
-        'Q4 2025': [],
-        'Q1 2026': [],
-        'Q2 2026': [],
-        'Q3 2026': [],
-        'Q4 2026': []
-      }
-    };
-
-    let editingAction = null;
-
-    function generateId() {
-      return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-    }
-
-    async function loadData() {
-      try {
-        const { data, error } = await supabase
-          .from('roadmap_actions')
-          .select('*')
-          .order('created_at', { ascending: true });
-
-        if (error) throw error;
-
-        roadmapData.quarters = {
-          'Q4 2025': [],
-          'Q1 2026': [],
-          'Q2 2026': [],
-          'Q3 2026': [],
-          'Q4 2026': []
-        };
-
-        if (data) {
-          data.forEach(item => {
-            if (roadmapData.quarters[item.quarter]) {
-              roadmapData.quarters[item.quarter].push(item);
-            }
-          });
-        }
-
-        renderTimeline();
-        updateStats();
-        console.log('✅ Datos cargados desde Supabase');
-      } catch (error) {
-        console.error('❌ Error loading data:', error);
-      }
-    }
-
-    async function saveToSupabase(action, quarter) {
-      try {
-        const { error } = await supabase
-          .from('roadmap_actions')
-          .upsert({
-            id: action.id,
-            quarter: quarter,
-            category: action.category,
-            title: action.title,
-            description: action.description || '',
-            priority: action.priority,
-            status: action.status,
-            responsable: action.responsable || '',
-            deadline: action.deadline || null,
-            subtasks: action.subtasks || [],
-            updated_at: new Date().toISOString()
-          }, { onConflict: 'id' });
-
-        if (error) throw error;
-        console.log('✅ Guardado en Supabase');
-      } catch (error) {
-        console.error('❌ Error saving to Supabase:', error);
-        alert('Error al guardar: ' + error.message);
-      }
-    }
-
-    async function deleteFromSupabase(actionId) {
-      try {
-        const { error } = await supabase
-          .from('roadmap_actions')
-          .delete()
-          .eq('id', actionId);
-
-        if (error) throw error;
-        console.log('✅ Eliminado de Supabase');
-      } catch (error) {
-        console.error('❌ Error deleting from Supabase:', error);
-      }
-    }
-
-    function setupRealtimeSync() {
-      supabase
-        .channel('roadmap_changes')
-        .on('postgres_changes', { 
-          event: '*', 
-          schema: 'public', 
-          table: 'roadmap_actions' 
-        }, payload => {
-          console.log('🔄 Cambio detectado:', payload);
-          loadData();
-        })
-        .subscribe();
-    }
-
-    async function syncData() {
-      await loadData();
-      alert('✅ Datos sincronizados');
-    }
-
-    function renderTimeline() {
-      const timeline = document.getElementById('timeline');
-      timeline.innerHTML = '';
-
-      Object.keys(roadmapData.quarters).forEach(quarter => {
-        const actions = roadmapData.quarters[quarter];
-        
-        const quarterDiv = document.createElement('div');
-        quarterDiv.className = 'quarter';
-        quarterDiv.innerHTML = `
-          <div class="quarter-header">
-            <h2 class="quarter-title">${quarter}</h2>
-            <span style="color: var(--muted);">${actions.length} acciones</span>
-          </div>
-          <div class="actions-grid" id="actions-${quarter}"></div>
-        `;
-        
-        timeline.appendChild(quarterDiv);
-
-        const actionsGrid = document.getElementById(`actions-${quarter}`);
-        
-        actions.forEach(action => {
-          const actionCard = document.createElement('div');
-          actionCard.className = 'action-card';
-          actionCard.innerHTML = `
-            <div class="action-header">
-              <div>
-                <div class="action-title">${action.title}</div>
-                <span class="action-category">${action.category}</span>
-              </div>
-              <span class="status-badge status-${action.status.replace(' ', '.')}">${action.status}</span>
-            </div>
-            
-            ${action.description ? `<p style="color: var(--muted); font-size: 14px; margin: 8px 0;">${action.description}</p>` : ''}
-            
-            <div class="action-meta">
-              <span class="priority-badge priority-${action.priority}">
-                ${action.priority === 'Alta' ? '🔴' : action.priority === 'Media' ? '🟡' : '🟢'} ${action.priority}
-              </span>
-              ${action.responsable ? `<span>👤 ${action.responsable}</span>` : ''}
-              ${action.deadline ? `<span>📅 ${action.deadline}</span>` : ''}
-            </div>
-
-            ${action.subtasks && action.subtasks.length > 0 ? `
-              <div class="subtasks">
-                ${action.subtasks.map(st => `
-                  <div class="subtask">
-                    <input 
-                      type="checkbox" 
-                      ${st.completed ? 'checked' : ''} 
-                      onchange="toggleSubtask('${action.id}', '${st.id}', '${quarter}')"
-                    />
-                    <span style="${st.completed ? 'text-decoration: line-through; color: var(--muted);' : ''}">${st.text}</span>
-                  </div>
-                `).join('')}
-              </div>
-            ` : ''}
-
-            <div class="action-buttons">
-              <button onclick="editAction('${action.id}', '${quarter}')">✏️ Editar</button>
-              <button onclick="deleteAction('${action.id}', '${quarter}')">🗑️ Eliminar</button>
-            </div>
-          `;
-          
-          actionsGrid.appendChild(actionCard);
-        });
-      });
-
-      updateUIBasedOnRole();
-    }
-
-    function updateStats() {
-      let total = 0;
-      let completed = 0;
-      let responsables = new Set();
-
-      Object.values(roadmapData.quarters).forEach(actions => {
-        total += actions.length;
-        actions.forEach(action => {
-          if (action.status === 'Completado') completed++;
-          if (action.responsable) responsables.add(action.responsable);
-        });
-      });
-
-      document.getElementById('totalActions').textContent = total;
-      document.getElementById('completedActions').textContent = completed;
-      document.getElementById('totalResponsables').textContent = responsables.size;
-      document.getElementById('globalProgress').textContent = total > 0 ? Math.round((completed / total) * 100) + '%' : '0%';
-    }
-
-    function openAddActionModal() {
-      editingAction = null;
-      document.getElementById('modalTitle').textContent = 'Nueva Acción';
-      document.getElementById('actionForm').reset();
-      document.getElementById('actionModal').classList.add('active');
-    }
-
-    function editAction(actionId, quarter) {
-      const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
-      if (!action) return;
-
-      editingAction = { action, quarter };
-      document.getElementById('modalTitle').textContent = 'Editar Acción';
-      
-      document.getElementById('quarterSelect').value = quarter;
-      document.getElementById('categorySelect').value = action.category;
-      document.getElementById('titleInput').value = action.title;
-      document.getElementById('descriptionInput').value = action.description || '';
-      document.getElementById('prioritySelect').value = action.priority;
-      document.getElementById('statusSelect').value = action.status;
-      document.getElementById('responsableInput').value = action.responsable || '';
-      document.getElementById('deadlineInput').value = action.deadline || '';
-      
-      document.getElementById('actionModal').classList.add('active');
-    }
-    // ============================================
-// SISTEMA DE DEPARTAMENTOS
-// ============================================
-
-let allDepartments = [];
-
-async function loadDepartments() {
-  // ... todo el código que te di ...
-}
-
-// ... resto de funciones de departamentos ...
-
-    async function saveAction(event) {
-      event.preventDefault();
-
-      const quarter = document.getElementById('quarterSelect').value;
-      const actionData = {
-        id: editingAction ? editingAction.action.id : generateId(),
-        category: document.getElementById('categorySelect').value,
-        title: document.getElementById('titleInput').value,
-        description: document.getElementById('descriptionInput').value,
-        priority: document.getElementById('prioritySelect').value,
-        status: document.getElementById('statusSelect').value,
-        responsable: document.getElementById('responsableInput').value,
-        deadline: document.getElementById('deadlineInput').value,
-        subtasks: editingAction ? editingAction.action.subtasks : []
-      };
-
-      if (editingAction) {
-        const oldAction = editingAction.action;
-        const oldQuarter = editingAction.quarter;
-        
-        if (oldAction.responsable !== actionData.responsable && actionData.responsable) {
-          const { data: user } = await supabase
-            .from('user_approvals')
-            .select('user_id')
-            .ilike('email', `${actionData.responsable}%`)
-            .single();
-          
-          if (user) {
-            await createNotification(
-              user.user_id,
-              'assigned',
-              actionData.id,
-              `Se te asignó la tarea: "${actionData.title}"`
-            );
-          }
-        }
-        
-        roadmapData.quarters[oldQuarter] = roadmapData.quarters[oldQuarter].filter(a => a.id !== actionData.id);
-        await logUserActivity('update_action', actionData.id, { title: actionData.title });
-      } else {
-        if (actionData.responsable) {
-          const { data: user } = await supabase
-            .from('user_approvals')
-            .select('user_id')
-            .ilike('email', `${actionData.responsable}%`)
-            .single();
-          
-          if (user) {
-            await createNotification(
-              user.user_id,
-              'assigned',
-              actionData.id,
-              `Nueva tarea asignada: "${actionData.title}"`
-            );
-          }
-        }
-        
-        await logUserActivity('create_action', actionData.id, { title: actionData.title });
-      }
-
-      roadmapData.quarters[quarter].push(actionData);
-      await saveToSupabase(actionData, quarter);
-      
-      closeModal();
-      renderTimeline();
-      updateStats();
-    }
-
-    async function deleteAction(actionId, quarter) {
-      if (!confirm('¿Eliminar esta acción?')) return;
-
-      const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
-      
-      roadmapData.quarters[quarter] = roadmapData.quarters[quarter].filter(a => a.id !== actionId);
-      await deleteFromSupabase(actionId);
-      await logUserActivity('delete_action', actionId, { title: action?.title });
-      
-      renderTimeline();
-      updateStats();
-    }
-
-    async function toggleSubtask(actionId, subtaskId, quarter) {
-      const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
-      if (!action) return;
-
-      const subtask = action.subtasks.find(st => st.id === subtaskId);
-      if (subtask) {
-        subtask.completed = !subtask.completed;
-
-        const allCompleted = action.subtasks.every(st => st.completed);
-        const someCompleted = action.subtasks.some(st => st.completed);
-
-        if (allCompleted) {
-          action.status = 'Completado';
-        } else if (someCompleted) {
-          action.status = 'En curso';
-        } else {
-          action.status = 'Pendiente';
-        }
-
-        await saveToSupabase(action, quarter);
-        renderTimeline();
-        updateStats();
-      }
-    }
-
-    function closeModal() {
-      document.getElementById('actionModal').classList.remove('active');
-    }
-
-    function exportData() {
-      const dataStr = JSON.stringify(roadmapData, null, 2);
-      const dataBlob = new Blob([dataStr], { type: 'application/json' });
-      const url = URL.createObjectURL(dataBlob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `roadmap_${new Date().toISOString().split('T')[0]}.json`;
-      link.click();
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      checkSession();
-    });
-  </script>
-</body>
-</html>
