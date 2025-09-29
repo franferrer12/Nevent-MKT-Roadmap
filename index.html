@@ -1,3 +1,4 @@
+<artifact identifier="index-html-fase1" type="application/vnd.ant.code" language="html" title="index.html - Fase 1 Sistema de Roles">
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -19,496 +20,494 @@
       --warning: #f59e0b;
       --danger: #ef4444;
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--ink);
-      line-height: 1.6;
-    }
-
-    /* ============================================
-       LOGIN PAGE STYLES
-    ============================================ */
-    #loginPage {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 20px;
-      background: linear-gradient(135deg, var(--bg) 0%, #1a1a1a 100%);
-    }
-
-    .login-container {
-      background: var(--card);
-      border: 1px solid var(--stroke);
-      border-radius: 16px;
-      padding: 40px;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    }
-
-    .login-logo {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .login-logo h1 {
-      font-size: 32px;
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 8px;
-    }
-
-    .login-logo p {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--ink);
-      font-weight: 500;
-      font-size: 14px;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 12px 16px;
-      background: var(--bg);
-      border: 1px solid var(--stroke);
-      border-radius: 8px;
-      color: var(--ink);
-      font-size: 15px;
-      transition: all 0.2s;
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: var(--accent1);
-      box-shadow: 0 0 0 3px rgba(236, 0, 140, 0.1);
-    }
-
-    .login-btn {
-      width: 100%;
-      padding: 14px;
-      background: var(--accent1);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-top: 10px;
-    }
-
-    .login-btn:hover {
-      background: #d40080;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(236, 0, 140, 0.3);
-    }
-
-    .login-btn:active {
-      transform: translateY(0);
-    }
-
-    .login-btn:disabled {
-      background: var(--stroke);
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .error-message {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid var(--danger);
-      color: var(--danger);
-      padding: 12px;
-      border-radius: 8px;
-      margin-top: 16px;
-      font-size: 14px;
-      display: none;
-    }
-
-    .error-message.show {
-      display: block;
-    }
-
-    /* ============================================
-       MAIN APP STYLES (hidden until login)
-    ============================================ */
-    #mainApp {
-      display: none;
-    }
-
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 40px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--stroke);
-    }
-
-    h1 {
-      font-size: 36px;
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: 12px;
-    }
-
-    .btn {
-      padding: 10px 20px;
-      background: var(--card);
-      border: 1px solid var(--stroke);
-      color: var(--ink);
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      transition: all 0.2s;
-    }
-
-    .btn:hover {
-      background: var(--stroke);
-      transform: translateY(-1px);
-    }
-
-    .btn-primary {
-      background: var(--accent1);
-      border-color: var(--accent1);
-    }
-
-    .btn-primary:hover {
-      background: #d40080;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-bottom: 30px;
-    }
-
-    .stat-card {
-      background: var(--card);
-      border: 1px solid var(--stroke);
-      border-radius: 12px;
-      padding: 20px;
-    }
-
-    .stat-label {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 8px;
-    }
-
-    .stat-value {
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--accent1);
-    }
-
-    .timeline {
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-    }
-
-    .quarter {
-      background: var(--card);
-      border: 1px solid var(--stroke);
-      border-radius: 12px;
-      padding: 24px;
-    }
-
-    .quarter-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .quarter-title {
-      font-size: 22px;
-      font-weight: 700;
-    }
-
-    .actions-grid {
-      display: grid;
-      gap: 16px;
-    }
-
-    .action-card {
-      background: var(--bg);
-      border: 1px solid var(--stroke);
-      border-radius: 8px;
-      padding: 16px;
-      transition: all 0.2s;
-    }
-
-    .action-card:hover {
-      border-color: var(--accent1);
-      transform: translateX(4px);
-    }
-
-    .action-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: start;
-      margin-bottom: 12px;
-    }
-
-    .action-title {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .action-category {
-      display: inline-block;
-      padding: 4px 12px;
-      background: rgba(236, 0, 140, 0.1);
-      color: var(--accent1);
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    .action-meta {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .priority-badge {
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      font-weight: 600;
-    }
-
-    .priority-Alta {
-      background: rgba(239, 68, 68, 0.2);
-      color: var(--danger);
-    }
-
-    .priority-Media {
-      background: rgba(245, 158, 11, 0.2);
-      color: var(--warning);
-    }
-
-    .priority-Baja {
-      background: rgba(16, 185, 129, 0.2);
-      color: var(--success);
-    }
-
-    .status-badge {
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    .status-Completado {
-      background: rgba(16, 185, 129, 0.2);
-      color: var(--success);
-    }
-
-    .status-En.curso {
-      background: rgba(245, 158, 11, 0.2);
-      color: var(--warning);
-    }
-
-    .status-Pendiente {
-      background: rgba(156, 163, 175, 0.2);
-      color: var(--muted);
-    }
-
-    /* Modal styles */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      z-index: 1000;
-      overflow-y: auto;
-    }
-
-    .modal.active {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-content {
-      background: var(--card);
-      border: 1px solid var(--stroke);
-      border-radius: 16px;
-      padding: 32px;
-      max-width: 600px;
-      width: 90%;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-    }
-
-    .modal-title {
-      font-size: 24px;
-      font-weight: 700;
-    }
-
-    .close-btn {
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-size: 24px;
-      cursor: pointer;
-      padding: 0;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 8px;
-      transition: all 0.2s;
-    }
-
-    .close-btn:hover {
-      background: var(--stroke);
-      color: var(--ink);
-    }
-
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      padding: 12px;
-      background: var(--bg);
-      border: 1px solid var(--stroke);
-      border-radius: 8px;
-      color: var(--ink);
-      font-size: 14px;
-      font-family: inherit;
-    }
-
-    .form-group textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    .subtasks {
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid var(--stroke);
-    }
-
-    .subtask {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px;
-      margin: 4px 0;
-      background: var(--card);
-      border-radius: 6px;
-    }
-
-    .subtask input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .action-buttons button {
-      padding: 6px 12px;
-      font-size: 12px;
-      border-radius: 6px;
-      border: 1px solid var(--stroke);
-      background: var(--bg);
-      color: var(--ink);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .action-buttons button:hover {
-      background: var(--stroke);
-    }
-
-    .logout-btn {
-      background: var(--danger) !important;
-      border-color: var(--danger) !important;
-      color: white !important;
-    }
-
-    .logout-btn:hover {
-      background: #dc2626 !important;
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        padding: 12px;
-      }
-
-      h1 {
-        font-size: 24px;
-      }
-
-      .header-actions {
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .stats {
-        grid-template-columns: 1fr;
-      }
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+/* ============================================
+   LOGIN PAGE STYLES
+============================================ */
+#loginPage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, var(--bg) 0%, #1a1a1a 100%);
+}
+
+.login-container {
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.login-logo {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.login-logo h1 {
+  font-size: 32px;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+
+.login-logo p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--ink);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg);
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  color: var(--ink);
+  font-size: 15px;
+  transition: all 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent1);
+  box-shadow: 0 0 0 3px rgba(236, 0, 140, 0.1);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent1);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+}
+
+.login-btn:hover {
+  background: #d40080;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(236, 0, 140, 0.3);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.login-btn:disabled {
+  background: var(--stroke);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 16px;
+  font-size: 14px;
+  display: none;
+}
+
+.error-message.show {
+  display: block;
+}
+
+/* ============================================
+   MAIN APP STYLES (hidden until login)
+============================================ */
+#mainApp {
+  display: none;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--stroke);
+}
+
+h1 {
+  font-size: 36px;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  padding: 10px 20px;
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  color: var(--ink);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background: var(--stroke);
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: var(--accent1);
+  border-color: var(--accent1);
+}
+
+.btn-primary:hover {
+  background: #d40080;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent1);
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.quarter {
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.quarter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.quarter-title {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.actions-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.action-card {
+  background: var(--bg);
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.2s;
+}
+
+.action-card:hover {
+  border-color: var(--accent1);
+  transform: translateX(4px);
+}
+
+.action-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 12px;
+}
+
+.action-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.action-category {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(236, 0, 140, 0.1);
+  color: var(--accent1);
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.action-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.priority-badge {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.priority-Alta {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--danger);
+}
+
+.priority-Media {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--warning);
+}
+
+.priority-Baja {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success);
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-Completado {
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--success);
+}
+
+.status-En.curso {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--warning);
+}
+
+.status-Pendiente {
+  background: rgba(156, 163, 175, 0.2);
+  color: var(--muted);
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: var(--stroke);
+  color: var(--ink);
+}
+
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  background: var(--bg);
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  color: var(--ink);
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.subtasks {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--stroke);
+}
+
+.subtask {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  margin: 4px 0;
+  background: var(--card);
+  border-radius: 6px;
+}
+
+.subtask input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.action-buttons button {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--stroke);
+  background: var(--bg);
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-buttons button:hover {
+  background: var(--stroke);
+}
+
+.logout-btn {
+  background: var(--danger) !important;
+  border-color: var(--danger) !important;
+  color: white !important;
+}
+
+.logout-btn:hover {
+  background: #dc2626 !important;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 12px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+}
   </style>
 </head>
 <body>
-  
   <!-- ============================================
        LOGIN PAGE
   ============================================ -->
@@ -518,39 +517,37 @@
         <h1>🚀 Roadmap Nevent</h1>
         <p>2025-2026</p>
       </div>
-      
-      <form id="loginForm" onsubmit="handleLogin(event)">
-        <div class="form-group">
-          <label for="loginEmail">Email</label>
-          <input 
-            type="email" 
-            id="loginEmail" 
-            placeholder="tu.email@nevent.es"
-            required
-            autocomplete="email"
-          />
-        </div>
-        
-        <div class="form-group">
-          <label for="loginPassword">Contraseña</label>
-          <input 
-            type="password" 
-            id="loginPassword" 
-            placeholder="••••••••"
-            required
-            autocomplete="current-password"
-          />
-        </div>
-        
-        <button type="submit" class="login-btn" id="loginBtn">
-          Iniciar sesión
-        </button>
-        
-        <div id="loginError" class="error-message"></div>
-      </form>
+  <form id="loginForm" onsubmit="handleLogin(event)">
+    <div class="form-group">
+      <label for="loginEmail">Email</label>
+      <input 
+        type="email" 
+        id="loginEmail" 
+        placeholder="tu.email@nevent.es"
+        required
+        autocomplete="email"
+      />
     </div>
+    
+    <div class="form-group">
+      <label for="loginPassword">Contraseña</label>
+      <input 
+        type="password" 
+        id="loginPassword" 
+        placeholder="••••••••"
+        required
+        autocomplete="current-password"
+      />
+    </div>
+    
+    <button type="submit" class="login-btn" id="loginBtn">
+      Iniciar sesión
+    </button>
+    
+    <div id="loginError" class="error-message"></div>
+  </form>
+</div>
   </div>
-
   <!-- ============================================
        MAIN APPLICATION
   ============================================ -->
@@ -565,30 +562,28 @@
           <button class="btn logout-btn" onclick="handleLogout()">🚪 Salir</button>
         </div>
       </header>
-
-      <div class="stats">
-        <div class="stat-card">
-          <div class="stat-label">Acciones totales</div>
-          <div class="stat-value" id="totalActions">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Completadas</div>
-          <div class="stat-value" id="completedActions">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Responsables</div>
-          <div class="stat-value" id="totalResponsables">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Progreso global</div>
-          <div class="stat-value" id="globalProgress">0%</div>
-        </div>
-      </div>
-
-      <div class="timeline" id="timeline"></div>
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-label">Acciones totales</div>
+      <div class="stat-value" id="totalActions">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Completadas</div>
+      <div class="stat-value" id="completedActions">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Responsables</div>
+      <div class="stat-value" id="totalResponsables">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Progreso global</div>
+      <div class="stat-value" id="globalProgress">0%</div>
     </div>
   </div>
 
+  <div class="timeline" id="timeline"></div>
+</div>
+  </div>
   <!-- Modal for Add/Edit Action -->
   <div id="actionModal" class="modal">
     <div class="modal-content">
@@ -596,76 +591,74 @@
         <h2 class="modal-title" id="modalTitle">Nueva Acción</h2>
         <button class="close-btn" onclick="closeModal()">&times;</button>
       </div>
-      
-      <form id="actionForm" onsubmit="saveAction(event)">
-        <div class="form-group">
-          <label>Trimestre</label>
-          <select id="quarterSelect" required>
-            <option value="Q4 2025">Q4 2025</option>
-            <option value="Q1 2026">Q1 2026</option>
-            <option value="Q2 2026">Q2 2026</option>
-            <option value="Q3 2026">Q3 2026</option>
-            <option value="Q4 2026">Q4 2026</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Categoría</label>
-          <select id="categorySelect" required>
-            <option value="Marketing">Marketing</option>
-            <option value="Customer Success">Customer Success</option>
-            <option value="Expansión">Expansión</option>
-            <option value="Producto">Producto</option>
-            <option value="Ventas">Ventas</option>
-            <option value="Operaciones">Operaciones</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Título</label>
-          <input type="text" id="titleInput" placeholder="Ej: Email frío creativo" required />
-        </div>
-
-        <div class="form-group">
-          <label>Descripción</label>
-          <textarea id="descriptionInput" placeholder="Describe la acción..."></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>Prioridad</label>
-          <select id="prioritySelect">
-            <option value="Alta">Alta</option>
-            <option value="Media">Media</option>
-            <option value="Baja">Baja</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Estado</label>
-          <select id="statusSelect">
-            <option value="Pendiente">Pendiente</option>
-            <option value="En curso">En curso</option>
-            <option value="Completado">Completado</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Responsable</label>
-          <input type="text" id="responsableInput" placeholder="Ej: Fran" />
-        </div>
-
-        <div class="form-group">
-          <label>Fecha límite</label>
-          <input type="date" id="deadlineInput" />
-        </div>
-
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
-          💾 Guardar
-        </button>
-      </form>
+  <form id="actionForm" onsubmit="saveAction(event)">
+    <div class="form-group">
+      <label>Trimestre</label>
+      <select id="quarterSelect" required>
+        <option value="Q4 2025">Q4 2025</option>
+        <option value="Q1 2026">Q1 2026</option>
+        <option value="Q2 2026">Q2 2026</option>
+        <option value="Q3 2026">Q3 2026</option>
+        <option value="Q4 2026">Q4 2026</option>
+      </select>
     </div>
-  </div>
 
+    <div class="form-group">
+      <label>Categoría</label>
+      <select id="categorySelect" required>
+        <option value="Marketing">Marketing</option>
+        <option value="Customer Success">Customer Success</option>
+        <option value="Expansión">Expansión</option>
+        <option value="Producto">Producto</option>
+        <option value="Ventas">Ventas</option>
+        <option value="Operaciones">Operaciones</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Título</label>
+      <input type="text" id="titleInput" placeholder="Ej: Email frío creativo" required />
+    </div>
+
+    <div class="form-group">
+      <label>Descripción</label>
+      <textarea id="descriptionInput" placeholder="Describe la acción..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Prioridad</label>
+      <select id="prioritySelect">
+        <option value="Alta">Alta</option>
+        <option value="Media">Media</option>
+        <option value="Baja">Baja</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Estado</label>
+      <select id="statusSelect">
+        <option value="Pendiente">Pendiente</option>
+        <option value="En curso">En curso</option>
+        <option value="Completado">Completado</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Responsable</label>
+      <input type="text" id="responsableInput" placeholder="Ej: Fran" />
+    </div>
+
+    <div class="form-group">
+      <label>Fecha límite</label>
+      <input type="date" id="deadlineInput" />
+    </div>
+
+    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
+      💾 Guardar
+    </button>
+  </form>
+</div>
+  </div>
   <script>
     // ============================================
     // SUPABASE CONFIGURATION (HARDCODED)
@@ -675,6 +668,7 @@
     
     let supabase;
     let currentUser = null;
+    let currentUserRole = null; // 'admin', 'editor', 'viewer'
 
     // Initialize Supabase
     try {
@@ -682,6 +676,105 @@
       console.log('✅ Supabase initialized');
     } catch (error) {
       console.error('❌ Error initializing Supabase:', error);
+    }
+
+    // ============================================
+    // FASE 1: SISTEMA DE ROLES
+    // ============================================
+
+    async function loadUserRole() {
+      try {
+        const { data, error } = await supabase
+          .from('user_approvals')
+          .select('role')
+          .eq('user_id', currentUser.id)
+          .single();
+        
+        if (error) throw error;
+        
+        currentUserRole = data?.role || 'viewer';
+        console.log('✅ Rol cargado:', currentUserRole);
+        
+        updateUIBasedOnRole();
+      } catch (error) {
+        console.error('❌ Error al cargar rol:', error);
+        currentUserRole = 'viewer'; // Por defecto
+        updateUIBasedOnRole();
+      }
+    }
+
+    function updateUIBasedOnRole() {
+      // Esperar a que el DOM esté listo
+      setTimeout(() => {
+        const addActionBtn = document.querySelector('.btn-primary'); // Botón "Nueva Acción"
+        const actionButtons = document.querySelectorAll('.action-buttons'); // Botones editar/eliminar
+        
+        // Mostrar badge del rol en header
+        showRoleBadge();
+        
+        if (currentUserRole === 'viewer') {
+          // VIEWER: Solo lectura
+          if (addActionBtn) addActionBtn.style.display = 'none';
+          actionButtons.forEach(btns => {
+            btns.style.display = 'none';
+          });
+          
+          console.log('🔒 Modo VIEWER activado (solo lectura)');
+        } else if (currentUserRole === 'editor') {
+          // EDITOR: Puede crear/editar/eliminar acciones
+          if (addActionBtn) addActionBtn.style.display = 'inline-flex';
+          actionButtons.forEach(btns => {
+            btns.style.display = 'flex';
+          });
+          
+          console.log('✏️ Modo EDITOR activado');
+        } else if (currentUserRole === 'admin') {
+          // ADMIN: Acceso completo + botón gestionar usuarios
+          if (addActionBtn) addActionBtn.style.display = 'inline-flex';
+          actionButtons.forEach(btns => {
+            btns.style.display = 'flex';
+          });
+          
+          // TODO: Mostrar botón "Gestionar Usuarios" (Fase 1 Bloque 2)
+          console.log('👑 Modo ADMIN activado (acceso completo)');
+        }
+      }, 100);
+    }
+
+    function showRoleBadge() {
+      // Buscar si ya existe el badge
+      let badge = document.getElementById('roleBadge');
+      
+      if (!badge) {
+        // Crear badge si no existe
+        badge = document.createElement('span');
+        badge.id = 'roleBadge';
+        badge.style.cssText = `
+          padding: 4px 12px;
+          border-radius: 12px;
+          font-size: 12px;
+          font-weight: 600;
+          margin-left: 12px;
+        `;
+        
+        // Insertar en el header después del título
+        const header = document.querySelector('header h1');
+        if (header) {
+          header.parentNode.insertBefore(badge, header.nextSibling);
+        }
+      }
+      
+      // Actualizar contenido y color según rol
+      const roleConfig = {
+        admin: { text: '👑 Admin', bg: 'rgba(168, 85, 247, 0.2)', color: '#a855f7' },
+        editor: { text: '✏️ Editor', bg: 'rgba(59, 130, 246, 0.2)', color: '#3b82f6' },
+        viewer: { text: '👁️ Viewer', bg: 'rgba(156, 163, 175, 0.2)', color: '#9ca3af' }
+      };
+      
+      const config = roleConfig[currentUserRole] || roleConfig.viewer;
+      badge.textContent = config.text;
+      badge.style.background = config.bg;
+      badge.style.color = config.color;
     }
 
     // ============================================
@@ -719,7 +812,8 @@
         document.getElementById('loginPage').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
         
-        // Load data
+        // Load data and user role
+        await loadUserRole();
         await loadData();
         setupRealtimeSync();
         
@@ -737,6 +831,7 @@
       try {
         await supabase.auth.signOut();
         currentUser = null;
+        currentUserRole = null;
         document.getElementById('loginPage').style.display = 'flex';
         document.getElementById('mainApp').style.display = 'none';
         console.log('✅ Sesión cerrada');
@@ -753,6 +848,7 @@
           currentUser = session.user;
           document.getElementById('loginPage').style.display = 'none';
           document.getElementById('mainApp').style.display = 'block';
+          await loadUserRole();
           await loadData();
           setupRealtimeSync();
         }
@@ -941,6 +1037,9 @@
           actionsGrid.appendChild(actionCard);
         });
       });
+
+      // Aplicar permisos de rol después de renderizar
+      updateUIBasedOnRole();
     }
 
     function updateStats() {
@@ -1075,3 +1174,4 @@
   </script>
 </body>
 </html>
+</artifact>
