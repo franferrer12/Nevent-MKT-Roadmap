@@ -1,5 +1,11 @@
-<artifact identifier="index-html-fase1" type="application/vnd.ant.code" language="html" title="index.html - Fase 1 Sistema de Roles">
-<!DOCTYPE html>
+🎯 HTML COMPLETO - FASE 1 BLOQUE 2
+<invoke name="artifacts">
+<parameter name="command">create</parameter>
+<parameter name="type">application/vnd.ant.code</parameter>
+<parameter name="language">html</parameter>
+<parameter name="id">index-html-fase1-bloque2</parameter>
+<parameter name="title">index.html - Fase 1 Bloque 2 (Panel de Usuarios)</parameter>
+<parameter name="content"><!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -559,6 +565,7 @@ h1 {
           <button class="btn" onclick="exportData()">📥 Exportar</button>
           <button class="btn" onclick="syncData()">🔄 Sincronizar</button>
           <button class="btn btn-primary" onclick="openAddActionModal()">➕ Nueva Acción</button>
+          <button class="btn" onclick="openUsersModal()" id="manageUsersBtn" style="display: none; background: var(--accent2); border-color: var(--accent2);">👥 Usuarios</button>
           <button class="btn logout-btn" onclick="handleLogout()">🚪 Salir</button>
         </div>
       </header>
@@ -659,6 +666,47 @@ h1 {
   </form>
 </div>
   </div>
+  <!-- Modal de Gestión de Usuarios (Solo Admin) -->
+  <div id="usersModal" class="modal">
+    <div class="modal-content" style="max-width: 900px;">
+      <div class="modal-header">
+        <h2 class="modal-title">👥 Gestionar Usuarios</h2>
+        <button class="close-btn" onclick="closeUsersModal()">&times;</button>
+      </div>
+  <div style="margin-bottom: 20px; border-bottom: 1px solid var(--stroke);">
+    <div style="display: flex; gap: 8px; margin-bottom: -1px;">
+      <button 
+        class="tab-btn active" 
+        onclick="switchUsersTab('all')"
+        id="tabAll"
+        style="padding: 10px 20px; background: none; border: none; border-bottom: 2px solid var(--accent1); color: var(--ink); cursor: pointer; font-weight: 600;"
+      >
+        Todos
+      </button>
+      <button 
+        class="tab-btn" 
+        onclick="switchUsersTab('pending')"
+        id="tabPending"
+        style="padding: 10px 20px; background: none; border: none; border-bottom: 2px solid transparent; color: var(--muted); cursor: pointer;"
+      >
+        Pendientes
+      </button>
+      <button 
+        class="tab-btn" 
+        onclick="switchUsersTab('activity')"
+        id="tabActivity"
+        style="padding: 10px 20px; background: none; border: none; border-bottom: 2px solid transparent; color: var(--muted); cursor: pointer;"
+      >
+        Actividad
+      </button>
+    </div>
+  </div>
+  
+  <div id="usersContent">
+    <!-- Contenido dinámico según tab -->
+  </div>
+</div>
+  </div>
   <script>
     // ============================================
     // SUPABASE CONFIGURATION (HARDCODED)
@@ -735,7 +783,10 @@ h1 {
             btns.style.display = 'flex';
           });
           
-          // TODO: Mostrar botón "Gestionar Usuarios" (Fase 1 Bloque 2)
+          // Mostrar botón de gestión de usuarios
+          const manageUsersBtn = document.getElementById('manageUsersBtn');
+          if (manageUsersBtn) manageUsersBtn.style.display = 'inline-flex';
+          
           console.log('👑 Modo ADMIN activado (acceso completo)');
         }
       }, 100);
@@ -778,6 +829,360 @@ h1 {
     }
 
     // ============================================
+    // FASE 1 BLOQUE 2: GESTIÓN DE USUARIOS
+    // ============================================
+
+    // Logging de actividad
+    async function logUserActivity(actionType, actionId = null, metadata = {}) {
+      try {
+        await supabase
+          .from('user_activity')
+          .insert({
+            user_id: currentUser.id,
+            action_type: actionType,
+            action_id: actionId,
+            metadata: metadata
+          });
+        
+        console.log(`📝 Activity logged: ${actionType}`);
+      } catch (error) {
+        console.error('Error logging activity:', error);
+      }
+    }
+
+    // Abrir modal de usuarios
+    function openUsersModal() {
+      if (currentUserRole !== 'admin') {
+        alert('Solo los administradores pueden acceder a esta función');
+        return;
+      }
+      
+      document.getElementById('usersModal').classList.add('active');
+      switchUsersTab('all');
+    }
+
+    // Cerrar modal de usuarios
+    function closeUsersModal() {
+      document.getElementById('usersModal').classList.remove('active');
+    }
+
+    // Cambiar tab
+    function switchUsersTab(tab) {
+      // Actualizar estilos de tabs
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.style.borderBottomColor = 'transparent';
+        btn.style.color = 'var(--muted)';
+        btn.style.fontWeight = '400';
+      });
+      
+      const activeTab = document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
+      if (activeTab) {
+        activeTab.style.borderBottomColor = 'var(--accent1)';
+        activeTab.style.color = 'var(--ink)';
+        activeTab.style.fontWeight = '600';
+      }
+      
+      // Cargar contenido según tab
+      if (tab === 'all') {
+        loadAllUsers();
+      } else if (tab === 'pending') {
+        loadPendingUsers();
+      } else if (tab === 'activity') {
+        loadUserActivity();
+      }
+    }
+
+    // Cargar todos los usuarios
+    async function loadAllUsers() {
+      const content = document.getElementById('usersContent');
+      content.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 20px;">Cargando usuarios...</p>';
+      
+      try {
+        // Obtener usuarios de user_approvals
+        const { data: users, error } = await supabase
+          .from('user_approvals')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        if (!users || users.length === 0) {
+          content.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 40px;">No hay usuarios registrados</p>';
+          return;
+        }
+        
+        // Renderizar tabla de usuarios
+        let html = `
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="border-bottom: 1px solid var(--stroke); text-align: left;">
+                <th style="padding: 12px; color: var(--muted); font-size: 13px;">Email</th>
+                <th style="padding: 12px; color: var(--muted); font-size: 13px;">Rol</th>
+                <th style="padding: 12px; color: var(--muted); font-size: 13px;">Estado</th>
+                <th style="padding: 12px; color: var(--muted); font-size: 13px;">Registrado</th>
+                <th style="padding: 12px; color: var(--muted); font-size: 13px;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        
+        users.forEach(user => {
+          const statusBadge = user.approved 
+            ? '<span style="background: rgba(16, 185, 129, 0.2); color: var(--success); padding: 4px 8px; border-radius: 4px; font-size: 12px;">✓ Aprobado</span>'
+            : '<span style="background: rgba(245, 158, 11, 0.2); color: var(--warning); padding: 4px 8px; border-radius: 4px; font-size: 12px;">⏳ Pendiente</span>';
+          
+          const roleColors = {
+            admin: 'rgba(168, 85, 247, 0.2)',
+            editor: 'rgba(59, 130, 246, 0.2)',
+            viewer: 'rgba(156, 163, 175, 0.2)'
+          };
+          
+          const roleBadge = `<span style="background: ${roleColors[user.role]}; padding: 4px 8px; border-radius: 4px; font-size: 12px;">${user.role}</span>`;
+          
+          const date = new Date(user.created_at).toLocaleDateString('es-ES');
+          
+          html += `
+            <tr style="border-bottom: 1px solid var(--stroke);">
+              <td style="padding: 12px;">${user.email}</td>
+              <td style="padding: 12px;">${roleBadge}</td>
+              <td style="padding: 12px;">${statusBadge}</td>
+              <td style="padding: 12px; color: var(--muted); font-size: 13px;">${date}</td>
+              <td style="padding: 12px;">
+                ${!user.approved ? `
+                  <button onclick="approveUser('${user.id}')" style="padding: 4px 8px; font-size: 12px; background: var(--success); color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 4px;">
+                    ✓ Aprobar
+                  </button>
+                ` : ''}
+                <select onchange="changeUserRole('${user.id}', this.value)" style="padding: 4px 8px; font-size: 12px; background: var(--bg); border: 1px solid var(--stroke); border-radius: 4px; color: var(--ink);">
+                  <option value="">Cambiar rol...</option>
+                  <option value="admin" ${user.role === 'admin' ? 'disabled' : ''}>Admin</option>
+                  <option value="editor" ${user.role === 'editor' ? 'disabled' : ''}>Editor</option>
+                  <option value="viewer" ${user.role === 'viewer' ? 'disabled' : ''}>Viewer</option>
+                </select>
+              </td>
+            </tr>
+          `;
+        });
+        
+        html += `
+            </tbody>
+          </table>
+        `;
+        
+        content.innerHTML = html;
+        
+      } catch (error) {
+        console.error('Error loading users:', error);
+        content.innerHTML = '<p style="text-align: center; color: var(--danger); padding: 40px;">Error al cargar usuarios</p>';
+      }
+    }
+
+    // Cargar usuarios pendientes
+    async function loadPendingUsers() {
+      const content = document.getElementById('usersContent');
+      content.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 20px;">Cargando usuarios pendientes...</p>';
+      
+      try {
+        const { data: users, error } = await supabase
+          .from('user_approvals')
+          .select('*')
+          .eq('approved', false)
+          .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        if (!users || users.length === 0) {
+          content.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 40px;">👍 No hay usuarios pendientes de aprobación</p>';
+          return;
+        }
+        
+        let html = '<div style="display: flex; flex-direction: column; gap: 12px;">';
+        
+        users.forEach(user => {
+          const date = new Date(user.created_at).toLocaleDateString('es-ES', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          });
+          
+          html += `
+            <div style="background: var(--bg); border: 1px solid var(--stroke); border-radius: 8px; padding: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">${user.email}</div>
+                  <div style="font-size: 13px; color: var(--muted);">Solicitó acceso el ${date}</div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                  <button onclick="approveUser('${user.id}')" style="padding: 8px 16px; background: var(--success); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">
+                    ✓ Aprobar
+                  </button>
+                  <button onclick="rejectUser('${user.id}')" style="padding: 8px 16px; background: var(--danger); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">
+                    ✗ Rechazar
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        
+        html += '</div>';
+        content.innerHTML = html;
+        
+      } catch (error) {
+        console.error('Error loading pending users:', error);
+        content.innerHTML = '<p style="text-align: center; color: var(--danger); padding: 40px;">Error al cargar usuarios pendientes</p>';
+      }
+    }
+
+    // Cargar actividad de usuarios
+    async function loadUserActivity() {
+      const content = document.getElementById('usersContent');
+      content.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 20px;">Cargando actividad...</p>';
+      
+      try {
+        const { data: activities, error } = await supabase
+          .from('user_activity')
+          .select('*')
+          .order('timestamp', { ascending: false })
+          .limit(50);
+        
+        if (error) throw error;
+        
+        if (!activities || activities.length === 0) {
+          content.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 40px;">No hay actividad registrada</p>';
+          return;
+        }
+        
+        // Obtener emails de los usuarios
+        const userIds = [...new Set(activities.map(a => a.user_id))];
+        const { data: users } = await supabase
+          .from('user_approvals')
+          .select('user_id, email')
+          .in('user_id', userIds);
+        
+        const userMap = {};
+        if (users) {
+          users.forEach(u => {
+            userMap[u.user_id] = u.email;
+          });
+        }
+        
+        let html = '<div style="display: flex; flex-direction: column; gap: 8px;">';
+        
+        activities.forEach(activity => {
+          const date = new Date(activity.timestamp).toLocaleString('es-ES');
+          const actionIcons = {
+            login: '🔐',
+            create_action: '➕',
+            update_action: '✏️',
+            delete_action: '🗑️',
+            approve_user: '✓',
+            change_role: '🔄'
+          };
+          
+          const icon = actionIcons[activity.action_type] || '📝';
+          const email = userMap[activity.user_id] || 'Usuario desconocido';
+          
+          html += `
+            <div style="background: var(--bg); border: 1px solid var(--stroke); border-radius: 6px; padding: 12px; display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 20px;">${icon}</span>
+                <div>
+                  <div style="font-size: 14px;"><strong>${email}</strong> - ${activity.action_type}</div>
+                  <div style="font-size: 12px; color: var(--muted);">${date}</div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        
+        html += '</div>';
+        content.innerHTML = html;
+        
+      } catch (error) {
+        console.error('Error loading activity:', error);
+        content.innerHTML = '<p style="text-align: center; color: var(--danger); padding: 40px;">Error al cargar actividad</p>';
+      }
+    }
+
+    // Aprobar usuario
+    async function approveUser(userId) {
+      if (!confirm('¿Aprobar este usuario?')) return;
+      
+      try {
+        const { error } = await supabase
+          .from('user_approvals')
+          .update({ 
+            approved: true, 
+            approved_at: new Date().toISOString() 
+          })
+          .eq('id', userId);
+        
+        if (error) throw error;
+        
+        await logUserActivity('approve_user', null, { approved_user_id: userId });
+        
+        alert('✓ Usuario aprobado');
+        switchUsersTab('all');
+        
+      } catch (error) {
+        console.error('Error approving user:', error);
+        alert('Error al aprobar usuario: ' + error.message);
+      }
+    }
+
+    // Rechazar usuario
+    async function rejectUser(userId) {
+      if (!confirm('¿Rechazar y eliminar este usuario?')) return;
+      
+      try {
+        const { error } = await supabase
+          .from('user_approvals')
+          .delete()
+          .eq('id', userId);
+        
+        if (error) throw error;
+        
+        alert('✓ Usuario rechazado y eliminado');
+        switchUsersTab('pending');
+        
+      } catch (error) {
+        console.error('Error rejecting user:', error);
+        alert('Error al rechazar usuario: ' + error.message);
+      }
+    }
+
+    // Cambiar rol de usuario
+    async function changeUserRole(userId, newRole) {
+      if (!newRole) return;
+      
+      if (!confirm(`¿Cambiar el rol de este usuario a "${newRole}"?`)) {
+        // Reset select
+        event.target.value = '';
+        return;
+      }
+      
+      try {
+        const { error } = await supabase
+          .from('user_approvals')
+          .update({ role: newRole })
+          .eq('id', userId);
+        
+        if (error) throw error;
+        
+        await logUserActivity('change_role', null, { user_id: userId, new_role: newRole });
+        
+        alert(`✓ Rol cambiado a ${newRole}`);
+        switchUsersTab('all');
+        
+      } catch (error) {
+        console.error('Error changing role:', error);
+        alert('Error al cambiar rol: ' + error.message);
+        event.target.value = '';
+      }
+    }
+
+    // ============================================
     // LOGIN FUNCTIONALITY
     // ============================================
     async function handleLogin(event) {
@@ -816,6 +1221,7 @@ h1 {
         await loadUserRole();
         await loadData();
         setupRealtimeSync();
+        await logUserActivity('login', null, { email: currentUser.email });
         
       } catch (error) {
         console.error('❌ Error en login:', error);
@@ -851,6 +1257,7 @@ h1 {
           await loadUserRole();
           await loadData();
           setupRealtimeSync();
+          await logUserActivity('login', null, { email: currentUser.email });
         }
       } catch (error) {
         console.error('❌ Error checking session:', error);
@@ -1106,6 +1513,9 @@ h1 {
       if (editingAction) {
         const oldQuarter = editingAction.quarter;
         roadmapData.quarters[oldQuarter] = roadmapData.quarters[oldQuarter].filter(a => a.id !== actionData.id);
+        await logUserActivity('update_action', actionData.id, { title: actionData.title });
+      } else {
+        await logUserActivity('create_action', actionData.id, { title: actionData.title });
       }
 
       roadmapData.quarters[quarter].push(actionData);
@@ -1119,8 +1529,11 @@ h1 {
     async function deleteAction(actionId, quarter) {
       if (!confirm('¿Eliminar esta acción?')) return;
 
+      const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
+      
       roadmapData.quarters[quarter] = roadmapData.quarters[quarter].filter(a => a.id !== actionId);
       await deleteFromSupabase(actionId);
+      await logUserActivity('delete_action', actionId, { title: action?.title });
       
       renderTimeline();
       updateStats();
@@ -1174,4 +1587,5 @@ h1 {
   </script>
 </body>
 </html>
-</artifact>
+</parameter>
+</invoke>
