@@ -1,10 +1,4 @@
-<invoke name="artifacts">
-<parameter name="command">create</parameter>
-<parameter name="type">application/vnd.ant.code</parameter>
-<parameter name="language">html</parameter>
-<parameter name="id">index-html-fase1-completa</parameter>
-<parameter name="title">index.html - Fase 1 COMPLETA (Con Notificaciones)</parameter>
-<parameter name="content"><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -25,637 +19,626 @@
       --warning: #f59e0b;
       --danger: #ef4444;
     }
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--ink);
-  line-height: 1.6;
-}
-
-/* ============================================
-   LOGIN PAGE STYLES
-============================================ */
-#loginPage {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 20px;
-  background: linear-gradient(135deg, var(--bg) 0%, #1a1a1a 100%);
-}
-
-.login-container {
-  background: var(--card);
-  border: 1px solid var(--stroke);
-  border-radius: 16px;
-  padding: 40px;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-}
-
-.login-logo {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.login-logo h1 {
-  font-size: 32px;
-  background: linear-gradient(135deg, var(--accent1), var(--accent2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 8px;
-}
-
-.login-logo p {
-  color: var(--muted);
-  font-size: 14px;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--ink);
-  font-weight: 500;
-  font-size: 14px;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 12px 16px;
-  background: var(--bg);
-  border: 1px solid var(--stroke);
-  border-radius: 8px;
-  color: var(--ink);
-  font-size: 15px;
-  transition: all 0.2s;
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: var(--accent1);
-  box-shadow: 0 0 0 3px rgba(236, 0, 140, 0.1);
-}
-
-.login-btn {
-  width: 100%;
-  padding: 14px;
-  background: var(--accent1);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 10px;
-}
-
-.login-btn:hover {
-  background: #d40080;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(236, 0, 140, 0.3);
-}
-
-.login-btn:active {
-  transform: translateY(0);
-}
-
-.login-btn:disabled {
-  background: var(--stroke);
-  cursor: not-allowed;
-  transform: none;
-}
-
-.error-message {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid var(--danger);
-  color: var(--danger);
-  padding: 12px;
-  border-radius: 8px;
-  margin-top: 16px;
-  font-size: 14px;
-  display: none;
-}
-
-.error-message.show {
-  display: block;
-}
-
-/* ============================================
-   MAIN APP STYLES
-============================================ */
-#mainApp {
-  display: none;
-}
-
-.container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 40px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--stroke);
-}
-
-h1 {
-  font-size: 36px;
-  background: linear-gradient(135deg, var(--accent1), var(--accent2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.header-actions {
-  display: flex;
-  gap: 12px;
-}
-
-.btn {
-  padding: 10px 20px;
-  background: var(--card);
-  border: 1px solid var(--stroke);
-  color: var(--ink);
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s;
-  position: relative;
-}
-
-.btn:hover {
-  background: var(--stroke);
-  transform: translateY(-1px);
-}
-
-.btn-primary {
-  background: var(--accent1);
-  border-color: var(--accent1);
-}
-
-.btn-primary:hover {
-  background: #d40080;
-}
-
-/* Notification badge */
-.notification-badge {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background: var(--danger);
-  color: white;
-  border-radius: 10px;
-  padding: 2px 6px;
-  font-size: 11px;
-  font-weight: 700;
-  min-width: 18px;
-  text-align: center;
-}
-
-/* Notifications panel */
-.notifications-panel {
-  position: fixed;
-  top: 0;
-  right: -400px;
-  width: 400px;
-  height: 100vh;
-  background: var(--card);
-  border-left: 1px solid var(--stroke);
-  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.5);
-  transition: right 0.3s ease;
-  z-index: 2000;
-  display: flex;
-  flex-direction: column;
-}
-
-.notifications-panel.active {
-  right: 0;
-}
-
-.panel-header {
-  padding: 20px;
-  border-bottom: 1px solid var(--stroke);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.panel-header h3 {
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.notifications-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 12px;
-}
-
-.notification-item {
-  background: var(--bg);
-  border: 1px solid var(--stroke);
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.notification-item:hover {
-  border-color: var(--accent1);
-}
-
-.notification-item.unread {
-  border-left: 3px solid var(--accent1);
-}
-
-.notification-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: start;
-  margin-bottom: 6px;
-}
-
-.notification-type {
-  font-size: 18px;
-}
-
-.notification-time {
-  font-size: 11px;
-  color: var(--muted);
-}
-
-.notification-message {
-  font-size: 14px;
-  color: var(--ink);
-  margin-bottom: 4px;
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 30px;
-}
-
-.stat-card {
-  background: var(--card);
-  border: 1px solid var(--stroke);
-  border-radius: 12px;
-  padding: 20px;
-}
-
-.stat-label {
-  color: var(--muted);
-  font-size: 13px;
-  margin-bottom: 8px;
-}
-
-.stat-value {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--accent1);
-}
-
-.timeline {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.quarter {
-  background: var(--card);
-  border: 1px solid var(--stroke);
-  border-radius: 12px;
-  padding: 24px;
-}
-
-.quarter-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.quarter-title {
-  font-size: 22px;
-  font-weight: 700;
-}
-
-.actions-grid {
-  display: grid;
-  gap: 16px;
-}
-
-.action-card {
-  background: var(--bg);
-  border: 1px solid var(--stroke);
-  border-radius: 8px;
-  padding: 16px;
-  transition: all 0.2s;
-}
-
-.action-card:hover {
-  border-color: var(--accent1);
-  transform: translateX(4px);
-}
-
-.action-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: start;
-  margin-bottom: 12px;
-}
-
-.action-title {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-
-.action-category {
-  display: inline-block;
-  padding: 4px 12px;
-  background: rgba(236, 0, 140, 0.1);
-  color: var(--accent1);
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.action-meta {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-top: 12px;
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.priority-badge {
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.priority-Alta {
-  background: rgba(239, 68, 68, 0.2);
-  color: var(--danger);
-}
-
-.priority-Media {
-  background: rgba(245, 158, 11, 0.2);
-  color: var(--warning);
-}
-
-.priority-Baja {
-  background: rgba(16, 185, 129, 0.2);
-  color: var(--success);
-}
-
-.status-badge {
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.status-Completado {
-  background: rgba(16, 185, 129, 0.2);
-  color: var(--success);
-}
-
-.status-En.curso {
-  background: rgba(245, 158, 11, 0.2);
-  color: var(--warning);
-}
-
-.status-Pendiente {
-  background: rgba(156, 163, 175, 0.2);
-  color: var(--muted);
-}
-
-/* Modal styles */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  z-index: 1000;
-  overflow-y: auto;
-}
-
-.modal.active {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-content {
-  background: var(--card);
-  border: 1px solid var(--stroke);
-  border-radius: 16px;
-  padding: 32px;
-  max-width: 600px;
-  width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.modal-title {
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  color: var(--muted);
-  font-size: 24px;
-  cursor: pointer;
-  padding: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  transition: all 0.2s;
-}
-
-.close-btn:hover {
-  background: var(--stroke);
-  color: var(--ink);
-}
-
-.form-group select,
-.form-group textarea {
-  width: 100%;
-  padding: 12px;
-  background: var(--bg);
-  border: 1px solid var(--stroke);
-  border-radius: 8px;
-  color: var(--ink);
-  font-size: 14px;
-  font-family: inherit;
-}
-
-.form-group textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-.subtasks {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--stroke);
-}
-
-.subtask {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px;
-  margin: 4px 0;
-  background: var(--card);
-  border-radius: 6px;
-}
-
-.subtask input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.action-buttons button {
-  padding: 6px 12px;
-  font-size: 12px;
-  border-radius: 6px;
-  border: 1px solid var(--stroke);
-  background: var(--bg);
-  color: var(--ink);
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.action-buttons button:hover {
-  background: var(--stroke);
-}
-
-.logout-btn {
-  background: var(--danger) !important;
-  border-color: var(--danger) !important;
-  color: white !important;
-}
-
-.logout-btn:hover {
-  background: #dc2626 !important;
-}
-
-@media (max-width: 768px) {
-  .container {
-    padding: 12px;
-  }
-
-  h1 {
-    font-size: 24px;
-  }
-
-  .header-actions {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .stats {
-    grid-template-columns: 1fr;
-  }
-
-  .notifications-panel {
-    width: 100%;
-    right: -100%;
-  }
-}
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    #loginPage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      background: linear-gradient(135deg, var(--bg) 0%, #1a1a1a 100%);
+    }
+
+    .login-container {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .login-logo h1 {
+      font-size: 32px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .login-logo p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--ink);
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg);
+      border: 1px solid var(--stroke);
+      border-radius: 8px;
+      color: var(--ink);
+      font-size: 15px;
+      transition: all 0.2s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent1);
+      box-shadow: 0 0 0 3px rgba(236, 0, 140, 0.1);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent1);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 10px;
+    }
+
+    .login-btn:hover {
+      background: #d40080;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(236, 0, 140, 0.3);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .login-btn:disabled {
+      background: var(--stroke);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .error-message {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 16px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    #mainApp {
+      display: none;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    h1 {
+      font-size: 36px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      color: var(--ink);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .btn:hover {
+      background: var(--stroke);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--accent1);
+      border-color: var(--accent1);
+    }
+
+    .btn-primary:hover {
+      background: #d40080;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--danger);
+      color: white;
+      border-radius: 10px;
+      padding: 2px 6px;
+      font-size: 11px;
+      font-weight: 700;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    .notifications-panel {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 400px;
+      height: 100vh;
+      background: var(--card);
+      border-left: 1px solid var(--stroke);
+      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.5);
+      transition: right 0.3s ease;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .notifications-panel.active {
+      right: 0;
+    }
+
+    .panel-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--stroke);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-header h3 {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .notifications-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+    }
+
+    .notification-item {
+      background: var(--bg);
+      border: 1px solid var(--stroke);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .notification-item:hover {
+      border-color: var(--accent1);
+    }
+
+    .notification-item.unread {
+      border-left: 3px solid var(--accent1);
+    }
+
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 6px;
+    }
+
+    .notification-type {
+      font-size: 18px;
+    }
+
+    .notification-time {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .notification-message {
+      font-size: 14px;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent1);
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .quarter {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .quarter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .quarter-title {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .actions-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .action-card {
+      background: var(--bg);
+      border: 1px solid var(--stroke);
+      border-radius: 8px;
+      padding: 16px;
+      transition: all 0.2s;
+    }
+
+    .action-card:hover {
+      border-color: var(--accent1);
+      transform: translateX(4px);
+    }
+
+    .action-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+
+    .action-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .action-category {
+      display: inline-block;
+      padding: 4px 12px;
+      background: rgba(236, 0, 140, 0.1);
+      color: var(--accent1);
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .action-meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .priority-badge {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .priority-Alta {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--danger);
+    }
+
+    .priority-Media {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--warning);
+    }
+
+    .priority-Baja {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .status-Completado {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+
+    .status-En.curso {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--warning);
+    }
+
+    .status-Pendiente {
+      background: rgba(156, 163, 175, 0.2);
+      color: var(--muted);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      padding: 32px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .modal-title {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .close-btn:hover {
+      background: var(--stroke);
+      color: var(--ink);
+    }
+
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      background: var(--bg);
+      border: 1px solid var(--stroke);
+      border-radius: 8px;
+      color: var(--ink);
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .subtasks {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--stroke);
+    }
+
+    .subtask {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      margin: 4px 0;
+      background: var(--card);
+      border-radius: 6px;
+    }
+
+    .subtask input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .action-buttons button {
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 6px;
+      border: 1px solid var(--stroke);
+      background: var(--bg);
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .action-buttons button:hover {
+      background: var(--stroke);
+    }
+
+    .logout-btn {
+      background: var(--danger) !important;
+      border-color: var(--danger) !important;
+      color: white !important;
+    }
+
+    .logout-btn:hover {
+      background: #dc2626 !important;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 12px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .header-actions {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .notifications-panel {
+        width: 100%;
+        right: -100%;
+      }
+    }
   </style>
 </head>
 <body>
-  <!-- ============================================
-       LOGIN PAGE
-  ============================================ -->
+  
   <div id="loginPage">
     <div class="login-container">
       <div class="login-logo">
         <h1>🚀 Roadmap Nevent</h1>
         <p>2025-2026</p>
       </div>
-  <form id="loginForm" onsubmit="handleLogin(event)">
-    <div class="form-group">
-      <label for="loginEmail">Email</label>
-      <input 
-        type="email" 
-        id="loginEmail" 
-        placeholder="tu.email@nevent.es"
-        required
-        autocomplete="email"
-      />
+      
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="loginEmail">Email</label>
+          <input 
+            type="email" 
+            id="loginEmail" 
+            placeholder="tu.email@nevent.es"
+            required
+            autocomplete="email"
+          />
+        </div>
+        
+        <div class="form-group">
+          <label for="loginPassword">Contraseña</label>
+          <input 
+            type="password" 
+            id="loginPassword" 
+            placeholder="••••••••"
+            required
+            autocomplete="current-password"
+          />
+        </div>
+        
+        <button type="submit" class="login-btn" id="loginBtn">
+          Iniciar sesión
+        </button>
+        
+        <div id="loginError" class="error-message"></div>
+      </form>
     </div>
-    
-    <div class="form-group">
-      <label for="loginPassword">Contraseña</label>
-      <input 
-        type="password" 
-        id="loginPassword" 
-        placeholder="••••••••"
-        required
-        autocomplete="current-password"
-      />
-    </div>
-    
-    <button type="submit" class="login-btn" id="loginBtn">
-      Iniciar sesión
-    </button>
-    
-    <div id="loginError" class="error-message"></div>
-  </form>
-</div>
   </div>
-  <!-- ============================================
-       MAIN APPLICATION
-  ============================================ -->
+
   <div id="mainApp">
     <div class="container">
       <header>
@@ -672,29 +655,30 @@ h1 {
           <button class="btn logout-btn" onclick="handleLogout()">🚪 Salir</button>
         </div>
       </header>
-  <div class="stats">
-    <div class="stat-card">
-      <div class="stat-label">Acciones totales</div>
-      <div class="stat-value" id="totalActions">0</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Completadas</div>
-      <div class="stat-value" id="completedActions">0</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Responsables</div>
-      <div class="stat-value" id="totalResponsables">0</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Progreso global</div>
-      <div class="stat-value" id="globalProgress">0%</div>
+
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-label">Acciones totales</div>
+          <div class="stat-value" id="totalActions">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Completadas</div>
+          <div class="stat-value" id="completedActions">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Responsables</div>
+          <div class="stat-value" id="totalResponsables">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Progreso global</div>
+          <div class="stat-value" id="globalProgress">0%</div>
+        </div>
+      </div>
+
+      <div class="timeline" id="timeline"></div>
     </div>
   </div>
 
-  <div class="timeline" id="timeline"></div>
-</div>
-  </div>
-  <!-- Notifications Panel -->
   <div class="notifications-panel" id="notificationsPanel">
     <div class="panel-header">
       <h3>🔔 Notificaciones</h3>
@@ -711,124 +695,124 @@ h1 {
       </p>
     </div>
   </div>
-  <!-- Modal for Add/Edit Action -->
+
   <div id="actionModal" class="modal">
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title" id="modalTitle">Nueva Acción</h2>
         <button class="close-btn" onclick="closeModal()">&times;</button>
       </div>
-  <form id="actionForm" onsubmit="saveAction(event)">
-    <div class="form-group">
-      <label>Trimestre</label>
-      <select id="quarterSelect" required>
-        <option value="Q4 2025">Q4 2025</option>
-        <option value="Q1 2026">Q1 2026</option>
-        <option value="Q2 2026">Q2 2026</option>
-        <option value="Q3 2026">Q3 2026</option>
-        <option value="Q4 2026">Q4 2026</option>
-      </select>
-    </div>
+      
+      <form id="actionForm" onsubmit="saveAction(event)">
+        <div class="form-group">
+          <label>Trimestre</label>
+          <select id="quarterSelect" required>
+            <option value="Q4 2025">Q4 2025</option>
+            <option value="Q1 2026">Q1 2026</option>
+            <option value="Q2 2026">Q2 2026</option>
+            <option value="Q3 2026">Q3 2026</option>
+            <option value="Q4 2026">Q4 2026</option>
+          </select>
+        </div>
 
-    <div class="form-group">
-      <label>Categoría</label>
-      <select id="categorySelect" required>
-        <option value="Marketing">Marketing</option>
-        <option value="Customer Success">Customer Success</option>
-        <option value="Expansión">Expansión</option>
-        <option value="Producto">Producto</option>
-        <option value="Ventas">Ventas</option>
-        <option value="Operaciones">Operaciones</option>
-      </select>
-    </div>
+        <div class="form-group">
+          <label>Categoría</label>
+          <select id="categorySelect" required>
+            <option value="Marketing">Marketing</option>
+            <option value="Customer Success">Customer Success</option>
+            <option value="Expansión">Expansión</option>
+            <option value="Producto">Producto</option>
+            <option value="Ventas">Ventas</option>
+            <option value="Operaciones">Operaciones</option>
+          </select>
+        </div>
 
-    <div class="form-group">
-      <label>Título</label>
-      <input type="text" id="titleInput" placeholder="Ej: Email frío creativo" required />
-    </div>
+        <div class="form-group">
+          <label>Título</label>
+          <input type="text" id="titleInput" placeholder="Ej: Email frío creativo" required />
+        </div>
 
-    <div class="form-group">
-      <label>Descripción</label>
-      <textarea id="descriptionInput" placeholder="Describe la acción..."></textarea>
-    </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea id="descriptionInput" placeholder="Describe la acción..."></textarea>
+        </div>
 
-    <div class="form-group">
-      <label>Prioridad</label>
-      <select id="prioritySelect">
-        <option value="Alta">Alta</option>
-        <option value="Media">Media</option>
-        <option value="Baja">Baja</option>
-      </select>
-    </div>
+        <div class="form-group">
+          <label>Prioridad</label>
+          <select id="prioritySelect">
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Baja">Baja</option>
+          </select>
+        </div>
 
-    <div class="form-group">
-      <label>Estado</label>
-      <select id="statusSelect">
-        <option value="Pendiente">Pendiente</option>
-        <option value="En curso">En curso</option>
-        <option value="Completado">Completado</option>
-      </select>
-    </div>
+        <div class="form-group">
+          <label>Estado</label>
+          <select id="statusSelect">
+            <option value="Pendiente">Pendiente</option>
+            <option value="En curso">En curso</option>
+            <option value="Completado">Completado</option>
+          </select>
+        </div>
 
-    <div class="form-group">
-      <label>Responsable</label>
-      <input type="text" id="responsableInput" placeholder="Ej: Fran" />
-    </div>
+        <div class="form-group">
+          <label>Responsable</label>
+          <input type="text" id="responsableInput" placeholder="Ej: Fran" />
+        </div>
 
-    <div class="form-group">
-      <label>Fecha límite</label>
-      <input type="date" id="deadlineInput" />
-    </div>
+        <div class="form-group">
+          <label>Fecha límite</label>
+          <input type="date" id="deadlineInput" />
+        </div>
 
-    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
-      💾 Guardar
-    </button>
-  </form>
-</div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
+          💾 Guardar
+        </button>
+      </form>
+    </div>
   </div>
-  <!-- Modal de Gestión de Usuarios -->
+
   <div id="usersModal" class="modal">
     <div class="modal-content" style="max-width: 900px;">
       <div class="modal-header">
         <h2 class="modal-title">👥 Gestionar Usuarios</h2>
         <button class="close-btn" onclick="closeUsersModal()">&times;</button>
       </div>
-  <div style="margin-bottom: 20px; border-bottom: 1px solid var(--stroke);">
-    <div style="display: flex; gap: 8px; margin-bottom: -1px;">
-      <button 
-        class="tab-btn active" 
-        onclick="switchUsersTab('all')"
-        id="tabAll"
-        style="padding: 10px 20px; background: none; border: none; border-bottom: 2px solid var(--accent1); color: var(--ink); cursor: pointer; font-weight: 600;"
-      >
-        Todos
-      </button>
-      <button 
-        class="tab-btn" 
-        onclick="switchUsersTab('pending')"
-        id="tabPending"
-        style="padding: 10px 20px; background: none; border: none; border-bottom: 2px solid transparent; color: var(--muted); cursor: pointer;"
-      >
-        Pendientes
-      </button>
-      <button 
-        class="tab-btn" 
-        onclick="switchUsersTab('activity')"
-        id="tabActivity"
-        style="padding: 10px 20px; background: none; border: none; border-bottom: 2px solid transparent; color: var(--muted); cursor: pointer;"
-      >
-        Actividad
-      </button>
+      
+      <div style="margin-bottom: 20px; border-bottom: 1px solid var(--stroke);">
+        <div style="display: flex; gap: 8px; margin-bottom: -1px;">
+          <button 
+            class="tab-btn active" 
+            onclick="switchUsersTab('all')"
+            id="tabAll"
+            style="padding: 10px 20px; background: none; border: none; border-bottom: 2px solid var(--accent1); color: var(--ink); cursor: pointer; font-weight: 600;"
+          >
+            Todos
+          </button>
+          <button 
+            class="tab-btn" 
+            onclick="switchUsersTab('pending')"
+            id="tabPending"
+            style="padding: 10px 20px; background: none; border: none; border-bottom: 2px solid transparent; color: var(--muted); cursor: pointer;"
+          >
+            Pendientes
+          </button>
+          <button 
+            class="tab-btn" 
+            onclick="switchUsersTab('activity')"
+            id="tabActivity"
+            style="padding: 10px 20px; background: none; border: none; border-bottom: 2px solid transparent; color: var(--muted); cursor: pointer;"
+          >
+            Actividad
+          </button>
+        </div>
+      </div>
+      
+      <div id="usersContent"></div>
     </div>
   </div>
-  
-  <div id="usersContent"></div>
-</div>
-  </div>
+
   <script>
-    // ============================================
-    // SUPABASE CONFIGURATION
-    // ============================================
     const SUPABASE_URL = 'https://tvbqzqripcevaryquhfg.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2YnF6cXJpcGNldmFyeXF1aGZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxNTI4MzEsImV4cCI6MjA3NDcyODgzMX0.BVHINkyJtK4mwRLX1Nt7_gJbd3ht2qGfvqLvmehkyIM';
     
@@ -843,10 +827,6 @@ h1 {
       console.error('❌ Error initializing Supabase:', error);
     }
 
-    // ============================================
-    // FASE 1 BLOQUE 3: NOTIFICACIONES
-    // ============================================
-
     async function loadNotifications() {
       try {
         const { data, error } = await supabase
@@ -860,7 +840,6 @@ h1 {
         
         const unread = data ? data.filter(n => !n.read).length : 0;
         
-        // Actualizar badge
         const badge = document.getElementById('notifCount');
         if (unread > 0) {
           badge.textContent = unread > 99 ? '99+' : unread;
@@ -869,7 +848,6 @@ h1 {
           badge.style.display = 'none';
         }
         
-        // Renderizar lista
         renderNotifications(data || []);
         
         console.log(`✅ Notificaciones cargadas: ${data?.length || 0} (${unread} sin leer)`);
@@ -916,7 +894,7 @@ h1 {
     function formatTimeAgo(timestamp) {
       const now = new Date();
       const then = new Date(timestamp);
-      const diff = Math.floor((now - then) / 1000); // segundos
+      const diff = Math.floor((now - then) / 1000);
       
       if (diff < 60) return 'Ahora';
       if (diff < 3600) return `Hace ${Math.floor(diff / 60)}m`;
@@ -934,10 +912,8 @@ h1 {
         
         await loadNotifications();
         
-        // Si la notificación tiene action_id, scroll a esa acción
         if (actionId) {
-          toggleNotifications(); // Cerrar panel
-          // TODO: Scroll to action (implementar si es necesario)
+          toggleNotifications();
         }
       } catch (error) {
         console.error('Error marking notification as read:', error);
@@ -980,7 +956,6 @@ h1 {
       }
     }
 
-    // Setup Realtime para notificaciones
     function setupNotificationsRealtime() {
       supabase
         .channel('notifications_changes')
@@ -996,7 +971,6 @@ h1 {
         .subscribe();
     }
 
-    // Verificar deadlines próximos (ejecutar al login)
     async function checkUpcomingDeadlines() {
       try {
         const today = new Date();
@@ -1013,7 +987,6 @@ h1 {
         
         if (actions && actions.length > 0) {
           for (const action of actions) {
-            // Verificar si ya existe notificación de deadline para esta acción
             const { data: existing } = await supabase
               .from('notifications')
               .select('id')
@@ -1037,10 +1010,6 @@ h1 {
         console.error('Error checking deadlines:', error);
       }
     }
-
-    // ============================================
-    // FASE 1: SISTEMA DE ROLES
-    // ============================================
 
     async function loadUserRole() {
       try {
@@ -1121,10 +1090,6 @@ h1 {
       badge.style.background = config.bg;
       badge.style.color = config.color;
     }
-
-    // ============================================
-    // FASE 1 BLOQUE 2: GESTIÓN DE USUARIOS
-    // ============================================
 
     async function logUserActivity(actionType, actionId = null, metadata = {}) {
       try {
@@ -1456,9 +1421,6 @@ h1 {
       }
     }
 
-    // ============================================
-    // LOGIN FUNCTIONALITY
-    // ============================================
     async function handleLogin(event) {
       event.preventDefault();
       
@@ -1537,9 +1499,6 @@ h1 {
       }
     }
 
-    // ============================================
-    // ROADMAP DATA MANAGEMENT
-    // ============================================
     let roadmapData = {
       quarters: {
         'Q4 2025': [],
@@ -1726,363 +1685,167 @@ h1 {
 
       Object.values(roadmapData.quarters).forEach(actions => {
         total += actions.length;
-        action.status === 'Completado') completed++;
-if (action.responsable) responsables.add(action.responsable);
-});
-});
-  document.getElementById('totalActions').textContent = total;
-  document.getElementById('completedActions').textContent = completed;
-  document.getElementById('totalResponsables').textContent = responsables.size;
-  document.getElementById('globalProgress').textContent = total > 0 ? Math.round((completed / total) * 100) + '%' : '0%';
-}
+        actions.forEach(action => {
+          if (action.status === 'Completado') completed++;
+          if (action.responsable) responsables.add(action.responsable);
+        });
+      });
 
-function openAddActionModal() {
-  editingAction = null;
-  document.getElementById('modalTitle').textContent = 'Nueva Acción';
-  document.getElementById('actionForm').reset();
-  document.getElementById('actionModal').classList.add('active');
-}
+      document.getElementById('totalActions').textContent = total;
+      document.getElementById('completedActions').textContent = completed;
+      document.getElementById('totalResponsables').textContent = responsables.size;
+      document.getElementById('globalProgress').textContent = total > 0 ? Math.round((completed / total) * 100) + '%' : '0%';
+    }
 
-function editAction(actionId, quarter) {
-  const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
-  if (!action) return;
+    function openAddActionModal() {
+      editingAction = null;
+      document.getElementById('modalTitle').textContent = 'Nueva Acción';
+      document.getElementById('actionForm').reset();
+      document.getElementById('actionModal').classList.add('active');
+    }
 
-  editingAction = { action, quarter };
-  document.getElementById('modalTitle').textContent = 'Editar Acción';
-  
-  document.getElementById('quarterSelect').value = quarter;
-  document.getElementById('categorySelect').value = action.category;
-  document.getElementById('titleInput').value = action.title;
-  document.getElementById('descriptionInput').value = action.description || '';
-  document.getElementById('prioritySelect').value = action.priority;
-  document.getElementById('statusSelect').value = action.status;
-  document.getElementById('responsableInput').value = action.responsable || '';
-  document.getElementById('deadlineInput').value = action.deadline || '';
-  
-  document.getElementById('actionModal').classList.add('active');
-}
+    function editAction(actionId, quarter) {
+      const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
+      if (!action) return;
 
-async function saveAction(event) {
-  event.preventDefault();
-
-  const quarter = document.getElementById('quarterSelect').value;
-  const actionData = {
-    id: editingAction ? editingAction.action.id : generateId(),
-    category: document.getElementById('categorySelect').value,
-    title: document.getElementById('titleInput').value,
-    description: document.getElementById('descriptionInput').value,
-    priority: document.getElementById('prioritySelect').value,
-    status: document.getElementById('statusSelect').value,
-    responsable: document.getElementById('responsableInput').value,
-    deadline: document.getElementById('deadlineInput').value,
-    subtasks: editingAction ? editingAction.action.subtasks : []
-  };
-
-  // Detectar si cambió el responsable (para notificación)
-  if (editingAction) {
-    const oldAction = editingAction.action;
-    const oldQuarter = editingAction.quarter;
-    
-    // Si cambió el responsable, crear notificación
-    if (oldAction.responsable !== actionData.responsable && actionData.responsable) {
-      // Buscar user_id del responsable
-      const { data: user } = await supabase
-        .from('user_approvals')
-        .select('user_id')
-        .ilike('email', `${actionData.responsable}%`)
-        .single();
+      editingAction = { action, quarter };
+      document.getElementById('modalTitle').textContent = 'Editar Acción';
       
-      if (user) {
-        await createNotification(
-          user.user_id,
-          'assigned',
-          actionData.id,
-          `Se te asignó la tarea: "${actionData.title}"`
-        );
+      document.getElementById('quarterSelect').value = quarter;
+      document.getElementById('categorySelect').value = action.category;
+      document.getElementById('titleInput').value = action.title;
+      document.getElementById('descriptionInput').value = action.description || '';
+      document.getElementById('prioritySelect').value = action.priority;
+      document.getElementById('statusSelect').value = action.status;
+      document.getElementById('responsableInput').value = action.responsable || '';
+      document.getElementById('deadlineInput').value = action.deadline || '';
+      
+      document.getElementById('actionModal').classList.add('active');
+    }
+
+    async function saveAction(event) {
+      event.preventDefault();
+
+      const quarter = document.getElementById('quarterSelect').value;
+      const actionData = {
+        id: editingAction ? editingAction.action.id : generateId(),
+        category: document.getElementById('categorySelect').value,
+        title: document.getElementById('titleInput').value,
+        description: document.getElementById('descriptionInput').value,
+        priority: document.getElementById('prioritySelect').value,
+        status: document.getElementById('statusSelect').value,
+        responsable: document.getElementById('responsableInput').value,
+        deadline: document.getElementById('deadlineInput').value,
+        subtasks: editingAction ? editingAction.action.subtasks : []
+      };
+
+      if (editingAction) {
+        const oldAction = editingAction.action;
+        const oldQuarter = editingAction.quarter;
+        
+        if (oldAction.responsable !== actionData.responsable && actionData.responsable) {
+          const { data: user } = await supabase
+            .from('user_approvals')
+            .select('user_id')
+            .ilike('email', `${actionData.responsable}%`)
+            .single();
+          
+          if (user) {
+            await createNotification(
+              user.user_id,
+              'assigned',
+              actionData.id,
+              `Se te asignó la tarea: "${actionData.title}"`
+            );
+          }
+        }
+        
+        roadmapData.quarters[oldQuarter] = roadmapData.quarters[oldQuarter].filter(a => a.id !== actionData.id);
+        await logUserActivity('update_action', actionData.id, { title: actionData.title });
+      } else {
+        if (actionData.responsable) {
+          const { data: user } = await supabase
+            .from('user_approvals')
+            .select('user_id')
+            .ilike('email', `${actionData.responsable}%`)
+            .single();
+          
+          if (user) {
+            await createNotification(
+              user.user_id,
+              'assigned',
+              actionData.id,
+              `Nueva tarea asignada: "${actionData.title}"`
+            );
+          }
+        }
+        
+        await logUserActivity('create_action', actionData.id, { title: actionData.title });
+      }
+
+      roadmapData.quarters[quarter].push(actionData);
+      await saveToSupabase(actionData, quarter);
+      
+      closeModal();
+      renderTimeline();
+      updateStats();
+    }
+
+    async function deleteAction(actionId, quarter) {
+      if (!confirm('¿Eliminar esta acción?')) return;
+
+      const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
+      
+      roadmapData.quarters[quarter] = roadmapData.quarters[quarter].filter(a => a.id !== actionId);
+      await deleteFromSupabase(actionId);
+      await logUserActivity('delete_action', actionId, { title: action?.title });
+      
+      renderTimeline();
+      updateStats();
+    }
+
+    async function toggleSubtask(actionId, subtaskId, quarter) {
+      const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
+      if (!action) return;
+
+      const subtask = action.subtasks.find(st => st.id === subtaskId);
+      if (subtask) {
+        subtask.completed = !subtask.completed;
+
+        const allCompleted = action.subtasks.every(st => st.completed);
+        const someCompleted = action.subtasks.some(st => st.completed);
+
+        if (allCompleted) {
+          action.status = 'Completado';
+        } else if (someCompleted) {
+          action.status = 'En curso';
+        } else {
+          action.status = 'Pendiente';
+        }
+
+        await saveToSupabase(action, quarter);
+        renderTimeline();
+        updateStats();
       }
     }
-    
-    roadmapData.quarters[oldQuarter] = roadmapData.quarters[oldQuarter].filter(a => a.id !== actionData.id);
-    await logUserActivity('update_action', actionData.id, { title: actionData.title });
-  } else {
-    // Nueva acción - crear notificación si tiene responsable
-    if (actionData.responsable) {
-      const { data: user } = await supabase
-        .from('user_approvals')
-        .select('user_id')
-        .ilike('email', `${actionData.responsable}%`)
-        .single();
-      
-      if (user) {
-        await createNotification(
-          user.user_id,
-          'assigned',
-          actionData.id,
-          `Nueva tarea asignada: "${actionData.title}"`
-        );
-      }
-    }
-    
-    await logUserActivity('create_action', actionData.id, { title: actionData.title });
-  }
 
-  roadmapData.quarters[quarter].push(actionData);
-  await saveToSupabase(actionData, quarter);
-  
-  closeModal();
-  renderTimeline();
-  updateStats();
-}
-
-async function deleteAction(actionId, quarter) {
-  if (!confirm('¿Eliminar esta acción?')) return;
-
-  const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
-  
-  roadmapData.quarters[quarter] = roadmapData.quarters[quarter].filter(a => a.id !== actionId);
-  await deleteFromSupabase(actionId);
-  await logUserActivity('delete_action', actionId, { title: action?.title });
-  
-  renderTimeline();
-  updateStats();
-}
-
-async function toggleSubtask(actionId, subtaskId, quarter) {
-  const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
-  if (!action) return;
-
-  const subtask = action.subtasks.find(st => st.id === subtaskId);
-  if (subtask) {
-    subtask.completed = !subtask.completed;
-
-    const allCompleted = action.subtasks.every(st => st.completed);
-    const someCompleted = action.subtasks.some(st => st.completed);
-
-    if (allCompleted) {
-      action.status = 'Completado';
-    } else if (someCompleted) {
-      action.status = 'En curso';
-    } else {
-      action.status = 'Pendiente';
+    function closeModal() {
+      document.getElementById('actionModal').classList.remove('active');
     }
 
-    await saveToSupabase(action, quarter);
-    renderTimeline();
-    updateStats();
-  }
-}
+    function exportData() {
+      const dataStr = JSON.stringify(roadmapData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `roadmap_${new Date().toISOString().split('T')[0]}.json`;
+      link.click();
+    }
 
-function closeModal() {
-  document.getElementById('actionModal').classList.remove('active');
-}
-
-function exportData() {
-  const dataStr = JSON.stringify(roadmapData, null, 2);
-  const dataBlob = new Blob([dataStr], { type: 'application/json' });
-  const url = URL.createObjectURL(dataBlob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `roadmap_${new Date().toISOString().split('T')[0]}.json`;
-  link.click();
-}
-
-// ============================================
-// INITIALIZE
-// ============================================
-window.addEventListener('DOMContentLoaded', () => {
-  checkSession();
-});
+    window.addEventListener('DOMContentLoaded', () => {
+      checkSession();
+    });
   </script>
 </body>
 </html>
-</parameter>
-</invoke>
-<invoke name="artifacts">
-<parameter name="command">update</parameter>
-<parameter name="id">index-html-fase1-completa</parameter>
-<parameter name="old_str">    function updateStats() {
-      let total = 0;
-      let completed = 0;
-      let responsables = new Set();
-  Object.values(roadmapData.quarters).forEach(actions => {
-    total += actions.length;
-    actions.forEach(action => {
-      if (</parameter>
-<parameter name="new_str">    function updateStats() {
-let total = 0;
-let completed = 0;
-let responsables = new Set();
-  Object.values(roadmapData.quarters).forEach(actions => {
-    total += actions.length;
-    actions.forEach(action => {
-      if (action.status === 'Completado') completed++;
-      if (action.responsable) responsables.add(action.responsable);
-    });
-  });
-
-  document.getElementById('totalActions').textContent = total;
-  document.getElementById('completedActions').textContent = completed;
-  document.getElementById('totalResponsables').textContent = responsables.size;
-  document.getElementById('globalProgress').textContent = total > 0 ? Math.round((completed / total) * 100) + '%' : '0%';
-}
-
-function openAddActionModal() {
-  editingAction = null;
-  document.getElementById('modalTitle').textContent = 'Nueva Acción';
-  document.getElementById('actionForm').reset();
-  document.getElementById('actionModal').classList.add('active');
-}
-
-function editAction(actionId, quarter) {
-  const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
-  if (!action) return;
-
-  editingAction = { action, quarter };
-  document.getElementById('modalTitle').textContent = 'Editar Acción';
-  
-  document.getElementById('quarterSelect').value = quarter;
-  document.getElementById('categorySelect').value = action.category;
-  document.getElementById('titleInput').value = action.title;
-  document.getElementById('descriptionInput').value = action.description || '';
-  document.getElementById('prioritySelect').value = action.priority;
-  document.getElementById('statusSelect').value = action.status;
-  document.getElementById('responsableInput').value = action.responsable || '';
-  document.getElementById('deadlineInput').value = action.deadline || '';
-  
-  document.getElementById('actionModal').classList.add('active');
-}
-
-async function saveAction(event) {
-  event.preventDefault();
-
-  const quarter = document.getElementById('quarterSelect').value;
-  const actionData = {
-    id: editingAction ? editingAction.action.id : generateId(),
-    category: document.getElementById('categorySelect').value,
-    title: document.getElementById('titleInput').value,
-    description: document.getElementById('descriptionInput').value,
-    priority: document.getElementById('prioritySelect').value,
-    status: document.getElementById('statusSelect').value,
-    responsable: document.getElementById('responsableInput').value,
-    deadline: document.getElementById('deadlineInput').value,
-    subtasks: editingAction ? editingAction.action.subtasks : []
-  };
-
-  // Detectar si cambió el responsable (para notificación)
-  if (editingAction) {
-    const oldAction = editingAction.action;
-    const oldQuarter = editingAction.quarter;
-    
-    // Si cambió el responsable, crear notificación
-    if (oldAction.responsable !== actionData.responsable && actionData.responsable) {
-      // Buscar user_id del responsable
-      const { data: user } = await supabase
-        .from('user_approvals')
-        .select('user_id')
-        .ilike('email', `${actionData.responsable}%`)
-        .single();
-      
-      if (user) {
-        await createNotification(
-          user.user_id,
-          'assigned',
-          actionData.id,
-          `Se te asignó la tarea: "${actionData.title}"`
-        );
-      }
-    }
-    
-    roadmapData.quarters[oldQuarter] = roadmapData.quarters[oldQuarter].filter(a => a.id !== actionData.id);
-    await logUserActivity('update_action', actionData.id, { title: actionData.title });
-  } else {
-    // Nueva acción - crear notificación si tiene responsable
-    if (actionData.responsable) {
-      const { data: user } = await supabase
-        .from('user_approvals')
-        .select('user_id')
-        .ilike('email', `${actionData.responsable}%`)
-        .single();
-      
-      if (user) {
-        await createNotification(
-          user.user_id,
-          'assigned',
-          actionData.id,
-          `Nueva tarea asignada: "${actionData.title}"`
-        );
-      }
-    }
-    
-    await logUserActivity('create_action', actionData.id, { title: actionData.title });
-  }
-
-  roadmapData.quarters[quarter].push(actionData);
-  await saveToSupabase(actionData, quarter);
-  
-  closeModal();
-  renderTimeline();
-  updateStats();
-}
-
-async function deleteAction(actionId, quarter) {
-  if (!confirm('¿Eliminar esta acción?')) return;
-
-  const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
-  
-  roadmapData.quarters[quarter] = roadmapData.quarters[quarter].filter(a => a.id !== actionId);
-  await deleteFromSupabase(actionId);
-  await logUserActivity('delete_action', actionId, { title: action?.title });
-  
-  renderTimeline();
-  updateStats();
-}
-
-async function toggleSubtask(actionId, subtaskId, quarter) {
-  const action = roadmapData.quarters[quarter].find(a => a.id === actionId);
-  if (!action) return;
-
-  const subtask = action.subtasks.find(st => st.id === subtaskId);
-  if (subtask) {
-    subtask.completed = !subtask.completed;
-
-    const allCompleted = action.subtasks.every(st => st.completed);
-    const someCompleted = action.subtasks.some(st => st.completed);
-
-    if (allCompleted) {
-      action.status = 'Completado';
-    } else if (someCompleted) {
-      action.status = 'En curso';
-    } else {
-      action.status = 'Pendiente';
-    }
-
-    await saveToSupabase(action, quarter);
-    renderTimeline();
-    updateStats();
-  }
-}
-
-function closeModal() {
-  document.getElementById('actionModal').classList.remove('active');
-}
-
-function exportData() {
-  const dataStr = JSON.stringify(roadmapData, null, 2);
-  const dataBlob = new Blob([dataStr], { type: 'application/json' });
-  const url = URL.createObjectURL(dataBlob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `roadmap_${new Date().toISOString().split('T')[0]}.json`;
-  link.click();
-}
-
-// ============================================
-// INITIALIZE
-// ============================================
-window.addEventListener('DOMContentLoaded', () => {
-  checkSession();
-});
-  </script>
-</body>
-</html></parameter>
-</invoke>
