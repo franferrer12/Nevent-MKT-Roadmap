@@ -963,10 +963,9 @@
       event: 'INSERT',
       schema: 'public',
       table: 'notifications'
-      // Sin filtro aquí
     }, payload => {
-      // Filtrar en el callback
-      if (payload.new.user_id === currentUser.id) {
+      // Filtrar en el callback en lugar del channel
+      if (payload.new && payload.new.user_id === currentUser.id) {
         console.log('🔔 Nueva notificación recibida:', payload);
         loadNotifications();
       }
@@ -974,45 +973,39 @@
     .subscribe();
 }
 
-    async function checkUpcomingDeadlines() {
-      try {
-        const today = new Date();
-        const threeDaysLater = new Date(today.getTime() + 3 * 24 * 60 * 60 * 1000);
-        const todayStr = today.toISOString().split('T')[0];
-        const threeDaysStr = threeDaysLater.toISOString().split('T')[0];
-        
-        const { data: actions } = await supabase
-          .from('roadmap_actions')
-          .select('*')
-          .gte('deadline', todayStr)
-          .lte('deadline', threeDaysStr)
-          .neq('status', 'Completado');
-        
-        if (actions && actions.length > 0) {
-          for (const action of actions) {
-            const { data: existing } = await supabase
-              .from('notifications')
-              .select('id')
-              .eq('user_id', currentUser.id)
-              .eq('action_id', action.id)
-              .eq('type', 'deadline')
-              .single();
-            
-            if (!existing) {
-              const daysLeft = Math.ceil((new Date(action.deadline) - today) / (1000 * 60 * 60 * 24));
-              await createNotification(
-                currentUser.id,
-                'deadline',
-                action.id,
-                `La tarea "${action.title}" vence en ${daysLeft} día${daysLeft !== 1 ? 's' : ''}`
-              );
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Error checking deadlines:', error);
+    async function checkOverdueActions() {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    
+    const { data: actions } = await supabase
+      .from('roadmap_actions')
+      .select('*')
+      .lt('deadline', today)
+      .neq('status', 'Completado');
+    
+    if (actions && actions.length > 0) {
+      // Verificar si ya existe notificación de overdue para hoy
+      const { data: existing } = await supabase
+        .from('notifications')
+        .select('id')
+        .eq('user_id', currentUser.id)
+        .eq('type', 'overdue')
+        .gte('created_at', today)
+        .single();
+      
+      if (!existing) {
+        await createNotification(
+          currentUser.id,
+          'overdue',
+          null,
+          `Tienes ${actions.length} tarea${actions.length !== 1 ? 's' : ''} atrasada${actions.length !== 1 ? 's' : ''}`
+        );
       }
     }
+  } catch (error) {
+    console.error('Error checking overdue actions:', error);
+  }
+}
 
     async function loadUserRole() {
       try {
@@ -1458,6 +1451,7 @@
         await loadNotifications();
         setupNotificationsRealtime();
         await checkUpcomingDeadlines();
+        await checkOverdueActions();
         await logUserActivity('login', null, { email: currentUser.email });
         
       } catch (error) {
@@ -1495,6 +1489,7 @@
           await loadNotifications();
           setupNotificationsRealtime();
           await checkUpcomingDeadlines();
+          await checkOverdueActions();
           await logUserActivity('login', null, { email: currentUser.email });
         }
       } catch (error) {
