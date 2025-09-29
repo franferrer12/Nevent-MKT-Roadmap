@@ -957,19 +957,22 @@
     }
 
     function setupNotificationsRealtime() {
-      supabase
-        .channel('notifications_changes')
-        .on('postgres_changes', {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'notifications',
-          filter: `user_id=eq.${currentUser.id}`
-        }, payload => {
-          console.log('🔔 Nueva notificación recibida:', payload);
-          loadNotifications();
-        })
-        .subscribe();
-    }
+  supabase
+    .channel('notifications_changes')
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'notifications'
+      // Sin filtro aquí
+    }, payload => {
+      // Filtrar en el callback
+      if (payload.new.user_id === currentUser.id) {
+        console.log('🔔 Nueva notificación recibida:', payload);
+        loadNotifications();
+      }
+    })
+    .subscribe();
+}
 
     async function checkUpcomingDeadlines() {
       try {
