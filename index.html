@@ -791,6 +791,59 @@
     </div>
   </div>
 
+  <!-- Modal: Create User OKR -->
+  <div id="okrModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">🎯 Nuevo OKR Personal</h2>
+        <button class="close-btn" onclick="closeOKRModal()">&times;</button>
+      </div>
+
+      <form id="okrForm" onsubmit="saveOKR(event)">
+        <div class="form-group">
+          <label>Título del Objetivo</label>
+          <input
+            type="text"
+            id="okrTitle"
+            placeholder="Ej: Aumentar engagement en redes sociales"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Trimestre</label>
+          <select id="okrQuarter" required>
+            <option value="Q4 2025">Q4 2025</option>
+            <option value="Q1 2026">Q1 2026</option>
+            <option value="Q2 2026">Q2 2026</option>
+            <option value="Q3 2026">Q3 2026</option>
+            <option value="Q4 2026">Q4 2026</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Fecha límite</label>
+          <input type="date" id="okrDeadline" required />
+        </div>
+
+        <div class="form-group">
+          <label>Key Results (Resultados Clave)</label>
+          <p style="color: var(--muted); font-size: 13px; margin-bottom: 12px;">
+            Define 2-5 resultados medibles para alcanzar este objetivo
+          </p>
+          <div id="keyResultsContainer"></div>
+          <button type="button" class="btn btn-secondary" onclick="addKeyResult()" style="width: 100%; margin-top: 8px;">
+            ➕ Agregar Key Result
+          </button>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
+          💾 Crear OKR
+        </button>
+      </form>
+    </div>
+  </div>
+
   <script>
     const SUPABASE_URL = 'https://tvbqzqripcevaryquhfg.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2YnF6cXJpcGNldmFyeXF1aGZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxNTI4MzEsImV4cCI6MjA3NDcyODgzMX0.BVHINkyJtK4mwRLX1Nt7_gJbd3ht2qGfvqLvmehkyIM';
@@ -1174,6 +1227,152 @@
       document.getElementById('actionModal').classList.remove('active');
     }
 
+    // OKR Modal Functions
+    let keyResultCounter = 0;
+
+    function openOKRModal() {
+      document.getElementById('okrModal').classList.add('active');
+      document.getElementById('okrForm').reset();
+      document.getElementById('keyResultsContainer').innerHTML = '';
+      keyResultCounter = 0;
+      // Add initial key result
+      addKeyResult();
+      addKeyResult();
+    }
+
+    function closeOKRModal() {
+      document.getElementById('okrModal').classList.remove('active');
+    }
+
+    function addKeyResult() {
+      const container = document.getElementById('keyResultsContainer');
+      const krId = `kr-${keyResultCounter++}`;
+
+      const krHTML = `
+        <div class="key-result-item" id="kr-item-${krId}" style="border: 1px solid var(--stroke); border-radius: 8px; padding: 16px; margin-bottom: 12px; background: var(--bg);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <strong style="color: var(--accent1);">KR ${keyResultCounter}</strong>
+            <button type="button" onclick="removeKeyResult('${krId}')" style="background: none; border: none; color: var(--danger); cursor: pointer; font-size: 18px;">×</button>
+          </div>
+
+          <div style="margin-bottom: 8px;">
+            <label style="font-size: 13px; color: var(--muted);">Descripción</label>
+            <input type="text" class="kr-description" placeholder="Ej: Alcanzar 50K seguidores en LinkedIn" required style="width: 100%; padding: 8px; background: var(--card); border: 1px solid var(--stroke); border-radius: 4px; color: var(--ink); margin-top: 4px;" />
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+            <div>
+              <label style="font-size: 13px; color: var(--muted);">Actual</label>
+              <input type="number" class="kr-current" placeholder="0" value="0" required style="width: 100%; padding: 8px; background: var(--card); border: 1px solid var(--stroke); border-radius: 4px; color: var(--ink); margin-top: 4px;" />
+            </div>
+            <div>
+              <label style="font-size: 13px; color: var(--muted);">Meta</label>
+              <input type="number" class="kr-target" placeholder="100" required style="width: 100%; padding: 8px; background: var(--card); border: 1px solid var(--stroke); border-radius: 4px; color: var(--ink); margin-top: 4px;" />
+            </div>
+            <div>
+              <label style="font-size: 13px; color: var(--muted);">Unidad</label>
+              <input type="text" class="kr-unit" placeholder="seguidores" required style="width: 100%; padding: 8px; background: var(--card); border: 1px solid var(--stroke); border-radius: 4px; color: var(--ink); margin-top: 4px;" />
+            </div>
+          </div>
+        </div>
+      `;
+
+      container.insertAdjacentHTML('beforeend', krHTML);
+    }
+
+    function removeKeyResult(krId) {
+      const element = document.getElementById(`kr-item-${krId}`);
+      if (element) {
+        element.remove();
+      }
+    }
+
+    async function saveOKR(event) {
+      event.preventDefault();
+
+      if (!currentUser) {
+        alert('Debes iniciar sesión para crear un OKR');
+        return;
+      }
+
+      const title = document.getElementById('okrTitle').value;
+      const quarter = document.getElementById('okrQuarter').value;
+      const deadline = document.getElementById('okrDeadline').value;
+
+      // Collect all key results
+      const krItems = document.querySelectorAll('.key-result-item');
+      const keyResults = [];
+
+      krItems.forEach((item, index) => {
+        const description = item.querySelector('.kr-description').value;
+        const current = parseFloat(item.querySelector('.kr-current').value) || 0;
+        const target = parseFloat(item.querySelector('.kr-target').value) || 0;
+        const unit = item.querySelector('.kr-unit').value;
+
+        if (description && target > 0) {
+          const progress = target > 0 ? Math.round((current / target) * 100) : 0;
+          keyResults.push({
+            id: `kr-${index + 1}`,
+            description,
+            current,
+            target,
+            unit,
+            progress
+          });
+        }
+      });
+
+      if (keyResults.length < 2) {
+        alert('Debes agregar al menos 2 Key Results');
+        return;
+      }
+
+      // Calculate overall progress
+      const avgProgress = Math.round(
+        keyResults.reduce((sum, kr) => sum + kr.progress, 0) / keyResults.length
+      );
+
+      // Determine status based on progress
+      let status = 'not_started';
+      if (avgProgress === 0) status = 'not_started';
+      else if (avgProgress < 40) status = 'off_track';
+      else if (avgProgress < 70) status = 'at_risk';
+      else if (avgProgress < 100) status = 'on_track';
+      else status = 'completed';
+
+      const newOKR = {
+        id: generateId(),
+        user_id: currentUser.id,
+        title,
+        quarter,
+        key_results: keyResults,
+        progress: avgProgress,
+        status,
+        deadline,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      try {
+        const { error } = await supabase
+          .from('user_okrs')
+          .insert([newOKR]);
+
+        if (error) throw error;
+
+        console.log('✅ OKR creado:', newOKR);
+        closeOKRModal();
+        await loadMyOKRs();
+        if (isDashboardVisible) {
+          await renderMyDashboard();
+        }
+        alert('✅ OKR creado exitosamente');
+      } catch (error) {
+        console.error('❌ Error al crear OKR:', error);
+        alert('Error al crear OKR: ' + error.message);
+      }
+    }
+
     // Dashboard Functions
     async function loadDepartments() {
       try {
@@ -1271,7 +1470,7 @@
           <div class="dashboard-header">
             <h2>👤 Mi Dashboard</h2>
             <div class="dashboard-actions">
-              <button class="btn-secondary" onclick="alert('Próximamente: Crear OKR')">
+              <button class="btn-secondary" onclick="openOKRModal()">
                 ➕ Nuevo OKR
               </button>
               <button class="btn-secondary" onclick="alert('Próximamente: Crear Initiative')">
