@@ -4057,14 +4057,47 @@
 
       const html = `
         <!-- CS Header -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2xl);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg);">
           <div>
             <h1 style="font-size: var(--font-size-h1); margin-bottom: var(--space-xs);">🤝 Customer Success</h1>
             <p style="color: var(--muted); font-size: 16px;">Gestión de clientes y health score</p>
           </div>
-          <button class="btn btn-primary" onclick="openCustomerModal()">
-            ➕ Nuevo Cliente
-          </button>
+          <div style="display: flex; gap: 12px;">
+            <button class="btn btn-secondary" onclick="syncCSMetricsToCompanyOKRsManual()">
+              🔄 Sincronizar con OKRs
+            </button>
+            <button class="btn btn-primary" onclick="openCustomerModal()">
+              ➕ Nuevo Cliente
+            </button>
+          </div>
+        </div>
+
+        <!-- OKR Contribution Banner -->
+        <div style="background: linear-gradient(135deg, rgba(236, 0, 140, 0.1), rgba(92, 194, 229, 0.1)); border: 1px solid var(--stroke); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-2xl);">
+          <div style="display: flex; align-items: center; gap: var(--space-md);">
+            <div style="font-size: 32px;">🎯</div>
+            <div style="flex: 1;">
+              <div style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">
+                Contribución a Company OKRs 2025
+              </div>
+              <div style="font-size: 13px; color: var(--muted);">
+                Tus métricas de CS se sincronizan automáticamente con:
+              </div>
+              <div style="display: flex; gap: 16px; margin-top: 8px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span style="font-size: 20px;">📊</span>
+                  <span style="font-size: 13px;"><strong>NRR ${metrics.nrr}%</strong> → OKR "Mantener NRR > 120%"</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span style="font-size: 20px;">👥</span>
+                  <span style="font-size: 13px;"><strong>${metrics.activeCustomers} clientes</strong> → OKR "Alcanzar 200 clientes activos"</span>
+                </div>
+              </div>
+            </div>
+            <div id="syncStatus" style="font-size: 12px; color: var(--muted); text-align: right;">
+              Última sync: Nunca
+            </div>
+          </div>
         </div>
 
         <!-- CS Metrics -->
@@ -4350,6 +4383,123 @@
       // Re-render customer list
       renderCustomerList(allCustomers, segment);
     }
+
+    // ================================================================
+    // CS METRICS → COMPANY OKRs INTEGRATION
+    // ================================================================
+
+    async function syncCSMetricsToCompanyOKRs() {
+      try {
+        // Load customers and calculate CS metrics
+        const customers = await loadAllCustomers();
+        const metrics = calculateCSMetrics(customers);
+
+        // Load Company OKRs
+        const { data: companyOKRs, error: loadError } = await supabase
+          .from('company_okrs')
+          .select('*')
+          .eq('fiscal_year', '2025');
+
+        if (loadError) throw loadError;
+
+        // Find growth OKR (contains NRR key result)
+        const growthOKR = companyOKRs.find(okr => okr.id === 'co-2025-growth');
+        if (!growthOKR) return;
+
+        // Update NRR Key Result (kr-3)
+        const keyResults = growthOKR.key_results;
+        const nrrKR = keyResults.find(kr => kr.id === 'kr-3');
+        const customersKR = keyResults.find(kr => kr.id === 'kr-2');
+
+        if (nrrKR) {
+          nrrKR.current = metrics.nrr;
+          nrrKR.progress = Math.min(Math.round((metrics.nrr / nrrKR.target) * 100), 100);
+        }
+
+        if (customersKR) {
+          customersKR.current = metrics.activeCustomers;
+          customersKR.progress = Math.min(Math.round((metrics.activeCustomers / customersKR.target) * 100), 100);
+        }
+
+        // Recalculate health score
+        const avgProgress = keyResults.reduce((sum, kr) => sum + kr.progress, 0) / keyResults.length;
+        const newHealthScore = Math.round(avgProgress);
+
+        // Update Company OKR
+        const { error: updateError } = await supabase
+          .from('company_okrs')
+          .update({
+            key_results: keyResults,
+            health_score: newHealthScore,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', 'co-2025-growth');
+
+        if (updateError) throw updateError;
+
+        console.log('✅ CS Metrics synced to Company OKRs:', {
+          nrr: metrics.nrr,
+          activeCustomers: metrics.activeCustomers,
+          healthScore: newHealthScore
+        });
+
+        return true;
+      } catch (error) {
+        console.error('Error syncing CS metrics to Company OKRs:', error);
+        return false;
+      }
+    }
+
+    // Manual sync trigger with user feedback
+    async function syncCSMetricsToCompanyOKRsManual() {
+      const button = event.target;
+      const originalText = button.innerHTML;
+
+      button.innerHTML = '⏳ Sincronizando...';
+      button.disabled = true;
+
+      const success = await syncCSMetricsToCompanyOKRs();
+
+      if (success) {
+        button.innerHTML = '✅ Sincronizado';
+        showToast('Métricas de CS sincronizadas con Company OKRs', 'success');
+
+        // Update sync status
+        const syncStatus = document.getElementById('syncStatus');
+        if (syncStatus) {
+          const now = new Date();
+          syncStatus.innerHTML = `Última sync: ${now.toLocaleTimeString('es-ES')}`;
+        }
+
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.disabled = false;
+        }, 2000);
+      } else {
+        button.innerHTML = '❌ Error';
+        showToast('Error al sincronizar métricas', 'error');
+
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.disabled = false;
+        }, 2000);
+      }
+    }
+
+    // Auto-sync CS metrics when customer is saved/deleted
+    const originalSaveCustomer = saveCustomer;
+    saveCustomer = async function(event) {
+      await originalSaveCustomer(event);
+      // Sync metrics to Company OKRs after save
+      setTimeout(() => syncCSMetricsToCompanyOKRs(), 500);
+    };
+
+    const originalDeleteCustomer = deleteCustomer;
+    deleteCustomer = async function(customerId) {
+      await originalDeleteCustomer(customerId);
+      // Sync metrics to Company OKRs after delete
+      setTimeout(() => syncCSMetricsToCompanyOKRs(), 500);
+    };
 
     // ================================================================
     // INITIALIZATION
