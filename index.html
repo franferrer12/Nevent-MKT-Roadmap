@@ -634,9 +634,169 @@
         gap: 15px;
       }
     }
+
+    /* Toast Notification System */
+    #toastContainer {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 400px;
+    }
+
+    .toast {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      padding: 16px 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: start;
+      gap: 12px;
+      animation: slideIn 0.3s ease-out;
+      cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .toast:hover {
+      transform: translateX(-4px);
+    }
+
+    .toast.removing {
+      animation: slideOut 0.3s ease-in forwards;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+    }
+
+    .toast-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .toast-content {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--ink);
+    }
+
+    .toast-message {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .toast-close {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 20px;
+      cursor: pointer;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: color 0.2s;
+    }
+
+    .toast-close:hover {
+      color: var(--ink);
+    }
+
+    .toast.success {
+      border-left: 4px solid var(--success);
+    }
+
+    .toast.error {
+      border-left: 4px solid var(--danger);
+    }
+
+    .toast.warning {
+      border-left: 4px solid var(--warning);
+    }
+
+    .toast.info {
+      border-left: 4px solid var(--accent2);
+    }
+
+    /* Offline Indicator */
+    #offlineIndicator {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--danger);
+      color: white;
+      padding: 12px 20px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 9999;
+      display: none;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-100%);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    #offlineIndicator.show {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      #toastContainer {
+        left: 20px;
+        right: 20px;
+        max-width: none;
+      }
+    }
   </style>
 </head>
 <body>
+  <!-- Offline Indicator -->
+  <div id="offlineIndicator">
+    ⚠️ Sin conexión a Internet. Algunas funcionalidades pueden no estar disponibles.
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer"></div>
   
   <div id="loginPage">
     <div class="login-container">
@@ -1924,8 +2084,151 @@
       return Math.round(totalProgress / myOKRs.length);
     }
 
+    // ================================================================
+    // TOAST NOTIFICATION SYSTEM
+    // ================================================================
+
+    function showToast(message, type = 'info', title = null, duration = 5000) {
+      const container = document.getElementById('toastContainer');
+
+      const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+      };
+
+      const titles = {
+        success: title || 'Éxito',
+        error: title || 'Error',
+        warning: title || 'Advertencia',
+        info: title || 'Información'
+      };
+
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `
+        <div class="toast-icon">${icons[type]}</div>
+        <div class="toast-content">
+          <div class="toast-title">${titles[type]}</div>
+          <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+      `;
+
+      container.appendChild(toast);
+
+      // Auto-remove after duration
+      if (duration > 0) {
+        setTimeout(() => {
+          toast.classList.add('removing');
+          setTimeout(() => toast.remove(), 300);
+        }, duration);
+      }
+
+      // Click to dismiss
+      toast.addEventListener('click', (e) => {
+        if (!e.target.classList.contains('toast-close')) {
+          toast.classList.add('removing');
+          setTimeout(() => toast.remove(), 300);
+        }
+      });
+
+      return toast;
+    }
+
+    // Offline/Online detection
+    function setupOfflineDetection() {
+      const indicator = document.getElementById('offlineIndicator');
+
+      window.addEventListener('offline', () => {
+        indicator.classList.add('show');
+        showToast(
+          'Has perdido la conexión a Internet. Los cambios se guardarán cuando vuelvas a estar online.',
+          'warning',
+          'Sin conexión',
+          10000
+        );
+      });
+
+      window.addEventListener('online', () => {
+        indicator.classList.remove('show');
+        showToast(
+          'Conexión restaurada. Todos los sistemas funcionando correctamente.',
+          'success',
+          'Conectado',
+          5000
+        );
+      });
+
+      // Check initial state
+      if (!navigator.onLine) {
+        indicator.classList.add('show');
+      }
+    }
+
+    // Enhanced error handling for Supabase operations
+    function handleSupabaseError(error, operation = 'operación') {
+      console.error(`❌ Error en ${operation}:`, error);
+
+      let message = `Hubo un problema al realizar la ${operation}.`;
+      let title = 'Error';
+
+      if (error.message) {
+        if (error.message.includes('JWT')) {
+          message = 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.';
+          title = 'Sesión expirada';
+          setTimeout(() => handleLogout(), 2000);
+        } else if (error.message.includes('network')) {
+          message = 'Error de conexión. Verifica tu conexión a Internet.';
+          title = 'Error de red';
+        } else if (error.message.includes('permission') || error.message.includes('policy')) {
+          message = 'No tienes permisos para realizar esta acción.';
+          title = 'Permisos insuficientes';
+        } else {
+          message = error.message;
+        }
+      }
+
+      showToast(message, 'error', title, 8000);
+    }
+
+    // Replace all alert() calls with showToast()
+    const originalAlert = window.alert;
+    window.alert = function(message) {
+      // Determine type based on message content
+      let type = 'info';
+      if (message.includes('✅') || message.toLowerCase().includes('éxito')) {
+        type = 'success';
+      } else if (message.includes('❌') || message.toLowerCase().includes('error')) {
+        type = 'error';
+      } else if (message.includes('⚠️') || message.toLowerCase().includes('advertencia')) {
+        type = 'warning';
+      }
+
+      showToast(message.replace(/✅|❌|⚠️|ℹ️/g, '').trim(), type);
+    };
+
+    // ================================================================
+    // INITIALIZATION
+    // ================================================================
+
     window.addEventListener('DOMContentLoaded', () => {
       checkSession();
+      setupOfflineDetection();
+
+      // Show welcome message when user logs in successfully
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('welcome') === 'true') {
+        setTimeout(() => {
+          showToast(
+            'Bienvenido a Nevent Strategic Execution Platform',
+            'success',
+            '¡Hola!',
+            4000
+          );
+        }, 500);
+      }
     });
   </script>
 </body>
