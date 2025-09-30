@@ -210,6 +210,19 @@
       max-width: 1400px;
       margin: 0 auto;
       padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .container.viewing-as-mode {
+      border: 4px solid var(--accent1);
+      border-radius: 12px;
+      padding: 16px;
+      background: linear-gradient(
+        to bottom,
+        rgba(236, 0, 140, 0.03) 0%,
+        transparent 100%
+      );
+      box-shadow: inset 0 0 20px rgba(236, 0, 140, 0.1), 0 0 30px rgba(236, 0, 140, 0.2);
     }
 
     header {
@@ -273,6 +286,20 @@
 
     .btn-secondary:hover {
       background: var(--stroke);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      border-color: var(--danger);
+      color: white;
+      font-weight: 600;
+    }
+
+    .btn-danger:hover {
+      background: #c21f1f;
+      border-color: #c21f1f;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
     }
 
     .logout-btn {
@@ -406,28 +433,64 @@
     }
 
     .viewing-as-banner {
-      background: linear-gradient(135deg, rgba(236, 0, 140, 0.15), rgba(92, 194, 229, 0.15));
-      border-bottom: 2px solid var(--accent1);
-      padding: var(--space-sm) var(--space-md);
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      border-bottom: 3px solid var(--accent1);
+      padding: var(--space-md) var(--space-lg);
       text-align: center;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 4px 12px rgba(236, 0, 140, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      animation: slideDown 0.3s ease-out, pulse-banner 2s ease-in-out infinite;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes pulse-banner {
+      0%, 100% {
+        box-shadow: 0 4px 12px rgba(236, 0, 140, 0.3);
+      }
+      50% {
+        box-shadow: 0 4px 20px rgba(236, 0, 140, 0.5);
+      }
+    }
+
+    .viewing-as-banner strong {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 12px;
+      border-radius: 6px;
+      margin: 0 8px;
     }
 
     .viewing-as-banner .exit-btn {
-      margin-left: 12px;
-      padding: 4px 12px;
-      font-size: 11px;
-      background: var(--accent1);
-      color: white;
+      margin-left: 16px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      background: white;
+      color: var(--accent1);
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
       transition: all 0.2s;
     }
 
     .viewing-as-banner .exit-btn:hover {
-      background: var(--accent1-light);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.95);
     }
 
     .stats {
@@ -2000,6 +2063,23 @@
     </div>
   </div>
 
+  <!-- Modal: Confirmation Dialog -->
+  <div id="confirmDialog" class="modal">
+    <div class="modal-content" style="max-width: 480px;">
+      <div class="modal-header">
+        <h2 class="modal-title" id="confirmDialogTitle">⚠️ Confirmar acción</h2>
+      </div>
+      <div class="modal-body">
+        <p id="confirmDialogMessage" style="font-size: 16px; margin-bottom: 12px; color: var(--ink);"></p>
+        <p id="confirmDialogDetails" style="font-size: 14px; color: var(--muted);"></p>
+      </div>
+      <div class="modal-footer" style="display: flex; gap: 12px; justify-content: flex-end;">
+        <button type="button" class="btn btn-secondary" id="confirmDialogCancel">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="confirmDialogConfirm">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal: Customer Management -->
   <div id="customerModal" class="modal">
     <div class="modal-content">
@@ -2120,7 +2200,7 @@
   <script>
     const SUPABASE_URL = 'https://tvbqzqripcevaryquhfg.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2YnF6cXJpcGNldmFyeXF1aGZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxNTI4MzEsImV4cCI6MjA3NDcyODgzMX0.BVHINkyJtK4mwRLX1Nt7_gJbd3ht2qGfvqLvmehkyIM';
-    
+
     let supabase;
     let currentUser = null;
     let currentUserRole = null;
@@ -2128,6 +2208,84 @@
     let myInitiatives = [];
     let allDepartments = [];
     let isDashboardVisible = false;
+
+    // ============================================
+    // ANALYTICS SYSTEM
+    // ============================================
+    const analytics = {
+      sessionId: `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      events: [],
+
+      track(eventName, properties = {}) {
+        const event = {
+          id: `evt-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          name: eventName,
+          timestamp: new Date().toISOString(),
+          session_id: this.sessionId,
+          user_id: currentUser?.id || 'anonymous',
+          user_email: currentUser?.email || 'anonymous',
+          user_role: currentUser?.role || 'unknown',
+          properties: {
+            ...properties,
+            url: window.location.href,
+            viewport_width: window.innerWidth,
+            viewport_height: window.innerHeight
+          }
+        };
+
+        this.events.push(event);
+
+        // Console log en desarrollo
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          console.log('📊 Analytics:', eventName, properties);
+        }
+
+        // Guardar en localStorage para análisis posterior
+        this.persistEvent(event);
+
+        return event;
+      },
+
+      persistEvent(event) {
+        try {
+          const storedEvents = JSON.parse(localStorage.getItem('analytics_events') || '[]');
+          storedEvents.push(event);
+
+          // Keep only last 100 events
+          if (storedEvents.length > 100) {
+            storedEvents.shift();
+          }
+
+          localStorage.setItem('analytics_events', JSON.stringify(storedEvents));
+        } catch (error) {
+          console.error('Error persisting analytics event:', error);
+        }
+      },
+
+      getEvents(filters = {}) {
+        try {
+          const events = JSON.parse(localStorage.getItem('analytics_events') || '[]');
+
+          if (filters.eventName) {
+            return events.filter(e => e.name === filters.eventName);
+          }
+
+          if (filters.sessionId) {
+            return events.filter(e => e.session_id === filters.sessionId);
+          }
+
+          return events;
+        } catch (error) {
+          console.error('Error getting analytics events:', error);
+          return [];
+        }
+      },
+
+      clearEvents() {
+        localStorage.removeItem('analytics_events');
+        this.events = [];
+      }
+    };
 
     try {
       supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -2175,6 +2333,12 @@
           // Fallback to user_metadata if no profile exists
           currentUser.role = data.user.user_metadata?.role || 'user';
         }
+
+        // Track login
+        analytics.track('user_login', {
+          role: currentUser.role,
+          has_profile: !!userProfile
+        });
 
         document.getElementById('loginPage').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
@@ -2519,11 +2683,24 @@
     }
 
     async function deleteAction(actionId, quarter) {
-      if (!confirm('¿Eliminar esta acción?')) return;
+      // Get action title for confirmation
+      const action = roadmapData.quarters[quarter]?.find(a => a.id === actionId);
+      const actionTitle = action?.title || 'esta acción';
+
+      const confirmed = await showConfirmDialog({
+        title: '⚠️ Confirmar eliminación',
+        message: `¿Estás seguro de eliminar "${actionTitle}"?`,
+        details: 'Esta acción no se puede deshacer. Se eliminarán todas las subtareas asociadas.',
+        confirmText: 'Sí, eliminar',
+        cancelText: 'Cancelar',
+        danger: true
+      });
+
+      if (!confirmed) return;
 
       roadmapData.quarters[quarter] = roadmapData.quarters[quarter].filter(a => a.id !== actionId);
       await deleteFromSupabase(actionId);
-      
+
       renderTimeline();
       updateStats();
     }
@@ -3126,6 +3303,14 @@
 
           if (error) throw error;
           showToast(`Cliente actualizado: ${name}`, 'success');
+
+          // Track customer update
+          analytics.track('customer_updated', {
+            customer_id: editId,
+            mrr: mrr,
+            status: status,
+            health_score: health_score
+          });
         } else {
           // Create new customer
           customerData.id = generateId();
@@ -3137,6 +3322,14 @@
 
           if (error) throw error;
           showToast(`Cliente creado: ${name}`, 'success');
+
+          // Track customer creation
+          analytics.track('customer_created', {
+            customer_id: customerData.id,
+            mrr: mrr,
+            status: status,
+            health_score: health_score
+          });
         }
 
         closeCustomerModal();
@@ -3169,9 +3362,20 @@
     }
 
     async function deleteCustomer(customerId) {
-      if (!confirm('¿Estás seguro de eliminar este cliente? Esta acción no se puede deshacer.')) {
-        return;
-      }
+      // Get customer name for confirmation
+      const customer = allCustomers.find(c => c.id === customerId);
+      const customerName = customer?.name || 'este cliente';
+
+      const confirmed = await showConfirmDialog({
+        title: '⚠️ Confirmar eliminación',
+        message: `¿Estás seguro de eliminar "${customerName}"?`,
+        details: 'Esta acción no se puede deshacer. Se perderán todos los datos del cliente.',
+        confirmText: 'Sí, eliminar',
+        cancelText: 'Cancelar',
+        danger: true
+      });
+
+      if (!confirmed) return;
 
       try {
         const { error } = await supabase
@@ -3181,7 +3385,7 @@
 
         if (error) throw error;
 
-        showToast('Cliente eliminado', 'success');
+        showToast('Cliente eliminado correctamente', 'success');
 
         // Reload customers
         if (currentView === 'cs-dashboard') {
@@ -3497,6 +3701,70 @@
     // TOAST NOTIFICATION SYSTEM
     // ================================================================
 
+    // ============================================
+    // CONFIRMATION DIALOG SYSTEM
+    // ============================================
+    function showConfirmDialog(options) {
+      return new Promise((resolve) => {
+        const {
+          title = '⚠️ Confirmar acción',
+          message = '¿Estás seguro?',
+          details = '',
+          confirmText = 'Confirmar',
+          cancelText = 'Cancelar',
+          danger = false
+        } = options;
+
+        const modal = document.getElementById('confirmDialog');
+        const titleEl = document.getElementById('confirmDialogTitle');
+        const messageEl = document.getElementById('confirmDialogMessage');
+        const detailsEl = document.getElementById('confirmDialogDetails');
+        const confirmBtn = document.getElementById('confirmDialogConfirm');
+        const cancelBtn = document.getElementById('confirmDialogCancel');
+
+        titleEl.textContent = title;
+        messageEl.textContent = message;
+        detailsEl.textContent = details;
+        confirmBtn.textContent = confirmText;
+        cancelBtn.textContent = cancelText;
+
+        // Apply danger style if needed
+        if (danger) {
+          confirmBtn.className = 'btn btn-danger';
+        } else {
+          confirmBtn.className = 'btn btn-primary';
+        }
+
+        modal.style.display = 'flex';
+
+        const cleanup = () => {
+          modal.style.display = 'none';
+          confirmBtn.onclick = null;
+          cancelBtn.onclick = null;
+        };
+
+        confirmBtn.onclick = () => {
+          cleanup();
+          resolve(true);
+        };
+
+        cancelBtn.onclick = () => {
+          cleanup();
+          resolve(false);
+        };
+
+        // Close on escape
+        const handleEscape = (e) => {
+          if (e.key === 'Escape') {
+            cleanup();
+            resolve(false);
+            document.removeEventListener('keydown', handleEscape);
+          }
+        };
+        document.addEventListener('keydown', handleEscape);
+      });
+    }
+
     function showToast(message, type = 'info', title = null, duration = 5000) {
       const container = document.getElementById('toastContainer');
 
@@ -3633,6 +3901,12 @@
 
     function switchView(viewName) {
       currentView = viewName;
+
+      // Track view change
+      analytics.track('view_changed', {
+        view: viewName,
+        previous_view: currentView
+      });
 
       // Update tabs
       document.querySelectorAll('.nav-tab').forEach(tab => {
@@ -4844,9 +5118,17 @@
       currentUser.full_name = user.full_name;
       currentUser.department_id = user.department_id;
 
-      // Mostrar banner
+      // Track view as switch
+      analytics.track('view_as_switch', {
+        target_user_id: user.id,
+        target_role: user.role,
+        original_role: originalUser.role
+      });
+
+      // Mostrar banner y overlay
       document.getElementById('viewingAsBanner').style.display = 'block';
       document.getElementById('viewingAsEmail').textContent = user.email;
+      document.querySelector('.container').classList.add('viewing-as-mode');
 
       // Actualizar badge
       updateCurrentUserBadge();
@@ -4925,8 +5207,14 @@
 
       viewingAsUser = null;
 
-      // Ocultar banner
+      // Track exit view as
+      analytics.track('view_as_exit', {
+        original_role: originalUser.role
+      });
+
+      // Ocultar banner y remover overlay
       document.getElementById('viewingAsBanner').style.display = 'none';
+      document.querySelector('.container').classList.remove('viewing-as-mode');
 
       // Actualizar badge
       updateCurrentUserBadge();
