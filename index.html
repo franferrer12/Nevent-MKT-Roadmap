@@ -4870,7 +4870,7 @@
         return;
       }
 
-      safeSetHTML(container, `
+      const html = `
         <div class="dept-health-grid">
           ${departments.map(dept => {
             const healthColor = dept.health_score >= 80 ? 'var(--success)' : dept.health_score >= 60 ? 'var(--warning)' : 'var(--danger)';
@@ -4897,6 +4897,8 @@
           }).join('')}
         </div>
       `;
+
+      safeSetHTML(container, html);
     }
 
     function showMetricDetail(metricType) {
