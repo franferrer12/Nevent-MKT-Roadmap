@@ -285,6 +285,151 @@
       background: #dc2626 !important;
     }
 
+    /* View As User Selector */
+    .view-as-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .view-as-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      min-width: 320px;
+      max-height: 500px;
+      overflow-y: auto;
+      z-index: 1000;
+    }
+
+    .dropdown-header {
+      padding: var(--space-md);
+      border-bottom: 1px solid var(--stroke);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .dropdown-subtitle {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: normal;
+      margin-top: 4px;
+    }
+
+    .user-list {
+      padding: var(--space-sm);
+    }
+
+    .user-item {
+      padding: var(--space-md);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      border: 1px solid transparent;
+      margin-bottom: 4px;
+    }
+
+    .user-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--accent1);
+    }
+
+    .user-item.active {
+      background: rgba(236, 0, 140, 0.1);
+      border-color: var(--accent1);
+    }
+
+    .user-item-icon {
+      font-size: 24px;
+      min-width: 32px;
+      text-align: center;
+    }
+
+    .user-item-info {
+      flex: 1;
+    }
+
+    .user-item-name {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .user-item-email {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .user-item-role {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .role-ceo {
+      background: var(--accent1);
+      color: white;
+    }
+
+    .role-director {
+      background: var(--accent2);
+      color: white;
+    }
+
+    .role-csm {
+      background: var(--warning);
+      color: white;
+    }
+
+    .role-user {
+      background: var(--stroke);
+      color: var(--muted);
+    }
+
+    #currentUserBadge {
+      font-weight: 600;
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .viewing-as-banner {
+      background: linear-gradient(135deg, rgba(236, 0, 140, 0.15), rgba(92, 194, 229, 0.15));
+      border-bottom: 2px solid var(--accent1);
+      padding: var(--space-sm) var(--space-md);
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .viewing-as-banner .exit-btn {
+      margin-left: 12px;
+      padding: 4px 12px;
+      font-size: 11px;
+      background: var(--accent1);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .viewing-as-banner .exit-btn:hover {
+      background: var(--accent1-light);
+    }
+
     .stats {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -1474,11 +1619,34 @@
 
   <div id="mainApp">
     <div class="container">
+      <!-- Viewing As Banner -->
+      <div id="viewingAsBanner" class="viewing-as-banner" style="display: none;">
+        👁️ Viendo como: <strong id="viewingAsEmail"></strong>
+        <button class="exit-btn" onclick="exitViewAsMode()">↩️ Volver a mi cuenta</button>
+      </div>
+
       <header>
         <h1>🚀 Roadmap Nevent 2025-2026</h1>
         <div class="header-actions">
           <button class="btn btn-primary" onclick="openAddActionModal()">➕ Nueva Acción</button>
           <button class="btn" onclick="syncData()">🔄 Sincronizar</button>
+
+          <!-- View As User Selector (CEO only) -->
+          <div id="viewAsSelector" class="view-as-container" style="display: none;">
+            <button class="btn btn-secondary" onclick="toggleViewAsDropdown()" id="viewAsButton">
+              👤 <span id="currentUserBadge">Usuario</span> <span style="font-size: 10px;">▼</span>
+            </button>
+            <div id="viewAsDropdown" class="view-as-dropdown" style="display: none;">
+              <div class="dropdown-header">
+                🔄 Cambiar vista de usuario
+                <span class="dropdown-subtitle">Jerarquía de acceso</span>
+              </div>
+              <div id="userListContainer" class="user-list">
+                <!-- Users will be loaded here -->
+              </div>
+            </div>
+          </div>
+
           <button class="btn logout-btn" onclick="handleLogout()">🚪 Salir</button>
         </div>
       </header>
@@ -2016,6 +2184,7 @@
         await loadMyInitiatives();
         await loadDepartments();
         initializeRoleBasedNav();
+        await initializeViewAsSystem();
         setupRealtimeSync();
 
       } catch (error) {
@@ -2066,6 +2235,7 @@
           await loadMyInitiatives();
           await loadDepartments();
           initializeRoleBasedNav();
+          await initializeViewAsSystem();
           setupRealtimeSync();
         }
       } catch (error) {
@@ -4535,6 +4705,243 @@
       // Sync metrics to Company OKRs after delete
       setTimeout(() => syncCSMetricsToCompanyOKRs(), 500);
     };
+
+    // ================================================================
+    // VIEW AS USER SYSTEM (Multi-Tenant Interno)
+    // ================================================================
+
+    let originalUser = null;     // Usuario autenticado real
+    let viewingAsUser = null;    // Usuario que estamos viendo como
+    let allUsersForSwitch = [];  // Lista de usuarios disponibles según jerarquía
+
+    async function initializeViewAsSystem() {
+      // Solo disponible para CEO
+      if (!currentUser || currentUser.role !== 'ceo') {
+        return;
+      }
+
+      // Mostrar el selector
+      document.getElementById('viewAsSelector').style.display = 'inline-block';
+
+      // Guardar usuario original si no está guardado
+      if (!originalUser) {
+        originalUser = { ...currentUser };
+      }
+
+      // Cargar usuarios disponibles según jerarquía
+      await loadUsersForViewAs();
+
+      // Actualizar badge
+      updateCurrentUserBadge();
+    }
+
+    async function loadUsersForViewAs() {
+      try {
+        const { data: users, error } = await supabase
+          .from('users')
+          .select('*')
+          .order('role', { ascending: false });
+
+        if (error) throw error;
+
+        allUsersForSwitch = users || [];
+        renderUserList();
+      } catch (error) {
+        console.error('Error loading users:', error);
+      }
+    }
+
+    function renderUserList() {
+      const container = document.getElementById('userListContainer');
+      if (!container || allUsersForSwitch.length === 0) return;
+
+      const roleOrder = { ceo: 1, director: 2, csm: 3, user: 4 };
+      const sortedUsers = [...allUsersForSwitch].sort((a, b) => {
+        return (roleOrder[a.role] || 999) - (roleOrder[b.role] || 999);
+      });
+
+      const html = sortedUsers.map(user => {
+        const isActive = currentUser.id === user.id;
+        const roleIcon = getRoleIcon(user.role);
+        const roleClass = `role-${user.role}`;
+
+        return `
+          <div class="user-item ${isActive ? 'active' : ''}" onclick="switchToUser('${user.id}')">
+            <div class="user-item-icon">${roleIcon}</div>
+            <div class="user-item-info">
+              <div class="user-item-name">${user.full_name || user.email.split('@')[0]}</div>
+              <div class="user-item-email">${user.email}</div>
+            </div>
+            <span class="user-item-role ${roleClass}">${user.role}</span>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = html;
+    }
+
+    function getRoleIcon(role) {
+      const icons = {
+        ceo: '🌍',
+        director: '👥',
+        csm: '🤝',
+        user: '👤'
+      };
+      return icons[role] || '👤';
+    }
+
+    function toggleViewAsDropdown() {
+      const dropdown = document.getElementById('viewAsDropdown');
+      if (!dropdown) return;
+
+      const isVisible = dropdown.style.display === 'block';
+      dropdown.style.display = isVisible ? 'none' : 'block';
+
+      // Cerrar al hacer click fuera
+      if (!isVisible) {
+        setTimeout(() => {
+          document.addEventListener('click', closeDropdownOnClickOutside);
+        }, 10);
+      }
+    }
+
+    function closeDropdownOnClickOutside(event) {
+      const dropdown = document.getElementById('viewAsDropdown');
+      const button = document.getElementById('viewAsButton');
+
+      if (dropdown && button) {
+        if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+          dropdown.style.display = 'none';
+          document.removeEventListener('click', closeDropdownOnClickOutside);
+        }
+      }
+    }
+
+    async function switchToUser(userId) {
+      // Cerrar dropdown
+      document.getElementById('viewAsDropdown').style.display = 'none';
+
+      // Buscar usuario
+      const user = allUsersForSwitch.find(u => u.id === userId);
+      if (!user) return;
+
+      // Si es el usuario original, salir del modo View As
+      if (originalUser && userId === originalUser.id) {
+        exitViewAsMode();
+        return;
+      }
+
+      // Guardar usuario original si no existe
+      if (!originalUser) {
+        originalUser = { ...currentUser };
+      }
+
+      // Cambiar contexto
+      viewingAsUser = user;
+      currentUser.id = user.id;
+      currentUser.email = user.email;
+      currentUser.role = user.role;
+      currentUser.full_name = user.full_name;
+      currentUser.department_id = user.department_id;
+
+      // Mostrar banner
+      document.getElementById('viewingAsBanner').style.display = 'block';
+      document.getElementById('viewingAsEmail').textContent = user.email;
+
+      // Actualizar badge
+      updateCurrentUserBadge();
+
+      // Reload todos los datos del nuevo usuario
+      await reloadAllUserData();
+
+      // Actualizar navegación
+      initializeRoleBasedNav();
+
+      // Cambiar a vista por defecto del nuevo rol
+      if (user.role === 'ceo') {
+        switchView('ceo-dashboard');
+      } else if (user.role === 'director') {
+        switchView('director-dashboard');
+      } else if (user.role === 'csm') {
+        switchView('cs-dashboard');
+      } else {
+        switchView('user-dashboard');
+      }
+
+      showToast(`Vista cambiada a: ${user.email}`, 'info');
+    }
+
+    function updateCurrentUserBadge() {
+      const badge = document.getElementById('currentUserBadge');
+      if (!badge) return;
+
+      const displayName = currentUser.full_name || currentUser.email.split('@')[0];
+      const roleIcon = getRoleIcon(currentUser.role);
+
+      badge.innerHTML = `${roleIcon} ${displayName}`;
+    }
+
+    async function reloadAllUserData() {
+      try {
+        // Limpiar datos actuales
+        myOKRs = [];
+        myInitiatives = [];
+        allCustomers = [];
+
+        // Reload según el rol
+        await loadData();
+        await loadMyOKRs();
+        await loadMyInitiatives();
+
+        if (currentUser.role === 'director' || currentUser.role === 'ceo') {
+          await loadDepartments();
+        }
+
+        if (currentUser.role === 'csm' || currentUser.role === 'ceo') {
+          await loadAllCustomers();
+        }
+
+        // Renderizar dashboard actual
+        const currentViewId = document.querySelector('.nav-tab.active')?.dataset.view;
+        if (currentViewId) {
+          switchView(currentViewId);
+        }
+
+      } catch (error) {
+        console.error('Error reloading user data:', error);
+        showToast('Error al cargar datos del usuario', 'error');
+      }
+    }
+
+    function exitViewAsMode() {
+      if (!originalUser) return;
+
+      // Restaurar usuario original
+      currentUser.id = originalUser.id;
+      currentUser.email = originalUser.email;
+      currentUser.role = originalUser.role;
+      currentUser.full_name = originalUser.full_name;
+      currentUser.department_id = originalUser.department_id;
+
+      viewingAsUser = null;
+
+      // Ocultar banner
+      document.getElementById('viewingAsBanner').style.display = 'none';
+
+      // Actualizar badge
+      updateCurrentUserBadge();
+
+      // Reload datos
+      reloadAllUserData();
+
+      // Actualizar navegación
+      initializeRoleBasedNav();
+
+      // Volver a CEO dashboard
+      switchView('ceo-dashboard');
+
+      showToast('Has vuelto a tu cuenta', 'success');
+    }
 
     // ================================================================
     // INITIALIZATION
