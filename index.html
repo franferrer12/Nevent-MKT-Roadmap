@@ -7,6 +7,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
+      /* Base colors */
       --bg: #0A0A0A;
       --card: #141414;
       --ink: #FFFFFF;
@@ -18,6 +19,62 @@
       --success: #10b981;
       --warning: #f59e0b;
       --danger: #ef4444;
+
+      /* Extended palette */
+      --accent1-light: #FF1A9E;
+      --accent1-dark: #CC0070;
+      --accent2-light: #70D9FF;
+      --accent2-dark: #4AA8C7;
+
+      /* Neutral scale */
+      --neutral-900: #0A0A0A;
+      --neutral-800: #141414;
+      --neutral-700: #1E1E1E;
+      --neutral-600: #2A2A2A;
+      --neutral-500: #333333;
+
+      /* Type scale */
+      --font-size-display: 56px;
+      --font-size-h1: 36px;
+      --font-size-h2: 28px;
+      --font-size-h3: 22px;
+      --font-size-body: 16px;
+      --font-size-small: 14px;
+
+      /* Font weights */
+      --font-weight-bold: 700;
+      --font-weight-semibold: 600;
+      --font-weight-medium: 500;
+
+      /* Spacing */
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+
+      /* Border radius */
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --radius-full: 9999px;
+
+      /* Shadows */
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.5);
+
+      /* Transitions */
+      --transition-fast: 0.15s ease;
+      --transition-base: 0.2s ease;
+      --transition-slow: 0.3s ease;
+
+      /* Z-index */
+      --z-dropdown: 1000;
+      --z-modal: 1050;
+      --z-toast: 1060;
     }
 
     * {
@@ -787,6 +844,164 @@
         max-width: none;
       }
     }
+
+    /* Navigation Tabs System */
+    .main-navigation {
+      margin-bottom: var(--space-xl);
+      border-bottom: 2px solid var(--stroke);
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: var(--space-xs);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .nav-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-tab {
+      padding: 12px 24px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--muted);
+      font-size: var(--font-size-small);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      white-space: nowrap;
+    }
+
+    .nav-tab:hover {
+      color: var(--ink);
+      background: rgba(236, 0, 140, 0.05);
+    }
+
+    .nav-tab.active {
+      color: var(--accent1);
+      border-bottom-color: var(--accent1);
+    }
+
+    .nav-tab[data-required-role]:not([data-user-has-role]) {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .nav-tab {
+        padding: 10px 16px;
+        font-size: 13px;
+      }
+
+      .tab-label {
+        display: none;
+      }
+
+      .nav-tab.active .tab-label {
+        display: inline;
+      }
+    }
+
+    /* CEO Dashboard Styles */
+    .ceo-dashboard {
+      display: none;
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: var(--space-xl);
+    }
+
+    .ceo-dashboard.active {
+      display: block;
+    }
+
+    .ceo-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .kpi-card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: all var(--transition-slow);
+      cursor: pointer;
+    }
+
+    .kpi-card:hover {
+      border-color: var(--accent1);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .kpi-icon {
+      font-size: 48px;
+      flex-shrink: 0;
+    }
+
+    .kpi-content {
+      flex: 1;
+    }
+
+    .kpi-label {
+      font-size: var(--font-size-small);
+      color: var(--muted);
+      margin-bottom: var(--space-xs);
+    }
+
+    .kpi-value {
+      font-size: var(--font-size-display);
+      font-weight: var(--font-weight-bold);
+      line-height: 1;
+      margin-bottom: var(--space-xs);
+    }
+
+    .kpi-trend {
+      font-size: var(--font-size-small);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .kpi-trend.positive {
+      color: var(--success);
+    }
+
+    .kpi-trend.negative {
+      color: var(--danger);
+    }
+
+    @media (max-width: 1200px) {
+      .ceo-metrics {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .ceo-dashboard {
+        padding: var(--space-md);
+      }
+
+      .ceo-metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .kpi-value {
+        font-size: 40px;
+      }
+
+      .kpi-trend {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -842,36 +1057,62 @@
       <header>
         <h1>🚀 Roadmap Nevent 2025-2026</h1>
         <div class="header-actions">
-          <button class="btn btn-secondary" onclick="toggleDashboardView()" id="dashboardToggleBtn">
-            👤 Mi Dashboard
-          </button>
           <button class="btn btn-primary" onclick="openAddActionModal()">➕ Nueva Acción</button>
           <button class="btn" onclick="syncData()">🔄 Sincronizar</button>
           <button class="btn logout-btn" onclick="handleLogout()">🚪 Salir</button>
         </div>
       </header>
 
-      <div class="stats">
-        <div class="stat-card">
-          <div class="stat-label">Acciones totales</div>
-          <div class="stat-value" id="totalActions">0</div>
+      <!-- Navigation Tabs -->
+      <nav class="main-navigation" role="navigation" aria-label="Main navigation">
+        <div class="nav-tabs">
+          <button class="nav-tab active" data-view="timeline" onclick="switchView('timeline')">
+            <span class="tab-icon">📊</span>
+            <span class="tab-label">Timeline</span>
+          </button>
+          <button class="nav-tab" data-view="user-dashboard" onclick="switchView('user-dashboard')">
+            <span class="tab-icon">👤</span>
+            <span class="tab-label">Mi Dashboard</span>
+          </button>
+          <button class="nav-tab" data-view="ceo-dashboard" data-required-role="ceo" onclick="switchView('ceo-dashboard')">
+            <span class="tab-icon">🌍</span>
+            <span class="tab-label">CEO Dashboard</span>
+          </button>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Completadas</div>
-          <div class="stat-value" id="completedActions">0</div>
+      </nav>
+
+      <!-- Timeline View (Original) -->
+      <div id="timelineView" class="view-content">
+        <div class="stats">
+          <div class="stat-card">
+            <div class="stat-label">Acciones totales</div>
+            <div class="stat-value" id="totalActions">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Completadas</div>
+            <div class="stat-value" id="completedActions">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Responsables</div>
+            <div class="stat-value" id="totalResponsables">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Progreso global</div>
+            <div class="stat-value" id="globalProgress">0%</div>
+          </div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Responsables</div>
-          <div class="stat-value" id="totalResponsables">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Progreso global</div>
-          <div class="stat-value" id="globalProgress">0%</div>
-        </div>
+        <div class="timeline" id="timeline"></div>
       </div>
 
-      <div class="timeline" id="timeline"></div>
-      <div id="myDashboardContainer" style="display: none;"></div>
+      <!-- User Dashboard View -->
+      <div id="userDashboardView" class="view-content" style="display: none;">
+        <div id="myDashboardContainer"></div>
+      </div>
+
+      <!-- CEO Dashboard View -->
+      <div id="ceoDashboardView" class="view-content ceo-dashboard" style="display: none;">
+        <!-- CEO Dashboard will be populated by JavaScript -->
+      </div>
     </div>
   </div>
 
@@ -1835,23 +2076,9 @@
       }
     }
 
+    // Legacy function - now replaced by switchView()
     function toggleDashboardView() {
-      isDashboardVisible = !isDashboardVisible;
-      
-      const timeline = document.getElementById('timeline');
-      const dashboard = document.getElementById('myDashboardContainer');
-      const btn = document.getElementById('dashboardToggleBtn');
-      
-      if (isDashboardVisible) {
-        timeline.style.display = 'none';
-        dashboard.style.display = 'block';
-        btn.textContent = '📊 Ver Timeline';
-        renderMyDashboard();
-      } else {
-        timeline.style.display = 'block';
-        dashboard.style.display = 'none';
-        btn.textContent = '👤 Mi Dashboard';
-      }
+      switchView(currentView === 'timeline' ? 'user-dashboard' : 'timeline');
     }
 
     async function renderMyDashboard() {
@@ -2199,9 +2426,302 @@
     // INITIALIZATION
     // ================================================================
 
+    // ================================================================
+    // NAVIGATION SYSTEM
+    // ================================================================
+
+    let currentView = 'timeline';
+
+    function switchView(viewName) {
+      currentView = viewName;
+
+      // Update tabs
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.remove('active');
+        if (tab.dataset.view === viewName) {
+          tab.classList.add('active');
+        }
+      });
+
+      // Hide all views
+      document.getElementById('timelineView').style.display = 'none';
+      document.getElementById('userDashboardView').style.display = 'none';
+      document.getElementById('ceoDashboardView').style.display = 'none';
+
+      // Show selected view
+      if (viewName === 'timeline') {
+        document.getElementById('timelineView').style.display = 'block';
+      } else if (viewName === 'user-dashboard') {
+        document.getElementById('userDashboardView').style.display = 'block';
+        renderMyDashboard();
+      } else if (viewName === 'ceo-dashboard') {
+        document.getElementById('ceoDashboardView').style.display = 'block';
+        renderCEODashboard();
+      }
+    }
+
+    // ================================================================
+    // CEO DASHBOARD
+    // ================================================================
+
+    async function renderCEODashboard() {
+      const container = document.getElementById('ceoDashboardView');
+
+      // Load data
+      const companyOKRs = await loadCompanyOKRs();
+      const departments = await loadAllDepartmentsWithHealth();
+      const companyMetrics = calculateCompanyMetrics(companyOKRs, departments);
+
+      const html = `
+        <!-- KPI Hero Cards -->
+        <div class="ceo-metrics">
+          <div class="kpi-card" onclick="showMetricDetail('health')">
+            <div class="kpi-icon">${companyMetrics.health >= 80 ? '💚' : companyMetrics.health >= 60 ? '🟡' : '🔴'}</div>
+            <div class="kpi-content">
+              <div class="kpi-label">Company Health</div>
+              <div class="kpi-value" style="color: ${companyMetrics.health >= 80 ? 'var(--success)' : companyMetrics.health >= 60 ? 'var(--warning)' : 'var(--danger)'};">
+                ${companyMetrics.health}
+              </div>
+              <div class="kpi-trend ${companyMetrics.healthTrend >= 0 ? 'positive' : 'negative'}">
+                ${companyMetrics.healthTrend >= 0 ? '↗' : '↘'} ${Math.abs(companyMetrics.healthTrend)} vs Q3
+              </div>
+            </div>
+          </div>
+
+          <div class="kpi-card" onclick="showMetricDetail('okrs')">
+            <div class="kpi-icon">🎯</div>
+            <div class="kpi-content">
+              <div class="kpi-label">OKR Completion</div>
+              <div class="kpi-value" style="color: var(--accent1);">
+                ${companyMetrics.okrCompletion}%
+              </div>
+              <div class="kpi-trend positive">
+                ${companyMetrics.okrsOnTrack} of ${companyMetrics.totalOKRs} on track
+              </div>
+            </div>
+          </div>
+
+          <div class="kpi-card" onclick="showMetricDetail('initiatives')">
+            <div class="kpi-icon">🚀</div>
+            <div class="kpi-content">
+              <div class="kpi-label">Active Initiatives</div>
+              <div class="kpi-value" style="color: var(--accent2);">
+                ${companyMetrics.activeInitiatives}
+              </div>
+              <div class="kpi-trend ${companyMetrics.initiativesAtRisk > 0 ? 'negative' : 'positive'}">
+                ${companyMetrics.initiativesOnTrack} on track, ${companyMetrics.initiativesAtRisk} at risk
+              </div>
+            </div>
+          </div>
+
+          <div class="kpi-card" onclick="showMetricDetail('budget')">
+            <div class="kpi-icon">💰</div>
+            <div class="kpi-content">
+              <div class="kpi-label">Budget Utilization</div>
+              <div class="kpi-value" style="color: var(--success);">
+                ${companyMetrics.budgetUtilization}%
+              </div>
+              <div class="kpi-trend ${companyMetrics.budgetUtilization > 90 ? 'negative' : 'positive'}">
+                €${(companyMetrics.budgetSpent / 1000).toFixed(0)}K / €${(companyMetrics.budgetTotal / 1000).toFixed(0)}K
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Company OKRs Section -->
+        <div style="margin-bottom: var(--space-2xl);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg);">
+            <h2 style="font-size: var(--font-size-h2);">🎯 Company OKRs - Q4 2025</h2>
+            <button class="btn btn-primary" onclick="openCompanyOKRModal()">➕ Create Company OKR</button>
+          </div>
+          <div id="companyOKRsList"></div>
+        </div>
+
+        <!-- Department Health Grid -->
+        <div>
+          <h2 style="font-size: var(--font-size-h2); margin-bottom: var(--space-lg);">🏢 Department Health</h2>
+          <div id="departmentHealthGrid"></div>
+        </div>
+      `;
+
+      container.innerHTML = html;
+
+      // Render sub-components
+      renderCompanyOKRsList(companyOKRs);
+      renderDepartmentHealthGrid(departments);
+    }
+
+    async function loadCompanyOKRs() {
+      try {
+        const { data, error } = await supabase
+          .from('company_okrs')
+          .select('*')
+          .eq('fiscal_year', '2025')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return data || [];
+      } catch (error) {
+        handleSupabaseError(error, 'cargar OKRs de empresa');
+        return [];
+      }
+    }
+
+    async function loadAllDepartmentsWithHealth() {
+      try {
+        const { data, error } = await supabase
+          .from('departments')
+          .select('*')
+          .eq('status', 'active')
+          .order('health_score', { ascending: false });
+
+        if (error) throw error;
+        return data || [];
+      } catch (error) {
+        handleSupabaseError(error, 'cargar departamentos');
+        return [];
+      }
+    }
+
+    function calculateCompanyMetrics(okrs, departments) {
+      // Calculate company-wide metrics
+      const totalOKRs = okrs.length;
+      const okrsOnTrack = okrs.filter(okr => okr.health_score >= 70).length;
+      const okrCompletion = totalOKRs > 0 ? Math.round((okrsOnTrack / totalOKRs) * 100) : 0;
+
+      // Department health average
+      const avgHealth = departments.length > 0
+        ? Math.round(departments.reduce((sum, d) => sum + (d.health_score || 0), 0) / departments.length)
+        : 0;
+
+      // Budget calculations
+      let budgetTotal = 0;
+      let budgetSpent = 0;
+      departments.forEach(dept => {
+        if (dept.budget) {
+          budgetTotal += dept.budget.allocated || 0;
+          budgetSpent += dept.budget.spent || 0;
+        }
+      });
+
+      const budgetUtilization = budgetTotal > 0 ? Math.round((budgetSpent / budgetTotal) * 100) : 0;
+
+      // Mock initiative counts (will be real when initiatives table is populated)
+      const activeInitiatives = 23;
+      const initiativesOnTrack = 15;
+      const initiativesAtRisk = 6;
+
+      return {
+        health: avgHealth,
+        healthTrend: +5, // Mock trend
+        okrCompletion,
+        totalOKRs,
+        okrsOnTrack,
+        activeInitiatives,
+        initiativesOnTrack,
+        initiativesAtRisk,
+        budgetTotal,
+        budgetSpent,
+        budgetUtilization
+      };
+    }
+
+    function renderCompanyOKRsList(okrs) {
+      const container = document.getElementById('companyOKRsList');
+
+      if (okrs.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 60px 20px; color: var(--muted);">
+            <div style="font-size: 48px; margin-bottom: 16px;">📊</div>
+            <h3>No hay OKRs de empresa creados</h3>
+            <p style="margin-top: 12px;">Crea el primer OKR de la empresa para establecer la dirección estratégica.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = okrs.map(okr => {
+        const keyResults = okr.key_results || [];
+        const avgProgress = keyResults.length > 0
+          ? Math.round(keyResults.reduce((sum, kr) => sum + kr.progress, 0) / keyResults.length)
+          : 0;
+
+        return `
+          <div class="okr-card" style="margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+              <h3 style="font-size: 20px; flex: 1;">${okr.objective}</h3>
+              <span class="status-badge" style="background: rgba(16, 185, 129, 0.2); color: var(--success);">
+                ${okr.health_score}/100
+              </span>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span style="font-size: 14px; color: var(--muted);">Progress</span>
+                <span style="font-size: 14px; font-weight: 600;">${avgProgress}%</span>
+              </div>
+              <div style="width: 100%; height: 8px; background: var(--neutral-600); border-radius: 4px; overflow: hidden;">
+                <div style="width: ${avgProgress}%; height: 100%; background: linear-gradient(90deg, var(--accent1), var(--accent2)); transition: width 0.3s;"></div>
+              </div>
+            </div>
+
+            <div style="font-size: 13px; color: var(--muted);">
+              <strong>Key Results:</strong>
+              ${keyResults.slice(0, 3).map(kr => `
+                <div style="margin-top: 6px;">• ${kr.description}: ${kr.current}/${kr.target} ${kr.unit} (${kr.progress}%)</div>
+              `).join('')}
+              ${keyResults.length > 3 ? `<div style="margin-top: 6px;">... +${keyResults.length - 3} more</div>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderDepartmentHealthGrid(departments) {
+      const container = document.getElementById('departmentHealthGrid');
+
+      container.innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
+          ${departments.map(dept => `
+            <div class="card-interactive" style="background: var(--card); border: 2px solid var(--stroke); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer;" onclick="showDepartmentDetail('${dept.id}')">
+              <div style="font-size: 32px; margin-bottom: 12px;">${dept.icon || '📊'}</div>
+              <h4 style="font-size: 16px; margin-bottom: 12px;">${dept.name}</h4>
+              <div style="font-size: 48px; font-weight: 700; color: ${dept.health_score >= 80 ? 'var(--success)' : dept.health_score >= 60 ? 'var(--warning)' : 'var(--danger)'}; margin-bottom: 4px;">
+                ${dept.health_score || 0}
+              </div>
+              <div style="font-size: 12px; color: var(--muted);">/100</div>
+
+              ${dept.okrs && Array.isArray(dept.okrs) && dept.okrs.length > 0 ? `
+                <div style="margin-top: 12px; font-size: 13px; color: var(--muted);">
+                  🎯 ${dept.okrs.length} OKRs
+                </div>
+              ` : ''}
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function showMetricDetail(metricType) {
+      showToast(`Drill-down para ${metricType} - Próximamente`, 'info');
+    }
+
+    function showDepartmentDetail(deptId) {
+      showToast('Vista de departamento - Próximamente', 'info');
+    }
+
+    function openCompanyOKRModal() {
+      showToast('Modal de creación de Company OKR - Próximamente', 'info');
+    }
+
+    // ================================================================
+    // INITIALIZATION
+    // ================================================================
+
     window.addEventListener('DOMContentLoaded', () => {
       checkSession();
       setupOfflineDetection();
+      initializeRoleBasedNav();
 
       // Show welcome message when user logs in successfully
       const urlParams = new URLSearchParams(window.location.search);
@@ -2216,6 +2736,16 @@
         }, 500);
       }
     });
+
+    function initializeRoleBasedNav() {
+      // For now, show CEO dashboard to all users (dev mode)
+      // In production, check currentUserRole
+      const ceoTab = document.querySelector('[data-required-role="ceo"]');
+      if (ceoTab) {
+        ceoTab.setAttribute('data-user-has-role', 'true');
+        ceoTab.style.display = 'flex';
+      }
+    }
   </script>
 </body>
 </html>
