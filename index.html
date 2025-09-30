@@ -994,12 +994,78 @@
         grid-template-columns: 1fr;
       }
 
+      .kpi-card {
+        padding: 20px;
+      }
+
       .kpi-value {
         font-size: 40px;
       }
 
       .kpi-trend {
         display: none;
+      }
+    }
+
+    /* Department Health Card Styles */
+    .dept-health-card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+
+    .dept-health-card:hover {
+      border-color: var(--accent1);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .dept-health-icon {
+      font-size: 32px;
+      margin-bottom: var(--space-md);
+    }
+
+    .dept-health-name {
+      font-size: 16px;
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-md);
+      color: var(--ink);
+    }
+
+    .dept-health-score {
+      font-size: 48px;
+      font-weight: var(--font-weight-bold);
+      margin-bottom: 4px;
+      line-height: 1;
+    }
+
+    .dept-health-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 8px;
+    }
+
+    .dept-health-meta {
+      margin-top: var(--space-md);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .dept-health-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    @media (max-width: 768px) {
+      .dept-health-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -1243,7 +1309,7 @@
 
     .team-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: var(--space-lg);
     }
 
@@ -2752,7 +2818,7 @@
                 <span style="font-size: 13px; color: var(--muted);">Progreso</span>
                 <span style="font-size: 13px; font-weight: 600; color: var(--accent1);">${okr.progress || 0}%</span>
               </div>
-              <div style="width: 100%; height: 6px; background: var(--stroke); border-radius: 3px; overflow: hidden;">
+              <div role="progressbar" aria-valuenow="${okr.progress || 0}" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso del OKR: ${okr.progress || 0}%" style="width: 100%; height: 6px; background: var(--stroke); border-radius: 3px; overflow: hidden;">
                 <div style="width: ${okr.progress || 0}%; height: 100%; background: linear-gradient(90deg, var(--accent1), var(--accent2)); transition: width 0.3s;"></div>
               </div>
             </div>
@@ -2819,7 +2885,7 @@
                 <span style="font-size: 13px; color: var(--muted);">Progreso</span>
                 <span style="font-size: 13px; font-weight: 600; color: var(--accent1);">${initiative.progress || 0}%</span>
               </div>
-              <div style="width: 100%; height: 6px; background: var(--stroke); border-radius: 3px; overflow: hidden;">
+              <div role="progressbar" aria-valuenow="${initiative.progress || 0}" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso de la iniciativa: ${initiative.progress || 0}%" style="width: 100%; height: 6px; background: var(--stroke); border-radius: 3px; overflow: hidden;">
                 <div style="width: ${initiative.progress || 0}%; height: 100%; background: linear-gradient(90deg, var(--accent1), var(--accent2)); transition: width 0.3s;"></div>
               </div>
             </div>
@@ -3033,8 +3099,8 @@
       const html = `
         <!-- KPI Hero Cards -->
         <div class="ceo-metrics">
-          <div class="kpi-card" onclick="showMetricDetail('health')">
-            <div class="kpi-icon">${companyMetrics.health >= 80 ? '💚' : companyMetrics.health >= 60 ? '🟡' : '🔴'}</div>
+          <div class="kpi-card" role="button" tabindex="0" aria-label="Ver detalles de Company Health: ${companyMetrics.health} puntos" onclick="showMetricDetail('health')">
+            <div class="kpi-icon" aria-hidden="true">${companyMetrics.health >= 80 ? '💚' : companyMetrics.health >= 60 ? '🟡' : '🔴'}</div>
             <div class="kpi-content">
               <div class="kpi-label">Company Health</div>
               <div class="kpi-value" style="color: ${companyMetrics.health >= 80 ? 'var(--success)' : companyMetrics.health >= 60 ? 'var(--warning)' : 'var(--danger)'};">
@@ -3046,8 +3112,8 @@
             </div>
           </div>
 
-          <div class="kpi-card" onclick="showMetricDetail('okrs')">
-            <div class="kpi-icon">🎯</div>
+          <div class="kpi-card" role="button" tabindex="0" aria-label="Ver detalles de OKR Completion: ${companyMetrics.okrCompletion}%" onclick="showMetricDetail('okrs')">
+            <div class="kpi-icon" aria-hidden="true">🎯</div>
             <div class="kpi-content">
               <div class="kpi-label">OKR Completion</div>
               <div class="kpi-value" style="color: var(--accent1);">
@@ -3059,8 +3125,8 @@
             </div>
           </div>
 
-          <div class="kpi-card" onclick="showMetricDetail('initiatives')">
-            <div class="kpi-icon">🚀</div>
+          <div class="kpi-card" role="button" tabindex="0" aria-label="Ver detalles de Active Initiatives: ${companyMetrics.activeInitiatives} iniciativas" onclick="showMetricDetail('initiatives')">
+            <div class="kpi-icon" aria-hidden="true">🚀</div>
             <div class="kpi-content">
               <div class="kpi-label">Active Initiatives</div>
               <div class="kpi-value" style="color: var(--accent2);">
@@ -3072,8 +3138,8 @@
             </div>
           </div>
 
-          <div class="kpi-card" onclick="showMetricDetail('budget')">
-            <div class="kpi-icon">💰</div>
+          <div class="kpi-card" role="button" tabindex="0" aria-label="Ver detalles de Budget Utilization: ${companyMetrics.budgetUtilization}%" onclick="showMetricDetail('budget')">
+            <div class="kpi-icon" aria-hidden="true">💰</div>
             <div class="kpi-content">
               <div class="kpi-label">Budget Utilization</div>
               <div class="kpi-value" style="color: var(--success);">
@@ -3208,8 +3274,8 @@
           <div class="okr-card" style="margin-bottom: 16px;">
             <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
               <h3 style="font-size: 20px; flex: 1;">${okr.objective}</h3>
-              <span class="status-badge" style="background: rgba(16, 185, 129, 0.2); color: var(--success);">
-                ${okr.health_score}/100
+              <span class="status-badge" style="background: ${okr.health_score >= 80 ? 'rgba(16, 185, 129, 0.2)' : okr.health_score >= 60 ? 'rgba(245, 158, 11, 0.2)' : 'rgba(239, 68, 68, 0.2)'}; color: ${okr.health_score >= 80 ? 'var(--success)' : okr.health_score >= 60 ? 'var(--warning)' : 'var(--danger)'};">
+                ${okr.health_score >= 80 ? '✓' : okr.health_score >= 60 ? '⚠' : '✗'} ${okr.health_score}/100
               </span>
             </div>
 
@@ -3218,7 +3284,7 @@
                 <span style="font-size: 14px; color: var(--muted);">Progress</span>
                 <span style="font-size: 14px; font-weight: 600;">${avgProgress}%</span>
               </div>
-              <div style="width: 100%; height: 8px; background: var(--neutral-600); border-radius: 4px; overflow: hidden;">
+              <div role="progressbar" aria-valuenow="${avgProgress}" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso del Company OKR: ${avgProgress}%" style="width: 100%; height: 8px; background: var(--neutral-600); border-radius: 4px; overflow: hidden;">
                 <div style="width: ${avgProgress}%; height: 100%; background: linear-gradient(90deg, var(--accent1), var(--accent2)); transition: width 0.3s;"></div>
               </div>
             </div>
@@ -3244,23 +3310,30 @@
       }
 
       container.innerHTML = `
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
-          ${departments.map(dept => `
-            <div class="card-interactive" style="background: var(--card); border: 2px solid var(--stroke); border-radius: 12px; padding: 20px; text-align: center; cursor: pointer;" onclick="showDepartmentDetail('${dept.id}')">
-              <div style="font-size: 32px; margin-bottom: 12px;">${dept.icon || '📊'}</div>
-              <h4 style="font-size: 16px; margin-bottom: 12px;">${dept.name}</h4>
-              <div style="font-size: 48px; font-weight: 700; color: ${dept.health_score >= 80 ? 'var(--success)' : dept.health_score >= 60 ? 'var(--warning)' : 'var(--danger)'}; margin-bottom: 4px;">
-                ${dept.health_score || 0}
-              </div>
-              <div style="font-size: 12px; color: var(--muted);">/100</div>
+        <div class="dept-health-grid">
+          ${departments.map(dept => {
+            const healthColor = dept.health_score >= 80 ? 'var(--success)' : dept.health_score >= 60 ? 'var(--warning)' : 'var(--danger)';
+            const healthLabel = dept.health_score >= 80 ? '✓ Saludable' : dept.health_score >= 60 ? '⚠ Atención' : '✗ Crítico';
 
-              ${dept.okrs && Array.isArray(dept.okrs) && dept.okrs.length > 0 ? `
-                <div style="margin-top: 12px; font-size: 13px; color: var(--muted);">
-                  🎯 ${dept.okrs.length} OKRs
+            return `
+              <div class="dept-health-card" onclick="showDepartmentDetail('${dept.id}')">
+                <div class="dept-health-icon">${dept.icon || '📊'}</div>
+                <h4 class="dept-health-name">${dept.name}</h4>
+                <div class="dept-health-score">
+                  <span style="color: ${healthColor};">${dept.health_score || 0}</span>
+                  <span style="font-size: 14px; color: var(--muted);">/100</span>
                 </div>
-              ` : ''}
-            </div>
-          `).join('')}
+                <div class="dept-health-label" style="color: ${healthColor};">
+                  ${healthLabel}
+                </div>
+                ${dept.okrs && Array.isArray(dept.okrs) && dept.okrs.length > 0 ? `
+                  <div class="dept-health-meta">
+                    🎯 ${dept.okrs.length} OKRs
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          }).join('')}
         </div>
       `;
     }
