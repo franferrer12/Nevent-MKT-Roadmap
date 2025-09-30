@@ -3685,18 +3685,31 @@
     });
 
     function initializeRoleBasedNav() {
-      // For now, show CEO and Director dashboards to all users (dev mode)
-      // In production, check currentUserRole
+      // Role-based navigation with proper permission checks
+      if (!currentUser) return;
+
+      const userRole = currentUser.role || 'user';
+
+      // Show CEO Dashboard only to CEOs
       const ceoTab = document.querySelector('[data-required-role="ceo"]');
       if (ceoTab) {
-        ceoTab.setAttribute('data-user-has-role', 'true');
-        ceoTab.style.display = 'flex';
+        if (userRole === 'ceo') {
+          ceoTab.setAttribute('data-user-has-role', 'true');
+          ceoTab.style.display = 'flex';
+        } else {
+          ceoTab.style.display = 'none';
+        }
       }
 
+      // Show Director Dashboard to Directors and CEOs
       const directorTab = document.querySelector('[data-required-role="director"]');
       if (directorTab) {
-        directorTab.setAttribute('data-user-has-role', 'true');
-        directorTab.style.display = 'flex';
+        if (userRole === 'director' || userRole === 'ceo') {
+          directorTab.setAttribute('data-user-has-role', 'true');
+          directorTab.style.display = 'flex';
+        } else {
+          directorTab.style.display = 'none';
+        }
       }
     }
   </script>
