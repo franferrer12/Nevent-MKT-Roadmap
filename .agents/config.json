@@ -9,8 +9,8 @@
         "Create commits with clear messages",
         "Update action status in Supabase"
       ],
-      "model": "claude-sonnet-4",
-      "maxTokens": 8000,
+      "model": "claude-3-5-haiku-20241022",
+      "maxTokens": 4000,
       "temperature": 0.7
     },
     "qa": {
@@ -22,8 +22,8 @@
         "Identify bugs and issues",
         "Provide constructive feedback"
       ],
-      "model": "claude-sonnet-4",
-      "maxTokens": 8000,
+      "model": "claude-3-5-haiku-20241022",
+      "maxTokens": 3000,
       "temperature": 0.5
     },
     "productManager": {
@@ -36,14 +36,14 @@
         "Update priorities based on impact",
         "Create new actions in Supabase"
       ],
-      "model": "claude-sonnet-4",
-      "maxTokens": 8000,
+      "model": "claude-3-5-haiku-20241022",
+      "maxTokens": 4000,
       "temperature": 0.8
     }
   },
   "workflow": {
-    "cycles": 5,
-    "maxIterationsPerFeature": 3,
+    "cycles": 2,
+    "maxIterationsPerFeature": 2,
     "autoCommit": true,
     "requireQAApproval": true,
     "pmReviewAfterCompletion": true
