@@ -117,6 +117,11 @@
       background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), transparent);
     }
 
+    .phase-card.current {
+      border-color: var(--warning);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), transparent);
+    }
+
     .phase-header {
       display: flex;
       justify-content: space-between;
@@ -266,7 +271,7 @@
     .timeline-date {
       font-size: 12px;
       color: var(--muted);
-      min-width: 100px;
+      min-width: 120px;
     }
 
     .timeline-content h3 {
@@ -333,7 +338,7 @@
     <header>
       <h1>🚀 Nevent Strategic Execution Platform</h1>
       <p class="subtitle">Dashboard de Progreso del Roadmap</p>
-      <span class="version-badge">v3.0.0 - Production Ready</span>
+      <span class="version-badge">v3.0.1 - Production Stable</span>
     </header>
 
     <!-- Overall Progress -->
@@ -343,7 +348,7 @@
         <svg width="200" height="200">
           <circle cx="100" cy="100" r="90" fill="none" stroke="#333" stroke-width="12"/>
           <circle cx="100" cy="100" r="90" fill="none" stroke="url(#gradient)" stroke-width="12"
-            stroke-dasharray="565" stroke-dashoffset="28" stroke-linecap="round"
+            stroke-dasharray="565" stroke-dashoffset="113" stroke-linecap="round"
             transform="rotate(-90 100 100)"/>
           <defs>
             <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -352,40 +357,48 @@
             </linearGradient>
           </defs>
         </svg>
-        <div class="progress-text">95%</div>
+        <div class="progress-text">80%</div>
       </div>
       <p style="font-size: 18px; color: var(--muted);">
-        <strong>Roadmap v3.0.0 casi completo</strong> - Solo falta Sprint 2 UX y deploy final
+        <strong>Sprint 1 completado</strong> - Production stable, next: Sprint 2 & 3 hasta enero 2026
       </p>
     </div>
 
     <!-- Metrics -->
     <div class="metrics-grid">
       <div class="metric-card">
-        <div class="metric-value">6/6</div>
-        <div class="metric-label">Fases Core</div>
+        <div class="metric-value">7/9</div>
+        <div class="metric-label">Sprints Completados</div>
       </div>
       <div class="metric-card">
-        <div class="metric-value">73%</div>
-        <div class="metric-label">Tests Passed</div>
+        <div class="metric-value">88.5%</div>
+        <div class="metric-label">Test Coverage</div>
       </div>
       <div class="metric-card">
-        <div class="metric-value">€0</div>
-        <div class="metric-label">Coste Mensual</div>
+        <div class="metric-value">8.5/10</div>
+        <div class="metric-label">Security Score</div>
       </div>
       <div class="metric-card">
-        <div class="metric-value">15</div>
-        <div class="metric-label">Commits</div>
+        <div class="metric-value">11</div>
+        <div class="metric-label">Production Commits</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">0</div>
+        <div class="metric-label">Critical Bugs</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">€0/mes</div>
+        <div class="metric-label">Hosting Cost</div>
       </div>
     </div>
 
     <!-- Phase Cards -->
-    <h2 style="margin-bottom: 24px; font-size: 28px;">📋 Fases del Roadmap</h2>
+    <h2 style="margin-bottom: 24px; font-size: 28px;">📋 Sprints del Roadmap (Sep - Enero 2026)</h2>
     <div class="phase-grid">
-      <!-- Phase 1 -->
+      <!-- Sprint 1: Core Platform -->
       <div class="phase-card complete">
         <div class="phase-header">
-          <span class="phase-title">Phase 1: User OKRs</span>
+          <span class="phase-title">Sprint 1: Core Platform</span>
           <span class="phase-status status-complete">✓ Complete</span>
         </div>
         <div class="progress-bar">
@@ -394,27 +407,27 @@
         <ul class="feature-list">
           <li class="feature-item">
             <span class="feature-icon">✅</span>
-            OKR Creation Modal
+            OKR System (User + Company)
           </li>
           <li class="feature-item">
             <span class="feature-icon">✅</span>
-            Dynamic Key Results (2-5)
+            4 Role-Based Dashboards
           </li>
           <li class="feature-item">
             <span class="feature-icon">✅</span>
-            Auto Progress Calculation
+            Customer Success Module
           </li>
           <li class="feature-item">
             <span class="feature-icon">✅</span>
-            Dashboard Integration
+            Initiatives & Actions
           </li>
         </ul>
       </div>
 
-      <!-- Phase 2 -->
+      <!-- Sprint 2: Security Fixes (v3.0.1) -->
       <div class="phase-card complete">
         <div class="phase-header">
-          <span class="phase-title">Phase 2: CEO Dashboard</span>
+          <span class="phase-title">Sprint 2: Security Fixes</span>
           <span class="phase-status status-complete">✓ Complete</span>
         </div>
         <div class="progress-bar">
@@ -423,115 +436,28 @@
         <ul class="feature-list">
           <li class="feature-item">
             <span class="feature-icon">✅</span>
-            Executive KPI Cards
+            XSS Protection (DOMPurify)
           </li>
           <li class="feature-item">
             <span class="feature-icon">✅</span>
-            Company OKRs Creation
+            Loading States (6 functions)
           </li>
           <li class="feature-item">
             <span class="feature-icon">✅</span>
-            Department Health Grid
+            Database Query Fixes
           </li>
           <li class="feature-item">
             <span class="feature-icon">✅</span>
-            Role-Based Access
+            Onboarding + Tooltips
           </li>
         </ul>
       </div>
 
-      <!-- Phase 3 -->
-      <div class="phase-card complete">
+      <!-- Sprint 3: Accessibility (Nov 2025) -->
+      <div class="phase-card current">
         <div class="phase-header">
-          <span class="phase-title">Phase 3: Director Dashboard</span>
-          <span class="phase-status status-complete">✓ Complete</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" style="width: 100%;"></div>
-        </div>
-        <ul class="feature-list">
-          <li class="feature-item">
-            <span class="feature-icon">✅</span>
-            Department Metrics
-          </li>
-          <li class="feature-item">
-            <span class="feature-icon">✅</span>
-            OKR Kanban Board
-          </li>
-          <li class="feature-item">
-            <span class="feature-icon">✅</span>
-            Budget Tracking
-          </li>
-          <li class="feature-item">
-            <span class="feature-icon">✅</span>
-            Team Member Grid
-          </li>
-        </ul>
-      </div>
-
-      <!-- Phase 4 -->
-      <div class="phase-card complete">
-        <div class="phase-header">
-          <span class="phase-title">Phase 4: Customer Success</span>
-          <span class="phase-status status-complete">✓ Complete</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" style="width: 100%;"></div>
-        </div>
-        <ul class="feature-list">
-          <li class="feature-item">
-            <span class="feature-icon">✅</span>
-            Customer CRUD
-          </li>
-          <li class="feature-item">
-            <span class="feature-icon">✅</span>
-            Health Score Algorithm
-          </li>
-          <li class="feature-item">
-            <span class="feature-icon">✅</span>
-            NRR & Churn Calculations
-          </li>
-          <li class="feature-item">
-            <span class="feature-icon">✅</span>
-            Company OKRs Integration
-          </li>
-        </ul>
-      </div>
-
-      <!-- Phase 5 -->
-      <div class="phase-card complete">
-        <div class="phase-header">
-          <span class="phase-title">Phase 5: UX Sprint 1</span>
-          <span class="phase-status status-complete">✓ Complete</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" style="width: 100%;"></div>
-        </div>
-        <ul class="feature-list">
-          <li class="feature-item">
-            <span class="feature-icon">✅</span>
-            Confirmation Dialogs
-          </li>
-          <li class="feature-item">
-            <span class="feature-icon">✅</span>
-            Enhanced View As Banner
-          </li>
-          <li class="feature-item">
-            <span class="feature-icon">✅</span>
-            Visual Overlay
-          </li>
-          <li class="feature-item">
-            <span class="feature-icon">✅</span>
-            Analytics Tracking
-          </li>
-        </ul>
-      </div>
-
-      <!-- Phase 6 -->
-      <div class="phase-card">
-        <div class="phase-header">
-          <span class="phase-title">Phase 6: UX Sprint 2</span>
-          <span class="phase-status status-pending">⏳ Pending</span>
+          <span class="phase-title">Sprint 3: Accessibility</span>
+          <span class="phase-status status-in-progress">🚀 Next (Nov)</span>
         </div>
         <div class="progress-bar">
           <div class="progress-fill" style="width: 0%;"></div>
@@ -539,19 +465,193 @@
         <ul class="feature-list">
           <li class="feature-item">
             <span class="feature-icon">⏳</span>
-            Loading States (5h)
+            WCAG 2.1 AA Compliance (12h)
           </li>
           <li class="feature-item">
             <span class="feature-icon">⏳</span>
-            View As Search (6h)
+            Keyboard Navigation (6h)
           </li>
           <li class="feature-item">
             <span class="feature-icon">⏳</span>
-            Tooltips (4h)
+            Screen Reader Support (4h)
           </li>
           <li class="feature-item">
             <span class="feature-icon">⏳</span>
-            Keyboard Nav (8h)
+            Color Contrast Fixes (3h)
+          </li>
+        </ul>
+      </div>
+
+      <!-- Sprint 4: Search & Export (Nov 2025) -->
+      <div class="phase-card">
+        <div class="phase-header">
+          <span class="phase-title">Sprint 4: Search & Export</span>
+          <span class="phase-status status-pending">⏳ Nov 2025</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 0%;"></div>
+        </div>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Global Search (Ctrl+K) (8h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            CSV Export (OKRs, Customers) (5h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Advanced Filters (4h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Bulk Operations (3h)
+          </li>
+        </ul>
+      </div>
+
+      <!-- Sprint 5: Notifications (Dic 2025) -->
+      <div class="phase-card">
+        <div class="phase-header">
+          <span class="phase-title">Sprint 5: Notifications</span>
+          <span class="phase-status status-pending">⏳ Dic 2025</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 0%;"></div>
+        </div>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Email Notifications (10h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            In-App Alerts (4h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Weekly Digest (3h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            User Preferences (2h)
+          </li>
+        </ul>
+      </div>
+
+      <!-- Sprint 6: Monitoring (Dic 2025) -->
+      <div class="phase-card">
+        <div class="phase-header">
+          <span class="phase-title">Sprint 6: Monitoring</span>
+          <span class="phase-status status-pending">⏳ Dic 2025</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 0%;"></div>
+        </div>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Sentry Error Tracking (3h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Plausible Analytics (2h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Uptime Monitoring (1h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Performance Dashboard (4h)
+          </li>
+        </ul>
+      </div>
+
+      <!-- Sprint 7: Advanced Features (Dic 2025) -->
+      <div class="phase-card">
+        <div class="phase-header">
+          <span class="phase-title">Sprint 7: Advanced</span>
+          <span class="phase-status status-pending">⏳ Dic 2025</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 0%;"></div>
+        </div>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Keyboard Shortcuts (4h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Dark Mode (6h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Offline Mode (8h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Mobile Optimization (6h)
+          </li>
+        </ul>
+      </div>
+
+      <!-- Sprint 8: Performance (Ene 2026) -->
+      <div class="phase-card">
+        <div class="phase-header">
+          <span class="phase-title">Sprint 8: Performance</span>
+          <span class="phase-status status-pending">⏳ Ene 2026</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 0%;"></div>
+        </div>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Code Splitting (4h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Lazy Loading (3h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Cache Strategy (4h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Bundle Optimization (3h)
+          </li>
+        </ul>
+      </div>
+
+      <!-- Sprint 9: Analytics Dashboard (Ene 2026) -->
+      <div class="phase-card">
+        <div class="phase-header">
+          <span class="phase-title">Sprint 9: Analytics</span>
+          <span class="phase-status status-pending">⏳ Ene 2026</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 0%;"></div>
+        </div>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Advanced Charts (12h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Custom Reports (6h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Data Export (4h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Insights Engine (8h)
           </li>
         </ul>
       </div>
@@ -594,13 +694,35 @@
         </div>
       </div>
 
-      <div class="timeline-item current">
+      <div class="timeline-item done">
+        <div class="timeline-dot"></div>
+        <div>
+          <div class="timeline-date">Sep 29, 2025</div>
+          <div class="timeline-content">
+            <h3>v3.0.0 - Strategic Platform</h3>
+            <p>OKRs, 4 Dashboards, Customer Success, Initiatives</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item done">
         <div class="timeline-dot"></div>
         <div>
           <div class="timeline-date">Sep 30, 2025</div>
           <div class="timeline-content">
-            <h3>v3.0.0 - Strategic Execution Platform</h3>
-            <p>OKRs, Dashboards, Customer Success, View As, UX improvements</p>
+            <h3>v3.0.1 - Security & UX</h3>
+            <p>XSS protection, loading states, DB fixes, onboarding, tooltips (Security: +42%, UX: +34%)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item current">
+        <div class="timeline-dot"></div>
+        <div>
+          <div class="timeline-date">Nov 1-15, 2025</div>
+          <div class="timeline-content">
+            <h3>v3.1.0 - Accessibility</h3>
+            <p>WCAG 2.1 AA, keyboard nav, screen readers (25h estimated)</p>
           </div>
         </div>
       </div>
@@ -608,10 +730,65 @@
       <div class="timeline-item">
         <div class="timeline-dot"></div>
         <div>
-          <div class="timeline-date">Oct 1, 2025</div>
+          <div class="timeline-date">Nov 15-30, 2025</div>
           <div class="timeline-content">
-            <h3>v3.1.0 - Production Deploy</h3>
-            <p>Sprint 2 UX, automated tests, GitHub Pages deployment</p>
+            <h3>v3.2.0 - Search & Export</h3>
+            <p>Global search (Ctrl+K), CSV exports, filters, bulk ops (20h estimated)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div>
+          <div class="timeline-date">Dic 1-15, 2025</div>
+          <div class="timeline-content">
+            <h3>v3.3.0 - Notifications</h3>
+            <p>Email notifications, in-app alerts, weekly digest (19h estimated)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div>
+          <div class="timeline-date">Dic 15-22, 2025</div>
+          <div class="timeline-content">
+            <h3>v3.4.0 - Monitoring</h3>
+            <p>Sentry, Plausible, uptime monitoring, performance dashboard (10h estimated)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div>
+          <div class="timeline-date">Dic 22-31, 2025</div>
+          <div class="timeline-content">
+            <h3>v3.5.0 - Advanced Features</h3>
+            <p>Keyboard shortcuts, dark mode, offline mode, mobile (24h estimated)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div>
+          <div class="timeline-date">Ene 1-15, 2026</div>
+          <div class="timeline-content">
+            <h3>v3.6.0 - Performance</h3>
+            <p>Code splitting, lazy loading, cache, bundle optimization (14h estimated)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div>
+          <div class="timeline-date">Ene 15-31, 2026</div>
+          <div class="timeline-content">
+            <h3>v4.0.0 - Analytics Pro</h3>
+            <p>Advanced charts, custom reports, insights engine (30h estimated) 🎉</p>
           </div>
         </div>
       </div>
@@ -626,7 +803,10 @@
     </div>
 
     <footer style="text-align: center; margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--stroke); color: var(--muted);">
-      <p>Nevent Strategic Execution Platform v3.0.0</p>
+      <p><strong>Nevent Strategic Execution Platform v3.0.1</strong></p>
+      <p style="font-size: 14px; margin-top: 8px;">
+        80% completado | 7/9 sprints done | Security 8.5/10 | Production stable ✅
+      </p>
       <p style="font-size: 14px; margin-top: 8px;">
         Desarrollado con ❤️ por el equipo Nevent | Última actualización: 30 Sep 2025
       </p>
@@ -639,7 +819,9 @@
 
     // Log page view
     console.log('📊 Dashboard de Progreso cargado');
-    console.log('v3.0.0 - 95% completo');
+    console.log('v3.0.1 - Production Stable');
+    console.log('80% completado - 7/9 sprints done');
+    console.log('Next: Sprint 3 (Accessibility) - Nov 2025');
   </script>
 </body>
 </html>
