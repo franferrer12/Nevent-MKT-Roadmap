@@ -4610,7 +4610,7 @@
           .from('departments')
           .select('*')
           .eq('is_active', true)
-          .order('health_score', { ascending: false });
+          .order('name', { ascending: true });
 
         if (error) throw error;
         return data || [];
@@ -4911,18 +4911,17 @@
     }
 
     async function loadDirectorDepartment() {
-      // For now, simulate director's department based on user
-      // In production, query departments table where director_id = currentUser.id
+      // For now, get first active department
+      // In production, query departments table where lead_user_id = currentUser.id
       try {
         const { data, error } = await supabase
           .from('departments')
           .select('*')
           .eq('is_active', true)
-          .limit(1)
-          .single();
+          .limit(1);
 
         if (error) throw error;
-        return data;
+        return data && data.length > 0 ? data[0] : null;
       } catch (error) {
         console.error('Error loading director department:', error);
         return null;
