@@ -1118,9 +1118,8 @@
 
     try {
       supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-      console.log('✅ Supabase initialized');
     } catch (error) {
-      console.error('❌ Error initializing Supabase:', error);
+      showToast('Error al inicializar la conexión con el servidor', 'error');
     }
 
     async function handleLogin(event) {
@@ -1144,21 +1143,19 @@
         });
         
         if (error) throw error;
-        
+
         currentUser = data.user;
-        console.log('✅ Login exitoso:', currentUser.email);
-        
+
         document.getElementById('loginPage').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
-        
+
         await loadData();
         await loadMyOKRs();
         await loadMyInitiatives();
         await loadDepartments();
         setupRealtimeSync();
-        
+
       } catch (error) {
-        console.error('❌ Error en login:', error);
         errorDiv.textContent = error.message || 'Error al iniciar sesión. Verifica tus credenciales.';
         errorDiv.classList.add('show');
         loginBtn.disabled = false;
@@ -1173,9 +1170,8 @@
         currentUserRole = null;
         document.getElementById('loginPage').style.display = 'flex';
         document.getElementById('mainApp').style.display = 'none';
-        console.log('✅ Sesión cerrada');
       } catch (error) {
-        console.error('❌ Error al cerrar sesión:', error);
+        showToast('Error al cerrar sesión', 'error');
       }
     }
 
@@ -1193,7 +1189,7 @@
           setupRealtimeSync();
         }
       } catch (error) {
-        console.error('❌ Error checking session:', error);
+        // Silent fail on session check - user will see login page
       }
     }
 
@@ -1240,9 +1236,8 @@
 
         renderTimeline();
         updateStats();
-        console.log('✅ Datos cargados desde Supabase');
       } catch (error) {
-        console.error('❌ Error loading data:', error);
+        handleSupabaseError(error, 'cargar datos');
       }
     }
 
@@ -1265,10 +1260,9 @@
           }, { onConflict: 'id' });
 
         if (error) throw error;
-        console.log('✅ Guardado en Supabase');
       } catch (error) {
-        console.error('❌ Error saving to Supabase:', error);
-        alert('Error al guardar: ' + error.message);
+        handleSupabaseError(error, 'guardar');
+        throw error;
       }
     }
 
@@ -1280,9 +1274,8 @@
           .eq('id', actionId);
 
         if (error) throw error;
-        console.log('✅ Eliminado de Supabase');
       } catch (error) {
-        console.error('❌ Error deleting from Supabase:', error);
+        handleSupabaseError(error, 'eliminar');
       }
     }
 
@@ -1292,17 +1285,20 @@
         .on('postgres_changes', { 
           event: '*', 
           schema: 'public', 
-          table: 'roadmap_actions' 
+          table: 'roadmap_actions'
         }, payload => {
-          console.log('🔄 Cambio detectado:', payload);
           loadData();
         })
         .subscribe();
     }
 
     async function syncData() {
-      await loadData();
-      alert('✅ Datos sincronizados');
+      try {
+        await loadData();
+        showToast('Datos sincronizados exitosamente', 'success');
+      } catch (error) {
+        handleSupabaseError(error, 'sincronizar datos');
+      }
     }
 
     function renderTimeline() {
@@ -1575,7 +1571,7 @@
       event.preventDefault();
 
       if (!currentUser) {
-        alert('Debes iniciar sesión para crear un OKR');
+        showToast('Debes iniciar sesión para crear un OKR', 'warning');
         return;
       }
 
@@ -1607,7 +1603,7 @@
       });
 
       if (keyResults.length < 2) {
-        alert('Debes agregar al menos 2 Key Results');
+        showToast('Debes agregar al menos 2 Key Results', 'warning');
         return;
       }
 
@@ -1644,16 +1640,14 @@
 
         if (error) throw error;
 
-        console.log('✅ OKR creado:', newOKR);
         closeOKRModal();
         await loadMyOKRs();
         if (isDashboardVisible) {
           await renderMyDashboard();
         }
-        alert('✅ OKR creado exitosamente');
+        showToast('OKR creado exitosamente', 'success');
       } catch (error) {
-        console.error('❌ Error al crear OKR:', error);
-        alert('Error al crear OKR: ' + error.message);
+        handleSupabaseError(error, 'crear OKR');
       }
     }
 
@@ -1684,7 +1678,7 @@
       event.preventDefault();
 
       if (!currentUser) {
-        alert('Debes iniciar sesión para crear una Initiative');
+        showToast('Debes iniciar sesión para crear una Initiative', 'warning');
         return;
       }
 
@@ -1722,16 +1716,14 @@
 
         if (error) throw error;
 
-        console.log('✅ Initiative creada:', newInitiative);
         closeInitiativeModal();
         await loadMyInitiatives();
         if (isDashboardVisible) {
           await renderMyDashboard();
         }
-        alert('✅ Initiative creada exitosamente');
+        showToast('Initiative creada exitosamente', 'success');
       } catch (error) {
-        console.error('❌ Error al crear Initiative:', error);
-        alert('Error al crear Initiative: ' + error.message);
+        handleSupabaseError(error, 'crear Initiative');
       }
     }
 
@@ -1747,7 +1739,6 @@
         if (error) throw error;
 
         if (!actions || actions.length === 0) {
-          console.log('No actions linked to this initiative yet');
           return;
         }
 
@@ -1779,15 +1770,13 @@
 
         if (updateError) throw updateError;
 
-        console.log(`✅ Initiative ${initiativeId} progress updated: ${progress}%`);
-
         // Reload initiatives if dashboard is visible
         if (isDashboardVisible) {
           await loadMyInitiatives();
           await renderMyDashboard();
         }
       } catch (error) {
-        console.error('❌ Error updating initiative progress:', error);
+        handleSupabaseError(error, 'actualizar progreso de initiative');
       }
     }
 
@@ -1803,10 +1792,9 @@
         if (error) throw error;
 
         allDepartments = data || [];
-        console.log('✅ Departamentos cargados:', allDepartments.length);
         return allDepartments;
       } catch (error) {
-        console.error('❌ Error al cargar departamentos:', error);
+        handleSupabaseError(error, 'cargar departamentos');
         return [];
       }
     }
@@ -1822,10 +1810,9 @@
         if (error) throw error;
 
         myOKRs = data || [];
-        console.log('✅ OKRs cargados:', myOKRs.length);
         return myOKRs;
       } catch (error) {
-        console.error('❌ Error al cargar OKRs:', error);
+        handleSupabaseError(error, 'cargar OKRs');
         return [];
       }
     }
@@ -1841,10 +1828,9 @@
         if (error) throw error;
 
         myInitiatives = data || [];
-        console.log('✅ Initiatives cargadas:', myInitiatives.length);
         return myInitiatives;
       } catch (error) {
-        console.error('❌ Error al cargar Initiatives:', error);
+        handleSupabaseError(error, 'cargar initiatives');
         return [];
       }
     }
@@ -1869,8 +1855,6 @@
     }
 
     async function renderMyDashboard() {
-      console.log('🎨 Renderizando Mi Dashboard...');
-      
       await Promise.all([
         loadMyOKRs(),
         loadMyInitiatives(),
@@ -1879,7 +1863,6 @@
 
       const dashboardContainer = document.getElementById('myDashboardContainer');
       if (!dashboardContainer) {
-        console.error('❌ Contenedor de dashboard no encontrado');
         return;
       }
 
@@ -2107,13 +2090,16 @@
 
       const toast = document.createElement('div');
       toast.className = `toast ${type}`;
+      toast.setAttribute('role', 'alert');
+      toast.setAttribute('aria-live', 'polite');
+      toast.setAttribute('aria-atomic', 'true');
       toast.innerHTML = `
-        <div class="toast-icon">${icons[type]}</div>
+        <div class="toast-icon" aria-hidden="true">${icons[type]}</div>
         <div class="toast-content">
           <div class="toast-title">${titles[type]}</div>
           <div class="toast-message">${message}</div>
         </div>
-        <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+        <button class="toast-close" onclick="this.parentElement.remove()" aria-label="Cerrar notificación">×</button>
       `;
 
       container.appendChild(toast);
