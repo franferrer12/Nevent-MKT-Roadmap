@@ -4875,7 +4875,7 @@
             const healthLabel = dept.health_score >= 80 ? '✓ Saludable' : dept.health_score >= 60 ? '⚠ Atención' : '✗ Crítico';
 
             return `
-              <div class="dept-health-card" onclick="showDepartmentDetail('${sanitizeHTML(dept.id)}')">
+              <div class="dept-health-card" onclick="showDepartmentDetail('${dept.id}')">
                 <div class="dept-health-icon">${sanitizeHTML(dept.icon || '📊')}</div>
                 <h4 class="dept-health-name">${sanitizeHTML(dept.name)}</h4>
                 <div class="dept-health-score">
@@ -5534,10 +5534,10 @@
                   </div>
                 </div>
                 <div style="display: flex; gap: 8px;">
-                  <button class="btn btn-secondary" style="padding: 8px 16px;" onclick="openCustomerModal('${sanitizeHTML(customer.id)}')">
+                  <button class="btn btn-secondary" style="padding: 8px 16px;" onclick="openCustomerModal('${customer.id}')">
                     ✏️ Editar
                   </button>
-                  <button class="btn" style="padding: 8px 16px; background: var(--danger); color: white;" onclick="deleteCustomer('${sanitizeHTML(customer.id)}')">
+                  <button class="btn" style="padding: 8px 16px; background: var(--danger); color: white;" onclick="deleteCustomer('${customer.id}')">
                     🗑️ Eliminar
                   </button>
                 </div>
@@ -5741,7 +5741,7 @@
         const roleClass = `role-${user.role}`;
 
         return `
-          <div class="user-item ${isActive ? 'active' : ''}" onclick="switchToUser('${sanitizeHTML(user.id)}')">
+          <div class="user-item ${isActive ? 'active' : ''}" onclick="switchToUser('${user.id}')">
             <div class="user-item-icon">${roleIcon}</div>
             <div class="user-item-info">
               <div class="user-item-name">${sanitizeHTML(user.full_name || user.email.split('@')[0])}</div>
