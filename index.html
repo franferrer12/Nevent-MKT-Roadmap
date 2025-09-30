@@ -1973,6 +1973,7 @@
             name="email"
             placeholder="tu.email@nevent.es"
             required
+            maxlength="255"
             autocomplete="email"
             aria-required="true"
             aria-describedby="email-hint"
@@ -1988,6 +1989,8 @@
             name="password"
             placeholder="••••••••"
             required
+            minlength="8"
+            maxlength="128"
             autocomplete="current-password"
             aria-required="true"
             aria-describedby="password-hint"
@@ -2228,12 +2231,12 @@
 
         <div class="form-group">
           <label>Título</label>
-          <input type="text" id="titleInput" placeholder="Ej: Email frío creativo" required />
+          <input type="text" id="titleInput" placeholder="Ej: Email frío creativo" required maxlength="200" />
         </div>
 
         <div class="form-group">
           <label>Descripción</label>
-          <textarea id="descriptionInput" placeholder="Describe la acción..."></textarea>
+          <textarea id="descriptionInput" placeholder="Describe la acción..." maxlength="2000"></textarea>
         </div>
 
         <div class="form-group">
@@ -2256,7 +2259,7 @@
 
         <div class="form-group">
           <label>Responsable</label>
-          <input type="text" id="responsableInput" placeholder="Ej: Fran" />
+          <input type="text" id="responsableInput" placeholder="Ej: Fran" maxlength="100" />
         </div>
 
         <div class="form-group">
@@ -2297,6 +2300,7 @@
             id="okrTitle"
             placeholder="Ej: Aumentar engagement en redes sociales"
             required
+            maxlength="200"
           />
         </div>
 
@@ -2350,6 +2354,7 @@
             id="initiativeTitle"
             placeholder="Ej: Campaña de Content Marketing Q4"
             required
+            maxlength="200"
           />
         </div>
 
@@ -2359,6 +2364,7 @@
             id="initiativeDescription"
             placeholder="Describe el proyecto y su objetivo..."
             rows="3"
+            maxlength="2000"
           ></textarea>
         </div>
 
@@ -2440,6 +2446,7 @@
             id="companyOKRObjective"
             placeholder="Ej: Convertirse en la plataforma #1 de eventos en España"
             required
+            maxlength="250"
           />
           <p style="color: var(--muted); font-size: 12px; margin-top: 4px;">
             Define el objetivo principal de la empresa para este año
@@ -2508,6 +2515,7 @@
             id="customerName"
             placeholder="Ej: Acme Corporation"
             required
+            maxlength="150"
           />
         </div>
 
@@ -2517,6 +2525,7 @@
             type="text"
             id="customerCrmId"
             placeholder="ID en tu CRM (opcional)"
+            maxlength="100"
           />
         </div>
 
@@ -2529,6 +2538,7 @@
               placeholder="500"
               step="0.01"
               min="0"
+              max="10000000"
               required
             />
           </div>
@@ -3009,18 +3019,33 @@
       }
     }
 
+    // Global channel reference for cleanup
+    let realtimeChannel = null;
+
     function setupRealtimeSync() {
-      supabase
+      // Cleanup previous subscription if exists
+      if (realtimeChannel) {
+        supabase.removeChannel(realtimeChannel);
+      }
+
+      realtimeChannel = supabase
         .channel('roadmap_changes')
-        .on('postgres_changes', { 
-          event: '*', 
-          schema: 'public', 
+        .on('postgres_changes', {
+          event: '*',
+          schema: 'public',
           table: 'roadmap_actions'
         }, payload => {
           loadData();
         })
         .subscribe();
     }
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      if (realtimeChannel) {
+        supabase.removeChannel(realtimeChannel);
+      }
+    });
 
     async function syncData() {
       try {
@@ -4197,16 +4222,16 @@
           <div class="initiative-card" style="background: var(--bg); border: 1px solid var(--stroke); border-radius: 8px; padding: 16px; margin-bottom: 12px;">
             <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
               <div style="flex: 1;">
-                <h4 style="margin: 0 0 4px 0;">${initiative.title}</h4>
-                <span style="font-size: 13px; color: var(--muted);">${initiative.quarter || 'Sin trimestre'}</span>
+                <h4 style="margin: 0 0 4px 0;">${sanitizeHTML(initiative.title)}</h4>
+                <span style="font-size: 13px; color: var(--muted);">${sanitizeHTML(initiative.quarter || 'Sin trimestre')}</span>
               </div>
               <span style="padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500; background: ${healthColor}20; color: ${healthColor};">
-                ${healthIcon} ${initiative.health}
+                ${healthIcon} ${sanitizeHTML(initiative.health)}
               </span>
             </div>
 
             ${initiative.description ? `
-              <p style="color: var(--muted); font-size: 13px; margin-bottom: 12px;">${initiative.description}</p>
+              <p style="color: var(--muted); font-size: 13px; margin-bottom: 12px;">${sanitizeHTML(initiative.description)}</p>
             ` : ''}
 
             <div style="margin-bottom: 12px;">
@@ -4702,7 +4727,7 @@
         </div>
       `;
 
-      container.innerHTML = html;
+      safeSetHTML(container, html);
 
       // Render sub-components
       renderCompanyOKRsList(companyOKRs);
@@ -4788,17 +4813,17 @@
       const container = document.getElementById('companyOKRsList');
 
       if (okrs.length === 0) {
-        container.innerHTML = `
+        safeSetHTML(container, `
           <div style="text-align: center; padding: 60px 20px; color: var(--muted);">
             <div style="font-size: 48px; margin-bottom: 16px;">📊</div>
             <h3>No hay OKRs de empresa creados</h3>
             <p style="margin-top: 12px;">Crea el primer OKR de la empresa para establecer la dirección estratégica.</p>
           </div>
-        `;
+        `);
         return;
       }
 
-      container.innerHTML = okrs.map(okr => {
+      safeSetHTML(container, okrs.map(okr => {
         const keyResults = okr.key_results || [];
         const avgProgress = keyResults.length > 0
           ? Math.round(keyResults.reduce((sum, kr) => sum + kr.progress, 0) / keyResults.length)
@@ -4807,7 +4832,7 @@
         return `
           <div class="okr-card" style="margin-bottom: 16px;">
             <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
-              <h3 style="font-size: 20px; flex: 1;">${okr.objective}</h3>
+              <h3 style="font-size: 20px; flex: 1;">${sanitizeHTML(okr.objective)}</h3>
               <span class="status-badge" style="background: ${okr.health_score >= 80 ? 'rgba(16, 185, 129, 0.2)' : okr.health_score >= 60 ? 'rgba(245, 158, 11, 0.2)' : 'rgba(239, 68, 68, 0.2)'}; color: ${okr.health_score >= 80 ? 'var(--success)' : okr.health_score >= 60 ? 'var(--warning)' : 'var(--danger)'};">
                 ${okr.health_score >= 80 ? '✓' : okr.health_score >= 60 ? '⚠' : '✗'} ${okr.health_score}/100
               </span>
@@ -4826,7 +4851,7 @@
             <div style="font-size: 13px; color: var(--muted);">
               <strong>Key Results:</strong>
               ${keyResults.slice(0, 3).map(kr => `
-                <div style="margin-top: 6px;">• ${kr.description}: ${kr.current}/${kr.target} ${kr.unit} (${kr.progress}%)</div>
+                <div style="margin-top: 6px;">• ${sanitizeHTML(kr.description)}: ${kr.current}/${kr.target} ${sanitizeHTML(kr.unit)} (${kr.progress}%)</div>
               `).join('')}
               ${keyResults.length > 3 ? `<div style="margin-top: 6px;">... +${keyResults.length - 3} more</div>` : ''}
             </div>
@@ -4839,20 +4864,20 @@
       const container = document.getElementById('departmentHealthGrid');
 
       if (!departments || departments.length === 0) {
-        container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--muted);">No hay departamentos activos</div>';
+        safeSetHTML(container, '<div style="text-align: center; padding: 40px; color: var(--muted);">No hay departamentos activos</div>');
         return;
       }
 
-      container.innerHTML = `
+      safeSetHTML(container, `
         <div class="dept-health-grid">
           ${departments.map(dept => {
             const healthColor = dept.health_score >= 80 ? 'var(--success)' : dept.health_score >= 60 ? 'var(--warning)' : 'var(--danger)';
             const healthLabel = dept.health_score >= 80 ? '✓ Saludable' : dept.health_score >= 60 ? '⚠ Atención' : '✗ Crítico';
 
             return `
-              <div class="dept-health-card" onclick="showDepartmentDetail('${dept.id}')">
-                <div class="dept-health-icon">${dept.icon || '📊'}</div>
-                <h4 class="dept-health-name">${dept.name}</h4>
+              <div class="dept-health-card" onclick="showDepartmentDetail('${sanitizeHTML(dept.id)}')">
+                <div class="dept-health-icon">${sanitizeHTML(dept.icon || '📊')}</div>
+                <h4 class="dept-health-name">${sanitizeHTML(dept.name)}</h4>
                 <div class="dept-health-score">
                   <span style="color: ${healthColor};">${dept.health_score || 0}</span>
                   <span style="font-size: 14px; color: var(--muted);">/100</span>
@@ -4888,7 +4913,7 @@
       const container = document.getElementById('directorDashboardView');
 
       if (!currentUser) {
-        container.innerHTML = '<p class="empty-state">Por favor, inicia sesión para ver el dashboard</p>';
+        safeSetHTML(container, '<p class="empty-state">Por favor, inicia sesión para ver el dashboard</p>');
         return;
       }
 
@@ -4896,12 +4921,12 @@
       const department = await loadDirectorDepartment();
 
       if (!department) {
-        container.innerHTML = `
+        safeSetHTML(container, `
           <div class="empty-state">
             <h3>No se encontró departamento</h3>
             <p>Este usuario no está asignado como director de ningún departamento.</p>
           </div>
-        `;
+        `);
         return;
       }
 
@@ -4914,7 +4939,7 @@
         <!-- Director Header -->
         <div class="director-header">
           <div class="director-title">
-            <h1>${department.icon} ${department.name}</h1>
+            <h1>${sanitizeHTML(department.icon)} ${sanitizeHTML(department.name)}</h1>
             <span class="dept-badge">Director Dashboard</span>
           </div>
           <div class="director-actions">
@@ -5024,7 +5049,7 @@
         </div>
       `;
 
-      container.innerHTML = html;
+      safeSetHTML(container, html);
 
       // Render sub-components
       renderOKRKanban(teamOKRs);
@@ -5143,13 +5168,13 @@
         </div>
       `;
 
-      kanbanContainer.innerHTML = html;
+      safeSetHTML(kanbanContainer, html);
     }
 
     function renderOKRCardMini(okr) {
       return `
         <div class="okr-card-mini">
-          <h4>${okr.title}</h4>
+          <h4>${sanitizeHTML(okr.title)}</h4>
           <div class="progress-mini">
             ${okr.progress || 0}% complete · ${okr.key_results?.length || 0} KRs
           </div>
@@ -5164,10 +5189,10 @@
         <div class="team-grid">
           ${teamMembers.map(member => `
             <div class="team-member-card">
-              <div class="member-avatar">${member.avatar}</div>
+              <div class="member-avatar">${sanitizeHTML(member.avatar)}</div>
               <div class="member-info">
-                <div class="member-name">${member.name}</div>
-                <div class="member-role">${member.role}</div>
+                <div class="member-name">${sanitizeHTML(member.name)}</div>
+                <div class="member-role">${sanitizeHTML(member.role)}</div>
                 <div class="member-okrs">
                   <strong>${member.onTrack}/${member.okrs}</strong> OKRs on track
                 </div>
@@ -5177,7 +5202,7 @@
         </div>
       `;
 
-      gridContainer.innerHTML = html;
+      safeSetHTML(gridContainer, html);
     }
 
     function getHealthColor(health) {
@@ -5202,7 +5227,7 @@
       const container = document.getElementById('csDashboardView');
 
       if (!currentUser) {
-        container.innerHTML = '<p class="empty-state">Por favor, inicia sesión para ver el dashboard</p>';
+        safeSetHTML(container, '<p class="empty-state">Por favor, inicia sesión para ver el dashboard</p>');
         return;
       }
 
@@ -5374,7 +5399,7 @@
         <div id="customerList"></div>
       `;
 
-      container.innerHTML = html;
+      safeSetHTML(container, html);
       renderCustomerList(customers, 'all');
     }
 
@@ -5463,12 +5488,12 @@
       }
 
       if (filteredCustomers.length === 0) {
-        container.innerHTML = `
+        safeSetHTML(container, `
           <div class="empty-state">
             <h3>No hay clientes en este segmento</h3>
             <p>Los clientes aparecerán aquí cuando los agregues.</p>
           </div>
-        `;
+        `);
         return;
       }
 
@@ -5483,7 +5508,7 @@
               <div class="customer-card" style="background: var(--card); border: 1px solid var(--stroke); border-radius: var(--radius-lg); padding: var(--space-lg); display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
                 <div style="flex: 1;">
                   <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-sm);">
-                    <h3 style="font-size: 18px; margin: 0;">${customer.name}</h3>
+                    <h3 style="font-size: 18px; margin: 0;">${sanitizeHTML(customer.name)}</h3>
                     <span style="background: ${customer.status === 'active' ? 'var(--success)' : customer.status === 'prospect' ? 'var(--accent2)' : 'var(--danger)'}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">
                       ${statusIcon} ${statusLabel}
                     </span>
@@ -5509,10 +5534,10 @@
                   </div>
                 </div>
                 <div style="display: flex; gap: 8px;">
-                  <button class="btn btn-secondary" style="padding: 8px 16px;" onclick="openCustomerModal('${customer.id}')">
+                  <button class="btn btn-secondary" style="padding: 8px 16px;" onclick="openCustomerModal('${sanitizeHTML(customer.id)}')">
                     ✏️ Editar
                   </button>
-                  <button class="btn" style="padding: 8px 16px; background: var(--danger); color: white;" onclick="deleteCustomer('${customer.id}')">
+                  <button class="btn" style="padding: 8px 16px; background: var(--danger); color: white;" onclick="deleteCustomer('${sanitizeHTML(customer.id)}')">
                     🗑️ Eliminar
                   </button>
                 </div>
@@ -5522,7 +5547,7 @@
         </div>
       `;
 
-      container.innerHTML = html;
+      safeSetHTML(container, html);
     }
 
     function filterCustomerSegment(segment) {
@@ -5716,18 +5741,18 @@
         const roleClass = `role-${user.role}`;
 
         return `
-          <div class="user-item ${isActive ? 'active' : ''}" onclick="switchToUser('${user.id}')">
+          <div class="user-item ${isActive ? 'active' : ''}" onclick="switchToUser('${sanitizeHTML(user.id)}')">
             <div class="user-item-icon">${roleIcon}</div>
             <div class="user-item-info">
-              <div class="user-item-name">${user.full_name || user.email.split('@')[0]}</div>
-              <div class="user-item-email">${user.email}</div>
+              <div class="user-item-name">${sanitizeHTML(user.full_name || user.email.split('@')[0])}</div>
+              <div class="user-item-email">${sanitizeHTML(user.email)}</div>
             </div>
-            <span class="user-item-role ${roleClass}">${user.role}</span>
+            <span class="user-item-role ${roleClass}">${sanitizeHTML(user.role)}</span>
           </div>
         `;
       }).join('');
 
-      container.innerHTML = html;
+      safeSetHTML(container, html);
     }
 
     function getRoleIcon(role) {
@@ -5836,7 +5861,7 @@
       const displayName = currentUser.full_name || currentUser.email.split('@')[0];
       const roleIcon = getRoleIcon(currentUser.role);
 
-      badge.innerHTML = `${roleIcon} ${displayName}`;
+      safeSetHTML(badge, `${roleIcon} ${sanitizeHTML(displayName)}`);
     }
 
     async function reloadAllUserData() {
