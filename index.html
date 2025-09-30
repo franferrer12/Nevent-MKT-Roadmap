@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🚀 Roadmap Nevent 2025-2026</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js"></script>
   <style>
     :root {
       /* Base colors */
@@ -297,6 +298,73 @@
 
     .btn-danger:hover {
       background: #c21f1f;
+    }
+
+    /* Loading States */
+    .btn.loading {
+      pointer-events: none;
+      opacity: 0.6;
+      position: relative;
+    }
+
+    .btn.loading::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      top: 50%;
+      left: 50%;
+      margin-left: -7px;
+      margin-top: -7px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    .btn-secondary.loading::after,
+    .btn.loading:not(.btn-primary):not(.btn-danger)::after {
+      border-color: rgba(0, 0, 0, 0.2);
+      border-top-color: var(--ink);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .form-loading {
+      pointer-events: none;
+      opacity: 0.5;
+      position: relative;
+    }
+
+    .form-loading::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.8);
+      z-index: 10;
+      border-radius: 12px;
+    }
+
+    .form-loading::after {
+      content: '';
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      top: 50%;
+      left: 50%;
+      margin-left: -16px;
+      margin-top: -16px;
+      border: 3px solid rgba(236, 0, 140, 0.2);
+      border-top-color: var(--accent1);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      z-index: 11;
+    }
       border-color: #c21f1f;
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
@@ -2295,68 +2363,66 @@
 
     async function handleLogin(event) {
       event.preventDefault();
-      
+
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
       const loginBtn = document.getElementById('loginBtn');
       const errorDiv = document.getElementById('loginError');
-      
+
       errorDiv.classList.remove('show');
       errorDiv.textContent = '';
-      
-      loginBtn.disabled = true;
-      loginBtn.textContent = 'Iniciando sesión...';
-      
-      try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email: email,
-          password: password
-        });
-        
-        if (error) throw error;
 
-        currentUser = data.user;
+      await withButtonLoading(loginBtn, async () => {
+        try {
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+          });
 
-        // Load user profile from public.users table to get role
-        const { data: userProfile, error: profileError } = await supabase
-          .from('users')
-          .select('*')
-          .eq('id', data.user.id)
-          .single();
+          if (error) throw error;
 
-        if (userProfile) {
-          // Merge profile data with auth user
-          currentUser.role = userProfile.role;
-          currentUser.full_name = userProfile.full_name;
-          currentUser.department_id = userProfile.department_id;
-        } else {
-          // Fallback to user_metadata if no profile exists
-          currentUser.role = data.user.user_metadata?.role || 'user';
+          currentUser = data.user;
+
+          // Load user profile from public.users table to get role
+          const { data: userProfile, error: profileError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', data.user.id)
+            .single();
+
+          if (userProfile) {
+            // Merge profile data with auth user
+            currentUser.role = userProfile.role;
+            currentUser.full_name = userProfile.full_name;
+            currentUser.department_id = userProfile.department_id;
+          } else {
+            // Fallback to user_metadata if no profile exists
+            currentUser.role = data.user.user_metadata?.role || 'user';
+          }
+
+          // Track login
+          analytics.track('user_login', {
+            role: currentUser.role,
+            has_profile: !!userProfile
+          });
+
+          document.getElementById('loginPage').style.display = 'none';
+          document.getElementById('mainApp').style.display = 'block';
+
+          await loadData();
+          await loadMyOKRs();
+          await loadMyInitiatives();
+          await loadDepartments();
+          initializeRoleBasedNav();
+          await initializeViewAsSystem();
+          setupRealtimeSync();
+
+        } catch (error) {
+          errorDiv.textContent = error.message || 'Error al iniciar sesión. Verifica tus credenciales.';
+          errorDiv.classList.add('show');
+          throw error; // Re-throw to handle in finally
         }
-
-        // Track login
-        analytics.track('user_login', {
-          role: currentUser.role,
-          has_profile: !!userProfile
-        });
-
-        document.getElementById('loginPage').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
-
-        await loadData();
-        await loadMyOKRs();
-        await loadMyInitiatives();
-        await loadDepartments();
-        initializeRoleBasedNav();
-        await initializeViewAsSystem();
-        setupRealtimeSync();
-
-      } catch (error) {
-        errorDiv.textContent = error.message || 'Error al iniciar sesión. Verifica tus credenciales.';
-        errorDiv.classList.add('show');
-        loginBtn.disabled = false;
-        loginBtn.textContent = 'Iniciar sesión';
-      }
+      });
     }
 
     async function handleLogout() {
@@ -2802,6 +2868,9 @@
         return;
       }
 
+      const form = event.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+
       const title = document.getElementById('okrTitle').value;
       const quarter = document.getElementById('okrQuarter').value;
       const deadline = document.getElementById('okrDeadline').value;
@@ -2860,22 +2929,25 @@
         updated_at: new Date().toISOString()
       };
 
-      try {
-        const { error } = await supabase
-          .from('user_okrs')
-          .insert([newOKR]);
+      await withButtonLoading(submitBtn, async () => {
+        try {
+          const { error } = await supabase
+            .from('user_okrs')
+            .insert([newOKR]);
 
-        if (error) throw error;
+          if (error) throw error;
 
-        closeOKRModal();
-        await loadMyOKRs();
-        if (isDashboardVisible) {
-          await renderMyDashboard();
+          closeOKRModal();
+          await loadMyOKRs();
+          if (isDashboardVisible) {
+            await renderMyDashboard();
+          }
+          showToast('OKR creado exitosamente', 'success');
+        } catch (error) {
+          handleSupabaseError(error, 'crear OKR');
+          throw error;
         }
-        showToast('OKR creado exitosamente', 'success');
-      } catch (error) {
-        handleSupabaseError(error, 'crear OKR');
-      }
+      });
     }
 
     // Company OKR Modal Functions
@@ -3023,24 +3095,30 @@
         updated_at: new Date().toISOString()
       };
 
-      try {
-        const { data, error } = await supabase
-          .from('company_okrs')
-          .insert([newCompanyOKR])
-          .select();
+      const form = event.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
 
-        if (error) throw error;
+      await withButtonLoading(submitBtn, async () => {
+        try {
+          const { data, error } = await supabase
+            .from('company_okrs')
+            .insert([newCompanyOKR])
+            .select();
 
-        showToast(`OKR de empresa creado exitosamente: ${objective}`, 'success');
-        closeCompanyOKRModal();
+          if (error) throw error;
 
-        // Refresh CEO dashboard if we're on it
-        if (currentView === 'ceo-dashboard') {
-          renderCEODashboard();
+          showToast(`OKR de empresa creado exitosamente: ${objective}`, 'success');
+          closeCompanyOKRModal();
+
+          // Refresh CEO dashboard if we're on it
+          if (currentView === 'ceo-dashboard') {
+            renderCEODashboard();
+          }
+        } catch (error) {
+          handleSupabaseError(error, 'crear OKR de empresa');
+          throw error;
         }
-      } catch (error) {
-        handleSupabaseError(error, 'crear OKR de empresa');
-      }
+      });
     }
 
     // Initiative Modal Functions
@@ -3101,22 +3179,28 @@
         updated_at: new Date().toISOString()
       };
 
-      try {
-        const { error } = await supabase
-          .from('initiatives')
-          .insert([newInitiative]);
+      const form = event.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
 
-        if (error) throw error;
+      await withButtonLoading(submitBtn, async () => {
+        try {
+          const { error } = await supabase
+            .from('initiatives')
+            .insert([newInitiative]);
 
-        closeInitiativeModal();
-        await loadMyInitiatives();
-        if (isDashboardVisible) {
-          await renderMyDashboard();
+          if (error) throw error;
+
+          closeInitiativeModal();
+          await loadMyInitiatives();
+          if (isDashboardVisible) {
+            await renderMyDashboard();
+          }
+          showToast('Initiative creada exitosamente', 'success');
+        } catch (error) {
+          handleSupabaseError(error, 'crear Initiative');
+          throw error;
         }
-        showToast('Initiative creada exitosamente', 'success');
-      } catch (error) {
-        handleSupabaseError(error, 'crear Initiative');
-      }
+      });
     }
 
     // Auto-calculate Initiative Progress from Actions
@@ -3293,55 +3377,61 @@
         updated_at: new Date().toISOString()
       };
 
-      try {
-        if (editId) {
-          // Update existing customer
-          const { error } = await supabase
-            .from('customers')
-            .update(customerData)
-            .eq('id', editId);
+      const form = event.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
 
-          if (error) throw error;
-          showToast(`Cliente actualizado: ${name}`, 'success');
+      await withButtonLoading(submitBtn, async () => {
+        try {
+          if (editId) {
+            // Update existing customer
+            const { error } = await supabase
+              .from('customers')
+              .update(customerData)
+              .eq('id', editId);
 
-          // Track customer update
-          analytics.track('customer_updated', {
-            customer_id: editId,
-            mrr: mrr,
-            status: status,
-            health_score: health_score
-          });
-        } else {
-          // Create new customer
-          customerData.id = generateId();
-          customerData.created_at = new Date().toISOString();
+            if (error) throw error;
+            showToast(`Cliente actualizado: ${name}`, 'success');
 
-          const { error } = await supabase
-            .from('customers')
-            .insert([customerData]);
+            // Track customer update
+            analytics.track('customer_updated', {
+              customer_id: editId,
+              mrr: mrr,
+              status: status,
+              health_score: health_score
+            });
+          } else {
+            // Create new customer
+            customerData.id = generateId();
+            customerData.created_at = new Date().toISOString();
 
-          if (error) throw error;
-          showToast(`Cliente creado: ${name}`, 'success');
+            const { error } = await supabase
+              .from('customers')
+              .insert([customerData]);
 
-          // Track customer creation
-          analytics.track('customer_created', {
-            customer_id: customerData.id,
-            mrr: mrr,
-            status: status,
-            health_score: health_score
-          });
+            if (error) throw error;
+            showToast(`Cliente creado: ${name}`, 'success');
+
+            // Track customer creation
+            analytics.track('customer_created', {
+              customer_id: customerData.id,
+              mrr: mrr,
+              status: status,
+              health_score: health_score
+            });
+          }
+
+          closeCustomerModal();
+
+          // Reload customers if on CS dashboard
+          if (currentView === 'cs-dashboard') {
+            await loadAllCustomers();
+            await renderCSDashboard();
+          }
+        } catch (error) {
+          handleSupabaseError(error, editId ? 'actualizar cliente' : 'crear cliente');
+          throw error;
         }
-
-        closeCustomerModal();
-
-        // Reload customers if on CS dashboard
-        if (currentView === 'cs-dashboard') {
-          await loadAllCustomers();
-          await renderCSDashboard();
-        }
-      } catch (error) {
-        handleSupabaseError(error, editId ? 'actualizar cliente' : 'crear cliente');
-      }
+      });
     }
 
     async function loadAllCustomers() {
@@ -3787,14 +3877,16 @@
       toast.setAttribute('role', 'alert');
       toast.setAttribute('aria-live', 'polite');
       toast.setAttribute('aria-atomic', 'true');
-      toast.innerHTML = `
+
+      // Use safeSetHTML to prevent XSS in user messages
+      safeSetHTML(toast, `
         <div class="toast-icon" aria-hidden="true">${icons[type]}</div>
         <div class="toast-content">
           <div class="toast-title">${titles[type]}</div>
           <div class="toast-message">${message}</div>
         </div>
         <button class="toast-close" onclick="this.parentElement.remove()" aria-label="Cerrar notificación">×</button>
-      `;
+      `);
 
       container.appendChild(toast);
 
@@ -3815,6 +3907,121 @@
       });
 
       return toast;
+    }
+
+    // ==================================================================
+    // XSS PROTECTION HELPERS
+    // ==================================================================
+
+    /**
+     * Sanitize HTML to prevent XSS attacks
+     * @param {string} dirty - Untrusted HTML string
+     * @param {object} config - DOMPurify configuration (optional)
+     * @returns {string} Sanitized HTML
+     */
+    function sanitizeHTML(dirty, config = {}) {
+      if (typeof DOMPurify === 'undefined') {
+        console.error('DOMPurify not loaded');
+        return '';
+      }
+      return DOMPurify.sanitize(dirty, config);
+    }
+
+    /**
+     * Safely set innerHTML with XSS protection
+     * @param {HTMLElement} element - Target element
+     * @param {string} html - HTML content to set
+     * @param {object} config - DOMPurify configuration (optional)
+     */
+    function safeSetHTML(element, html, config = {}) {
+      if (!element) return;
+      element.innerHTML = sanitizeHTML(html, config);
+    }
+
+    // ==================================================================
+    // LOADING STATE HELPERS
+    // ==================================================================
+
+    /**
+     * Set loading state on a button
+     * @param {HTMLElement|string} button - Button element or selector
+     * @param {boolean} isLoading - Loading state
+     * @param {string} originalText - Text to restore when done (optional)
+     */
+    function setButtonLoading(button, isLoading, originalText = null) {
+      const btn = typeof button === 'string' ? document.querySelector(button) : button;
+      if (!btn) return;
+
+      if (isLoading) {
+        btn.dataset.originalText = originalText || btn.textContent;
+        btn.classList.add('loading');
+        btn.disabled = true;
+      } else {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+        if (btn.dataset.originalText) {
+          btn.textContent = btn.dataset.originalText;
+          delete btn.dataset.originalText;
+        }
+      }
+    }
+
+    /**
+     * Set loading state on a form
+     * @param {HTMLElement|string} form - Form element or selector
+     * @param {boolean} isLoading - Loading state
+     */
+    function setFormLoading(form, isLoading) {
+      const formEl = typeof form === 'string' ? document.querySelector(form) : form;
+      if (!formEl) return;
+
+      if (isLoading) {
+        formEl.classList.add('form-loading');
+        // Disable all inputs
+        formEl.querySelectorAll('input, select, textarea, button').forEach(el => {
+          el.dataset.wasDisabled = el.disabled;
+          el.disabled = true;
+        });
+      } else {
+        formEl.classList.remove('form-loading');
+        // Re-enable inputs that weren't disabled
+        formEl.querySelectorAll('input, select, textarea, button').forEach(el => {
+          if (el.dataset.wasDisabled === 'false') {
+            el.disabled = false;
+          }
+          delete el.dataset.wasDisabled;
+        });
+      }
+    }
+
+    /**
+     * Wrap async function with loading state on button
+     * @param {HTMLElement} button - Button element
+     * @param {Function} asyncFn - Async function to execute
+     * @returns {Promise} Result of async function
+     */
+    async function withButtonLoading(button, asyncFn) {
+      setButtonLoading(button, true);
+      try {
+        return await asyncFn();
+      } finally {
+        setButtonLoading(button, false);
+      }
+    }
+
+    /**
+     * Wrap async function with loading state on form
+     * @param {HTMLElement} form - Form element
+     * @param {Function} asyncFn - Async function to execute
+     * @returns {Promise} Result of async function
+     */
+    async function withFormLoading(form, asyncFn) {
+      setFormLoading(form, true);
+      try {
+        return await asyncFn();
+      } finally {
+        setFormLoading(form, false);
+      }
     }
 
     // Offline/Online detection
