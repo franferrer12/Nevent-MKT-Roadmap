@@ -1345,6 +1345,55 @@
     </div>
   </div>
 
+  <!-- Modal: Create Company OKR -->
+  <div id="companyOKRModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">🌍 Nuevo OKR de Empresa</h2>
+        <button class="close-btn" onclick="closeCompanyOKRModal()">&times;</button>
+      </div>
+
+      <form id="companyOKRForm" onsubmit="saveCompanyOKR(event)">
+        <div class="form-group">
+          <label>Objetivo Estratégico</label>
+          <input
+            type="text"
+            id="companyOKRObjective"
+            placeholder="Ej: Convertirse en la plataforma #1 de eventos en España"
+            required
+          />
+          <p style="color: var(--muted); font-size: 12px; margin-top: 4px;">
+            Define el objetivo principal de la empresa para este año
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label>Año Fiscal</label>
+          <select id="companyOKRYear" required>
+            <option value="2025" selected>2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Key Results (Resultados Clave)</label>
+          <p style="color: var(--muted); font-size: 13px; margin-bottom: 12px;">
+            Define 3-5 resultados medibles a nivel empresa
+          </p>
+          <div id="companyKeyResultsContainer"></div>
+          <button type="button" class="btn btn-secondary" onclick="addCompanyKeyResult()" style="width: 100%; margin-top: 8px;">
+            ➕ Agregar Key Result
+          </button>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
+          💾 Crear OKR de Empresa
+        </button>
+      </form>
+    </div>
+  </div>
+
   <script>
     const SUPABASE_URL = 'https://tvbqzqripcevaryquhfg.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2YnF6cXJpcGNldmFyeXF1aGZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxNTI4MzEsImV4cCI6MjA3NDcyODgzMX0.BVHINkyJtK4mwRLX1Nt7_gJbd3ht2qGfvqLvmehkyIM';
@@ -1889,6 +1938,171 @@
         showToast('OKR creado exitosamente', 'success');
       } catch (error) {
         handleSupabaseError(error, 'crear OKR');
+      }
+    }
+
+    // Company OKR Modal Functions
+    let companyKeyResultCounter = 0;
+
+    function openCompanyOKRModal() {
+      document.getElementById('companyOKRModal').classList.add('active');
+      document.getElementById('companyOKRForm').reset();
+      document.getElementById('companyKeyResultsContainer').innerHTML = '';
+      companyKeyResultCounter = 0;
+
+      // Company OKRs typically have 3-5 key results, start with 3
+      addCompanyKeyResult();
+      addCompanyKeyResult();
+      addCompanyKeyResult();
+    }
+
+    function closeCompanyOKRModal() {
+      document.getElementById('companyOKRModal').classList.remove('active');
+    }
+
+    function addCompanyKeyResult() {
+      const container = document.getElementById('companyKeyResultsContainer');
+      const krId = ++companyKeyResultCounter;
+
+      const krDiv = document.createElement('div');
+      krDiv.className = 'key-result-item';
+      krDiv.innerHTML = `
+        <div class="kr-header">
+          <label>Key Result ${krId}</label>
+          ${krId > 3 ? `<button type="button" class="remove-kr-btn" onclick="removeCompanyKeyResult(${krId})">✕</button>` : ''}
+        </div>
+        <input
+          type="text"
+          id="companyKR${krId}"
+          placeholder="Ej: Aumentar ARR de €2M a €5M"
+          required
+        />
+        <div class="kr-metrics">
+          <input
+            type="number"
+            id="companyKRCurrent${krId}"
+            placeholder="Valor actual"
+            step="0.01"
+            required
+          />
+          <input
+            type="number"
+            id="companyKRTarget${krId}"
+            placeholder="Objetivo"
+            step="0.01"
+            required
+          />
+          <input
+            type="text"
+            id="companyKRUnit${krId}"
+            placeholder="Unidad (EUR, %, clientes...)"
+            required
+          />
+        </div>
+      `;
+
+      container.appendChild(krDiv);
+
+      // Limit to 5 key results
+      if (companyKeyResultCounter >= 5) {
+        const addButton = document.querySelector('#companyOKRForm .btn-secondary');
+        if (addButton) addButton.style.display = 'none';
+      }
+    }
+
+    function removeCompanyKeyResult(krId) {
+      const krItem = document.querySelector(`#companyKR${krId}`).closest('.key-result-item');
+      if (krItem) {
+        krItem.remove();
+        companyKeyResultCounter--;
+
+        // Show add button again if under limit
+        const addButton = document.querySelector('#companyOKRForm .btn-secondary');
+        if (addButton && companyKeyResultCounter < 5) {
+          addButton.style.display = 'inline-block';
+        }
+      }
+    }
+
+    async function saveCompanyOKR(event) {
+      event.preventDefault();
+
+      if (!currentUser) {
+        showToast('Debes iniciar sesión para crear un OKR de empresa', 'warning');
+        return;
+      }
+
+      // Verify CEO role
+      if (currentUser.role !== 'ceo') {
+        showToast('Solo CEOs pueden crear OKRs de empresa', 'error');
+        return;
+      }
+
+      const objective = document.getElementById('companyOKRObjective').value;
+      const fiscal_year = document.getElementById('companyOKRYear').value;
+
+      // Collect key results
+      const key_results = [];
+      let totalProgress = 0;
+
+      for (let i = 1; i <= companyKeyResultCounter; i++) {
+        const descInput = document.getElementById(`companyKR${i}`);
+        if (descInput && descInput.value) {
+          const current = parseFloat(document.getElementById(`companyKRCurrent${i}`).value) || 0;
+          const target = parseFloat(document.getElementById(`companyKRTarget${i}`).value) || 1;
+          const unit = document.getElementById(`companyKRUnit${i}`).value;
+
+          const progress = Math.min(Math.round((current / target) * 100), 100);
+          totalProgress += progress;
+
+          key_results.push({
+            id: `kr-${i}`,
+            description: descInput.value,
+            current,
+            target,
+            unit,
+            progress
+          });
+        }
+      }
+
+      // Validate minimum 3 key results for company OKRs
+      if (key_results.length < 3) {
+        showToast('Los OKRs de empresa deben tener al menos 3 Key Results', 'warning');
+        return;
+      }
+
+      // Calculate health score
+      const avgProgress = Math.round(totalProgress / key_results.length);
+      const health_score = avgProgress;
+
+      const newCompanyOKR = {
+        id: generateId(),
+        fiscal_year,
+        objective,
+        key_results,
+        health_score,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      try {
+        const { data, error } = await supabase
+          .from('company_okrs')
+          .insert([newCompanyOKR])
+          .select();
+
+        if (error) throw error;
+
+        showToast(`OKR de empresa creado exitosamente: ${objective}`, 'success');
+        closeCompanyOKRModal();
+
+        // Refresh CEO dashboard if we're on it
+        if (currentView === 'ceo-dashboard') {
+          renderCEODashboard();
+        }
+      } catch (error) {
+        handleSupabaseError(error, 'crear OKR de empresa');
       }
     }
 
