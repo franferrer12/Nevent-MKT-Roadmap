@@ -1991,6 +1991,23 @@
 
         currentUser = data.user;
 
+        // Load user profile from public.users table to get role
+        const { data: userProfile, error: profileError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', data.user.id)
+          .single();
+
+        if (userProfile) {
+          // Merge profile data with auth user
+          currentUser.role = userProfile.role;
+          currentUser.full_name = userProfile.full_name;
+          currentUser.department_id = userProfile.department_id;
+        } else {
+          // Fallback to user_metadata if no profile exists
+          currentUser.role = data.user.user_metadata?.role || 'user';
+        }
+
         document.getElementById('loginPage').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
 
@@ -1998,6 +2015,7 @@
         await loadMyOKRs();
         await loadMyInitiatives();
         await loadDepartments();
+        initializeRoleBasedNav();
         setupRealtimeSync();
 
       } catch (error) {
@@ -2025,12 +2043,29 @@
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
           currentUser = session.user;
+
+          // Load user profile from public.users table to get role
+          const { data: userProfile } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', session.user.id)
+            .single();
+
+          if (userProfile) {
+            currentUser.role = userProfile.role;
+            currentUser.full_name = userProfile.full_name;
+            currentUser.department_id = userProfile.department_id;
+          } else {
+            currentUser.role = session.user.user_metadata?.role || 'user';
+          }
+
           document.getElementById('loginPage').style.display = 'none';
           document.getElementById('mainApp').style.display = 'block';
           await loadData();
           await loadMyOKRs();
           await loadMyInitiatives();
           await loadDepartments();
+          initializeRoleBasedNav();
           setupRealtimeSync();
         }
       } catch (error) {
