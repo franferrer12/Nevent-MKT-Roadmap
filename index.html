@@ -3040,17 +3040,17 @@
         
         const quarterDiv = document.createElement('div');
         quarterDiv.className = 'quarter';
-        quarterDiv.innerHTML = `
+        safeSetHTML(quarterDiv, `
           <div class="quarter-header">
-            <h2 class="quarter-title">${quarter}</h2>
+            <h2 class="quarter-title">${sanitizeHTML(quarter)}</h2>
             <span style="color: var(--muted);">${actions.length} acciones</span>
           </div>
-          <div class="actions-grid" id="actions-${quarter}"></div>
-        `;
+          <div class="actions-grid" id="actions-${sanitizeHTML(quarter)}"></div>
+        `);
         
         timeline.appendChild(quarterDiv);
 
-        const actionsGrid = document.getElementById(`actions-${quarter}`);
+        const actionsGrid = document.getElementById(`actions-${sanitizeHTML(quarter)}`);
         
         actions.forEach(action => {
           const actionCard = document.createElement('div');
@@ -4103,7 +4103,7 @@
         </div>
       `;
 
-      dashboardContainer.innerHTML = html;
+      safeSetHTML(dashboardContainer, html);
     }
 
     function renderOKRsList() {
@@ -4134,8 +4134,8 @@
           <div class="okr-card" style="background: var(--bg); border: 1px solid var(--stroke); border-radius: 8px; padding: 16px; margin-bottom: 12px;">
             <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
               <div style="flex: 1;">
-                <h4 style="margin: 0 0 4px 0;">${okr.title}</h4>
-                <span style="font-size: 13px; color: var(--muted);">${okr.quarter} • ${okr.deadline || 'Sin deadline'}</span>
+                <h4 style="margin: 0 0 4px 0;">${sanitizeHTML(okr.title)}</h4>
+                <span style="font-size: 13px; color: var(--muted);">${sanitizeHTML(okr.quarter)} • ${sanitizeHTML(okr.deadline || 'Sin deadline')}</span>
               </div>
               <span style="padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500; background: ${statusColor}20; color: ${statusColor};">
                 ${statusText}
@@ -4157,9 +4157,9 @@
                 <strong style="font-size: 13px; color: var(--muted);">Key Results:</strong>
                 ${keyResults.slice(0, 3).map(kr => `
                   <div style="margin-top: 8px; padding-left: 8px; border-left: 2px solid var(--stroke);">
-                    <div style="font-size: 13px; color: var(--ink); margin-bottom: 2px;">${kr.description}</div>
+                    <div style="font-size: 13px; color: var(--ink); margin-bottom: 2px;">${sanitizeHTML(kr.description)}</div>
                     <div style="font-size: 12px; color: var(--muted);">
-                      ${kr.current || 0} / ${kr.target} ${kr.unit} (${kr.progress || 0}%)
+                      ${kr.current || 0} / ${kr.target} ${sanitizeHTML(kr.unit)} (${kr.progress || 0}%)
                     </div>
                   </div>
                 `).join('')}
