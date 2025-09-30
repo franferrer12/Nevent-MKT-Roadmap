@@ -780,6 +780,16 @@
         </div>
 
         <div class="form-group">
+          <label>Vinculada a Initiative (opcional)</label>
+          <select id="initiativeSelect">
+            <option value="">Sin vincular</option>
+          </select>
+          <p style="color: var(--muted); font-size: 12px; margin-top: 4px;">
+            Vincula esta acción a una initiative estratégica
+          </p>
+        </div>
+
+        <div class="form-group">
           <label>Fecha límite</label>
           <input type="date" id="deadlineInput" />
         </div>
@@ -839,6 +849,96 @@
 
         <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
           💾 Crear OKR
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Create Initiative -->
+  <div id="initiativeModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">🚀 Nueva Initiative</h2>
+        <button class="close-btn" onclick="closeInitiativeModal()">&times;</button>
+      </div>
+
+      <form id="initiativeForm" onsubmit="saveInitiative(event)">
+        <div class="form-group">
+          <label>Título de la Initiative</label>
+          <input
+            type="text"
+            id="initiativeTitle"
+            placeholder="Ej: Campaña de Content Marketing Q4"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea
+            id="initiativeDescription"
+            placeholder="Describe el proyecto y su objetivo..."
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Contribuye al OKR</label>
+          <select id="initiativeOKR">
+            <option value="">Sin vincular</option>
+          </select>
+          <p style="color: var(--muted); font-size: 12px; margin-top: 4px;">
+            Vincula esta initiative a uno de tus OKRs
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label>Trimestre</label>
+          <select id="initiativeQuarter" required>
+            <option value="Q4 2025">Q4 2025</option>
+            <option value="Q1 2026">Q1 2026</option>
+            <option value="Q2 2026">Q2 2026</option>
+            <option value="Q3 2026">Q3 2026</option>
+            <option value="Q4 2026">Q4 2026</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Fechas</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div>
+              <label style="font-size: 13px; color: var(--muted);">Inicio</label>
+              <input type="date" id="initiativeStartDate" required style="margin-top: 4px;" />
+            </div>
+            <div>
+              <label style="font-size: 13px; color: var(--muted);">Fin</label>
+              <input type="date" id="initiativeEndDate" required style="margin-top: 4px;" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Budget Asignado (€)</label>
+          <input
+            type="number"
+            id="initiativeBudget"
+            placeholder="25000"
+            min="0"
+            step="100"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Estado Inicial</label>
+          <select id="initiativeStatus">
+            <option value="not_started">No iniciado</option>
+            <option value="in_progress" selected>En progreso</option>
+            <option value="on_hold">En pausa</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
+          💾 Crear Initiative
         </button>
       </form>
     </div>
@@ -1137,7 +1237,20 @@
       editingAction = null;
       document.getElementById('modalTitle').textContent = 'Nueva Acción';
       document.getElementById('actionForm').reset();
+      populateInitiativeDropdown();
       document.getElementById('actionModal').classList.add('active');
+    }
+
+    function populateInitiativeDropdown() {
+      const select = document.getElementById('initiativeSelect');
+      select.innerHTML = '<option value="">Sin vincular</option>';
+
+      myInitiatives.forEach(initiative => {
+        const option = document.createElement('option');
+        option.value = initiative.id;
+        option.textContent = `${initiative.title} (${initiative.quarter})`;
+        select.appendChild(option);
+      });
     }
 
     function editAction(actionId, quarter) {
@@ -1146,7 +1259,7 @@
 
       editingAction = { action, quarter };
       document.getElementById('modalTitle').textContent = 'Editar Acción';
-      
+
       document.getElementById('quarterSelect').value = quarter;
       document.getElementById('categorySelect').value = action.category;
       document.getElementById('titleInput').value = action.title;
@@ -1155,7 +1268,10 @@
       document.getElementById('statusSelect').value = action.status;
       document.getElementById('responsableInput').value = action.responsable || '';
       document.getElementById('deadlineInput').value = action.deadline || '';
-      
+
+      populateInitiativeDropdown();
+      document.getElementById('initiativeSelect').value = action.initiative_id || '';
+
       document.getElementById('actionModal').classList.add('active');
     }
 
@@ -1163,6 +1279,8 @@
       event.preventDefault();
 
       const quarter = document.getElementById('quarterSelect').value;
+      const initiative_id = document.getElementById('initiativeSelect').value || null;
+
       const actionData = {
         id: editingAction ? editingAction.action.id : generateId(),
         category: document.getElementById('categorySelect').value,
@@ -1172,6 +1290,7 @@
         status: document.getElementById('statusSelect').value,
         responsable: document.getElementById('responsableInput').value,
         deadline: document.getElementById('deadlineInput').value,
+        initiative_id: initiative_id,
         subtasks: editingAction ? editingAction.action.subtasks : []
       };
 
@@ -1182,10 +1301,15 @@
 
       roadmapData.quarters[quarter].push(actionData);
       await saveToSupabase(actionData, quarter);
-      
+
       closeModal();
       renderTimeline();
       updateStats();
+
+      // Update initiative progress if linked
+      if (initiative_id) {
+        await updateInitiativeProgress(initiative_id);
+      }
     }
 
     async function deleteAction(actionId, quarter) {
@@ -1373,6 +1497,140 @@
       }
     }
 
+    // Initiative Modal Functions
+    function openInitiativeModal() {
+      document.getElementById('initiativeModal').classList.add('active');
+      document.getElementById('initiativeForm').reset();
+      populateOKRDropdown();
+    }
+
+    function closeInitiativeModal() {
+      document.getElementById('initiativeModal').classList.remove('active');
+    }
+
+    function populateOKRDropdown() {
+      const select = document.getElementById('initiativeOKR');
+      select.innerHTML = '<option value="">Sin vincular</option>';
+
+      myOKRs.forEach(okr => {
+        const option = document.createElement('option');
+        option.value = okr.id;
+        option.textContent = `${okr.title} (${okr.quarter})`;
+        select.appendChild(option);
+      });
+    }
+
+    async function saveInitiative(event) {
+      event.preventDefault();
+
+      if (!currentUser) {
+        alert('Debes iniciar sesión para crear una Initiative');
+        return;
+      }
+
+      const title = document.getElementById('initiativeTitle').value;
+      const description = document.getElementById('initiativeDescription').value;
+      const contributes_to_okr = document.getElementById('initiativeOKR').value || null;
+      const quarter = document.getElementById('initiativeQuarter').value;
+      const start_date = document.getElementById('initiativeStartDate').value;
+      const end_date = document.getElementById('initiativeEndDate').value;
+      const budget_allocated = parseFloat(document.getElementById('initiativeBudget').value) || 0;
+      const status = document.getElementById('initiativeStatus').value;
+
+      const newInitiative = {
+        id: generateId(),
+        title,
+        description,
+        owner_id: currentUser.id,
+        contributes_to_okr,
+        quarter,
+        start_date,
+        end_date,
+        status,
+        progress: 0,
+        health: 'on_track',
+        budget_allocated,
+        budget_spent: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      try {
+        const { error } = await supabase
+          .from('initiatives')
+          .insert([newInitiative]);
+
+        if (error) throw error;
+
+        console.log('✅ Initiative creada:', newInitiative);
+        closeInitiativeModal();
+        await loadMyInitiatives();
+        if (isDashboardVisible) {
+          await renderMyDashboard();
+        }
+        alert('✅ Initiative creada exitosamente');
+      } catch (error) {
+        console.error('❌ Error al crear Initiative:', error);
+        alert('Error al crear Initiative: ' + error.message);
+      }
+    }
+
+    // Auto-calculate Initiative Progress from Actions
+    async function updateInitiativeProgress(initiativeId) {
+      try {
+        // Get all actions linked to this initiative
+        const { data: actions, error } = await supabase
+          .from('roadmap_actions')
+          .select('status')
+          .eq('initiative_id', initiativeId);
+
+        if (error) throw error;
+
+        if (!actions || actions.length === 0) {
+          console.log('No actions linked to this initiative yet');
+          return;
+        }
+
+        // Calculate progress based on action status
+        const totalActions = actions.length;
+        const completedActions = actions.filter(a => a.status === 'Completado').length;
+        const inProgressActions = actions.filter(a => a.status === 'En curso').length;
+
+        // Progress formula: completed = 100%, in_progress = 50%, pending = 0%
+        const progress = Math.round(
+          ((completedActions * 100) + (inProgressActions * 50)) / totalActions
+        );
+
+        // Determine health based on progress
+        let health = 'on_track';
+        if (progress < 40) health = 'off_track';
+        else if (progress < 70) health = 'at_risk';
+        else health = 'on_track';
+
+        // Update initiative
+        const { error: updateError } = await supabase
+          .from('initiatives')
+          .update({
+            progress,
+            health,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', initiativeId);
+
+        if (updateError) throw updateError;
+
+        console.log(`✅ Initiative ${initiativeId} progress updated: ${progress}%`);
+
+        // Reload initiatives if dashboard is visible
+        if (isDashboardVisible) {
+          await loadMyInitiatives();
+          await renderMyDashboard();
+        }
+      } catch (error) {
+        console.error('❌ Error updating initiative progress:', error);
+      }
+    }
+
     // Dashboard Functions
     async function loadDepartments() {
       try {
@@ -1473,7 +1731,7 @@
               <button class="btn-secondary" onclick="openOKRModal()">
                 ➕ Nuevo OKR
               </button>
-              <button class="btn-secondary" onclick="alert('Próximamente: Crear Initiative')">
+              <button class="btn-secondary" onclick="openInitiativeModal()">
                 ➕ Nueva Initiative
               </button>
             </div>
