@@ -4609,7 +4609,7 @@
         const { data, error } = await supabase
           .from('departments')
           .select('*')
-          .eq('status', 'active')
+          .eq('is_active', true)
           .order('health_score', { ascending: false });
 
         if (error) throw error;
@@ -4917,7 +4917,7 @@
         const { data, error } = await supabase
           .from('departments')
           .select('*')
-          .eq('status', 'active')
+          .eq('is_active', true)
           .limit(1)
           .single();
 
