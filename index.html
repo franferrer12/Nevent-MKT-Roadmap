@@ -2605,35 +2605,36 @@
         actions.forEach(action => {
           const actionCard = document.createElement('div');
           actionCard.className = 'action-card';
-          actionCard.innerHTML = `
+          // Sanitize user-controlled content to prevent XSS
+          safeSetHTML(actionCard, `
             <div class="action-header">
               <div>
-                <div class="action-title">${action.title}</div>
-                <span class="action-category">${action.category}</span>
+                <div class="action-title">${sanitizeHTML(action.title)}</div>
+                <span class="action-category">${sanitizeHTML(action.category)}</span>
               </div>
-              <span class="status-badge status-${action.status.replace(' ', '.')}">${action.status}</span>
+              <span class="status-badge status-${action.status.replace(' ', '.')}">${sanitizeHTML(action.status)}</span>
             </div>
-            
-            ${action.description ? `<p style="color: var(--muted); font-size: 14px; margin: 8px 0;">${action.description}</p>` : ''}
-            
+
+            ${action.description ? `<p style="color: var(--muted); font-size: 14px; margin: 8px 0;">${sanitizeHTML(action.description)}</p>` : ''}
+
             <div class="action-meta">
               <span class="priority-badge priority-${action.priority}">
-                ${action.priority === 'Alta' ? '🔴' : action.priority === 'Media' ? '🟡' : '🟢'} ${action.priority}
+                ${action.priority === 'Alta' ? '🔴' : action.priority === 'Media' ? '🟡' : '🟢'} ${sanitizeHTML(action.priority)}
               </span>
-              ${action.responsable ? `<span>👤 ${action.responsable}</span>` : ''}
-              ${action.deadline ? `<span>📅 ${action.deadline}</span>` : ''}
+              ${action.responsable ? `<span>👤 ${sanitizeHTML(action.responsable)}</span>` : ''}
+              ${action.deadline ? `<span>📅 ${sanitizeHTML(action.deadline)}</span>` : ''}
             </div>
 
             ${action.subtasks && action.subtasks.length > 0 ? `
               <div class="subtasks">
                 ${action.subtasks.map(st => `
                   <div class="subtask">
-                    <input 
-                      type="checkbox" 
-                      ${st.completed ? 'checked' : ''} 
+                    <input
+                      type="checkbox"
+                      ${st.completed ? 'checked' : ''}
                       onchange="toggleSubtask('${action.id}', '${st.id}', '${quarter}')"
                     />
-                    <span style="${st.completed ? 'text-decoration: line-through; color: var(--muted);' : ''}">${st.text}</span>
+                    <span style="${st.completed ? 'text-decoration: line-through; color: var(--muted);' : ''}">${sanitizeHTML(st.text)}</span>
                   </div>
                 `).join('')}
               </div>
@@ -2643,7 +2644,7 @@
               <button onclick="editAction('${action.id}', '${quarter}')">✏️ Editar</button>
               <button onclick="deleteAction('${action.id}', '${quarter}')">🗑️ Eliminar</button>
             </div>
-          `;
+          `);
           
           actionsGrid.appendChild(actionCard);
         });
@@ -2714,6 +2715,9 @@
     async function saveAction(event) {
       event.preventDefault();
 
+      const form = event.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+
       const quarter = document.getElementById('quarterSelect').value;
       const initiative_id = document.getElementById('initiativeSelect').value || null;
 
@@ -2730,22 +2734,24 @@
         subtasks: editingAction ? editingAction.action.subtasks : []
       };
 
-      if (editingAction) {
-        const oldQuarter = editingAction.quarter;
-        roadmapData.quarters[oldQuarter] = roadmapData.quarters[oldQuarter].filter(a => a.id !== actionData.id);
-      }
+      await withButtonLoading(submitBtn, async () => {
+        if (editingAction) {
+          const oldQuarter = editingAction.quarter;
+          roadmapData.quarters[oldQuarter] = roadmapData.quarters[oldQuarter].filter(a => a.id !== actionData.id);
+        }
 
-      roadmapData.quarters[quarter].push(actionData);
-      await saveToSupabase(actionData, quarter);
+        roadmapData.quarters[quarter].push(actionData);
+        await saveToSupabase(actionData, quarter);
 
-      closeModal();
-      renderTimeline();
-      updateStats();
+        closeModal();
+        renderTimeline();
+        updateStats();
 
-      // Update initiative progress if linked
-      if (initiative_id) {
-        await updateInitiativeProgress(initiative_id);
-      }
+        // Update initiative progress if linked
+        if (initiative_id) {
+          await updateInitiativeProgress(initiative_id);
+        }
+      });
     }
 
     async function deleteAction(actionId, quarter) {
