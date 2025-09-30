@@ -313,6 +313,70 @@
       white-space: normal;
     }
 
+    /* Skip to Content Link - HIGH PRIORITY FIX */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 0;
+      background: var(--accent1);
+      color: white;
+      padding: 12px 24px;
+      text-decoration: none;
+      z-index: 10000;
+      border-radius: 0 0 8px 0;
+      font-weight: 600;
+      font-size: 16px;
+      transition: top 0.2s ease;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .skip-link:focus {
+      top: 0;
+      outline: 3px solid white;
+      outline-offset: -3px;
+    }
+
+    /* Loading Skeletons for Dashboards */
+    .skeleton {
+      background: linear-gradient(
+        90deg,
+        var(--neutral-700) 0%,
+        var(--neutral-600) 50%,
+        var(--neutral-700) 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: var(--radius-md);
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .skeleton-card {
+      height: 120px;
+      margin-bottom: var(--space-md);
+    }
+
+    .skeleton-text {
+      height: 20px;
+      margin-bottom: var(--space-sm);
+    }
+
+    .skeleton-text.title {
+      height: 28px;
+      width: 60%;
+    }
+
+    .skeleton-text.short {
+      width: 40%;
+    }
+
+    .dashboard-loading {
+      padding: var(--space-xl);
+    }
+
     .btn-primary {
       background: var(--accent1);
       border-color: var(--accent1);
@@ -2896,6 +2960,21 @@
       }
     };
 
+    // PRIORITY 2 FIX: Session timeout handling with onAuthStateChange
+    function setupAuthListener() {
+      supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED' && !session) {
+          // Session expired or user signed out
+          showToast('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.', 'warning', 'Sesión Expirada');
+          handleLogout();
+        } else if (event === 'TOKEN_REFRESHED') {
+          console.log('Session token refreshed successfully');
+        } else if (event === 'SIGNED_IN') {
+          console.log('User signed in successfully');
+        }
+      });
+    }
+
     async function checkSession() {
       try {
         const { data: { session } } = await supabase.auth.getSession();
@@ -2926,6 +3005,9 @@
           initializeRoleBasedNav();
           await initializeViewAsSystem();
           setupRealtimeSync();
+
+          // PRIORITY 2 FIX: Setup auth state listener for session timeout
+          setupAuthListener();
         }
       } catch (error) {
         // Silent fail on session check - user will see login page
@@ -3021,6 +3103,22 @@
     // Global channel reference for cleanup
     let realtimeChannel = null;
 
+    // PRIORITY 1 FIX: Debounce utility to prevent excessive API calls
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
+    // Debounced data loading function (300ms delay)
+    const debouncedLoadData = debounce(loadData, 300);
+
     function setupRealtimeSync() {
       // Cleanup previous subscription if exists
       if (realtimeChannel) {
@@ -3034,7 +3132,8 @@
           schema: 'public',
           table: 'roadmap_actions'
         }, payload => {
-          loadData();
+          // PRIORITY 1 FIX: Use debounced version to prevent excessive calls
+          debouncedLoadData();
         })
         .subscribe();
     }
@@ -4055,16 +4154,31 @@
     }
 
     async function renderMyDashboard() {
+      const dashboardContainer = document.getElementById('myDashboardContainer');
+      if (!dashboardContainer) {
+        return;
+      }
+
+      // PRIORITY 2 FIX: Show loading skeleton while data loads
+      safeSetHTML(dashboardContainer, `
+        <div class="dashboard-loading">
+          <div class="skeleton skeleton-text title"></div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 24px 0;">
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+          </div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-text short"></div>
+        </div>
+      `);
+
       await Promise.all([
         loadMyOKRs(),
         loadMyInitiatives(),
         loadDepartments()
       ]);
-
-      const dashboardContainer = document.getElementById('myDashboardContainer');
-      if (!dashboardContainer) {
-        return;
-      }
 
       const html = `
         <div class="my-dashboard">
@@ -4534,26 +4648,43 @@
       }
     }
 
-    // Enhanced error handling for Supabase operations
+    // Enhanced error handling for Supabase operations - OPTIMIZATION: User-friendly messages
     function handleSupabaseError(error, operation = 'operación') {
       console.error(`❌ Error en ${operation}:`, error);
 
-      let message = `Hubo un problema al realizar la ${operation}.`;
-      let title = 'Error';
+      let message = `No pudimos completar la ${operation}. Por favor, intenta nuevamente.`;
+      let title = 'Algo salió mal';
 
-      if (error.message) {
+      // OPTIMIZATION: More user-friendly error messages
+      if (error.code === 'PGRST116') {
+        message = 'No encontramos la información que buscas. Puede que haya sido eliminada.';
+        title = 'Contenido no disponible';
+      } else if (error.code === '23505') {
+        message = 'Este elemento ya existe. Por favor, verifica tus datos e intenta con valores diferentes.';
+        title = 'Elemento duplicado';
+      } else if (error.code === '23503') {
+        message = 'Este elemento está siendo usado en otro lugar. Elimina las dependencias primero.';
+        title = 'No se puede eliminar';
+      } else if (error.code === '42501') {
+        message = 'No tienes permisos para realizar esta acción. Contacta a tu administrador.';
+        title = 'Permisos insuficientes';
+      } else if (error.message) {
         if (error.message.includes('JWT')) {
           message = 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.';
           title = 'Sesión expirada';
           setTimeout(() => handleLogout(), 2000);
-        } else if (error.message.includes('network')) {
-          message = 'Error de conexión. Verifica tu conexión a Internet.';
-          title = 'Error de red';
+        } else if (error.message.includes('network') || error.message.includes('fetch')) {
+          message = 'Parece que hay un problema con tu conexión a Internet. Verifica tu red e intenta de nuevo.';
+          title = 'Error de conexión';
         } else if (error.message.includes('permission') || error.message.includes('policy')) {
-          message = 'No tienes permisos para realizar esta acción.';
+          message = 'No tienes los permisos necesarios para realizar esta acción. Contacta a tu administrador si crees que es un error.';
           title = 'Permisos insuficientes';
+        } else if (error.message.includes('duplicate')) {
+          message = 'Este registro ya existe en el sistema. Intenta con información diferente.';
+          title = 'Registro duplicado';
         } else {
-          message = error.message;
+          // Sanitize technical messages for end users
+          message = `${error.message}. Si el problema persiste, contacta al soporte técnico.`;
         }
       }
 
@@ -4649,6 +4780,20 @@
     async function renderCEODashboard() {
       const container = document.getElementById('ceoDashboardView');
 
+      // PRIORITY 2 FIX: Show loading skeleton
+      safeSetHTML(container, `
+        <div class="dashboard-loading">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-bottom: 32px;">
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+            <div class="skeleton skeleton-card"></div>
+          </div>
+          <div class="skeleton skeleton-text title"></div>
+          <div class="skeleton skeleton-card"></div>
+        </div>
+      `);
+
       // Load data
       const companyOKRs = await loadCompanyOKRs();
       const departments = await loadAllDepartmentsWithHealth();
@@ -4657,7 +4802,7 @@
       const html = `
         <!-- KPI Hero Cards -->
         <div class="ceo-metrics">
-          <div class="kpi-card" role="button" tabindex="0" aria-label="Ver detalles de Company Health: ${companyMetrics.health} puntos" onclick="showMetricDetail('health')">
+          <div class="kpi-card" role="button" tabindex="0" aria-label="Ver detalles de Company Health: ${companyMetrics.health} puntos" onclick="showMetricDetail('health')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showMetricDetail('health');}">
             <div class="kpi-icon" aria-hidden="true">${companyMetrics.health >= 80 ? '💚' : companyMetrics.health >= 60 ? '🟡' : '🔴'}</div>
             <div class="kpi-content">
               <div class="kpi-label">Company Health</div>
@@ -4670,7 +4815,7 @@
             </div>
           </div>
 
-          <div class="kpi-card" role="button" tabindex="0" aria-label="Ver detalles de OKR Completion: ${companyMetrics.okrCompletion}%" onclick="showMetricDetail('okrs')">
+          <div class="kpi-card" role="button" tabindex="0" aria-label="Ver detalles de OKR Completion: ${companyMetrics.okrCompletion}%" onclick="showMetricDetail('okrs')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showMetricDetail('okrs');}">
             <div class="kpi-icon" aria-hidden="true">🎯</div>
             <div class="kpi-content">
               <div class="kpi-label">OKR Completion</div>
@@ -4683,7 +4828,7 @@
             </div>
           </div>
 
-          <div class="kpi-card" role="button" tabindex="0" aria-label="Ver detalles de Active Initiatives: ${companyMetrics.activeInitiatives} iniciativas" onclick="showMetricDetail('initiatives')">
+          <div class="kpi-card" role="button" tabindex="0" aria-label="Ver detalles de Active Initiatives: ${companyMetrics.activeInitiatives} iniciativas" onclick="showMetricDetail('initiatives')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showMetricDetail('initiatives');}">
             <div class="kpi-icon" aria-hidden="true">🚀</div>
             <div class="kpi-content">
               <div class="kpi-label">Active Initiatives</div>
@@ -4696,7 +4841,7 @@
             </div>
           </div>
 
-          <div class="kpi-card" role="button" tabindex="0" aria-label="Ver detalles de Budget Utilization: ${companyMetrics.budgetUtilization}%" onclick="showMetricDetail('budget')">
+          <div class="kpi-card" role="button" tabindex="0" aria-label="Ver detalles de Budget Utilization: ${companyMetrics.budgetUtilization}%" onclick="showMetricDetail('budget')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();showMetricDetail('budget');}">
             <div class="kpi-icon" aria-hidden="true">💰</div>
             <div class="kpi-content">
               <div class="kpi-label">Budget Utilization</div>
@@ -5770,10 +5915,14 @@
 
     function toggleViewAsDropdown() {
       const dropdown = document.getElementById('viewAsDropdown');
-      if (!dropdown) return;
+      const button = document.getElementById('viewAsButton');
+      if (!dropdown || !button) return;
 
       const isVisible = dropdown.style.display === 'block';
       dropdown.style.display = isVisible ? 'none' : 'block';
+
+      // PRIORITY 1 FIX: Update aria-expanded attribute
+      button.setAttribute('aria-expanded', !isVisible ? 'true' : 'false');
 
       // Cerrar al hacer click fuera
       if (!isVisible) {
@@ -5790,14 +5939,25 @@
       if (dropdown && button) {
         if (!dropdown.contains(event.target) && !button.contains(event.target)) {
           dropdown.style.display = 'none';
+          // PRIORITY 1 FIX: Update aria-expanded and cleanup event listener
+          button.setAttribute('aria-expanded', 'false');
           document.removeEventListener('click', closeDropdownOnClickOutside);
         }
       }
     }
 
     async function switchToUser(userId) {
+      // PRIORITY 1 FIX: Authorization check - only CEO can use View As
+      if (!originalUser && currentUser.role !== 'ceo') {
+        showToast('Solo CEOs pueden usar la función View As', 'error');
+        return;
+      }
+
       // Cerrar dropdown
-      document.getElementById('viewAsDropdown').style.display = 'none';
+      const dropdown = document.getElementById('viewAsDropdown');
+      const button = document.getElementById('viewAsButton');
+      if (dropdown) dropdown.style.display = 'none';
+      if (button) button.setAttribute('aria-expanded', 'false');
 
       // Buscar usuario
       const user = allUsersForSwitch.find(u => u.id === userId);
@@ -6012,29 +6172,11 @@
         }
       });
 
-      // Skip to main content link
+      // HIGH PRIORITY FIX: Skip to main content link (using CSS styles)
       const skipLink = document.createElement('a');
       skipLink.href = '#mainContent';
       skipLink.textContent = 'Saltar al contenido principal';
       skipLink.className = 'skip-link';
-      skipLink.style.cssText = `
-        position: absolute;
-        top: -40px;
-        left: 0;
-        background: var(--accent1);
-        color: white;
-        padding: 8px 16px;
-        text-decoration: none;
-        z-index: 100;
-        border-radius: 0 0 8px 0;
-        font-weight: 600;
-      `;
-      skipLink.addEventListener('focus', () => {
-        skipLink.style.top = '0';
-      });
-      skipLink.addEventListener('blur', () => {
-        skipLink.style.top = '-40px';
-      });
       document.body.insertBefore(skipLink, document.body.firstChild);
 
       // Add main content ID
