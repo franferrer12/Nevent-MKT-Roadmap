@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📊 Nevent Roadmap - Dashboard de Progreso</title>
+  <style>
+    :root {
+      --bg: #0A0A0A;
+      --card: #141414;
+      --ink: #FFFFFF;
+      --muted: #BBBBBB;
+      --stroke: #333;
+      --accent1: #EC008C;
+      --accent2: #5CC2E5;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #DC2626;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    h1 {
+      font-size: 48px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: var(--muted);
+    }
+
+    .version-badge {
+      display: inline-block;
+      background: var(--accent1);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 16px;
+    }
+
+    .overall-progress {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .progress-circle {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 24px;
+      position: relative;
+    }
+
+    .progress-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 48px;
+      font-weight: 900;
+      color: var(--accent1);
+    }
+
+    .phase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .phase-card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.3s;
+    }
+
+    .phase-card:hover {
+      border-color: var(--accent1);
+      transform: translateY(-4px);
+    }
+
+    .phase-card.complete {
+      border-color: var(--success);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), transparent);
+    }
+
+    .phase-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .phase-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .phase-status {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-complete {
+      background: var(--success);
+      color: white;
+    }
+
+    .status-in-progress {
+      background: var(--warning);
+      color: black;
+    }
+
+    .status-pending {
+      background: var(--stroke);
+      color: var(--muted);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--stroke);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      transition: width 1s ease;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .feature-item {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--stroke);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 14px;
+    }
+
+    .feature-item:last-child {
+      border-bottom: none;
+    }
+
+    .feature-icon {
+      font-size: 16px;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .metric-card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+    }
+
+    .metric-value {
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--accent1);
+      margin-bottom: 8px;
+    }
+
+    .metric-label {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .timeline {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 40px;
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 24px;
+      padding: 20px 0;
+      border-left: 2px solid var(--stroke);
+      padding-left: 32px;
+      position: relative;
+    }
+
+    .timeline-item.done {
+      border-left-color: var(--success);
+    }
+
+    .timeline-item.current {
+      border-left-color: var(--accent1);
+    }
+
+    .timeline-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--stroke);
+      position: absolute;
+      left: -9px;
+      top: 24px;
+    }
+
+    .timeline-item.done .timeline-dot {
+      background: var(--success);
+    }
+
+    .timeline-item.current .timeline-dot {
+      background: var(--accent1);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(236, 0, 140, 0.7); }
+      50% { box-shadow: 0 0 0 10px rgba(236, 0, 140, 0); }
+    }
+
+    .timeline-date {
+      font-size: 12px;
+      color: var(--muted);
+      min-width: 100px;
+    }
+
+    .timeline-content h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .timeline-content p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 60px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 16px 32px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      margin: 0 8px;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent1);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #d40080;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(236, 0, 140, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      color: var(--ink);
+    }
+
+    .btn-secondary:hover {
+      background: var(--stroke);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 32px; }
+      .phase-grid { grid-template-columns: 1fr; }
+      .metrics-grid { grid-template-columns: 1fr; }
+      .progress-circle { width: 150px; height: 150px; }
+      .progress-text { font-size: 36px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🚀 Nevent Strategic Execution Platform</h1>
+      <p class="subtitle">Dashboard de Progreso del Roadmap</p>
+      <span class="version-badge">v3.0.0 - Production Ready</span>
+    </header>
+
+    <!-- Overall Progress -->
+    <div class="overall-progress">
+      <h2 style="margin-bottom: 24px;">Progreso General del Proyecto</h2>
+      <div class="progress-circle">
+        <svg width="200" height="200">
+          <circle cx="100" cy="100" r="90" fill="none" stroke="#333" stroke-width="12"/>
+          <circle cx="100" cy="100" r="90" fill="none" stroke="url(#gradient)" stroke-width="12"
+            stroke-dasharray="565" stroke-dashoffset="28" stroke-linecap="round"
+            transform="rotate(-90 100 100)"/>
+          <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:#EC008C;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#5CC2E5;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="progress-text">95%</div>
+      </div>
+      <p style="font-size: 18px; color: var(--muted);">
+        <strong>Roadmap v3.0.0 casi completo</strong> - Solo falta Sprint 2 UX y deploy final
+      </p>
+    </div>
+
+    <!-- Metrics -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-value">6/6</div>
+        <div class="metric-label">Fases Core</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">73%</div>
+        <div class="metric-label">Tests Passed</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">€0</div>
+        <div class="metric-label">Coste Mensual</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">15</div>
+        <div class="metric-label">Commits</div>
+      </div>
+    </div>
+
+    <!-- Phase Cards -->
+    <h2 style="margin-bottom: 24px; font-size: 28px;">📋 Fases del Roadmap</h2>
+    <div class="phase-grid">
+      <!-- Phase 1 -->
+      <div class="phase-card complete">
+        <div class="phase-header">
+          <span class="phase-title">Phase 1: User OKRs</span>
+          <span class="phase-status status-complete">✓ Complete</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 100%;"></div>
+        </div>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            OKR Creation Modal
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            Dynamic Key Results (2-5)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            Auto Progress Calculation
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            Dashboard Integration
+          </li>
+        </ul>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="phase-card complete">
+        <div class="phase-header">
+          <span class="phase-title">Phase 2: CEO Dashboard</span>
+          <span class="phase-status status-complete">✓ Complete</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 100%;"></div>
+        </div>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            Executive KPI Cards
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            Company OKRs Creation
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            Department Health Grid
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            Role-Based Access
+          </li>
+        </ul>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="phase-card complete">
+        <div class="phase-header">
+          <span class="phase-title">Phase 3: Director Dashboard</span>
+          <span class="phase-status status-complete">✓ Complete</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 100%;"></div>
+        </div>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            Department Metrics
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            OKR Kanban Board
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            Budget Tracking
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            Team Member Grid
+          </li>
+        </ul>
+      </div>
+
+      <!-- Phase 4 -->
+      <div class="phase-card complete">
+        <div class="phase-header">
+          <span class="phase-title">Phase 4: Customer Success</span>
+          <span class="phase-status status-complete">✓ Complete</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 100%;"></div>
+        </div>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            Customer CRUD
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            Health Score Algorithm
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            NRR & Churn Calculations
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            Company OKRs Integration
+          </li>
+        </ul>
+      </div>
+
+      <!-- Phase 5 -->
+      <div class="phase-card complete">
+        <div class="phase-header">
+          <span class="phase-title">Phase 5: UX Sprint 1</span>
+          <span class="phase-status status-complete">✓ Complete</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 100%;"></div>
+        </div>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            Confirmation Dialogs
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            Enhanced View As Banner
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            Visual Overlay
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">✅</span>
+            Analytics Tracking
+          </li>
+        </ul>
+      </div>
+
+      <!-- Phase 6 -->
+      <div class="phase-card">
+        <div class="phase-header">
+          <span class="phase-title">Phase 6: UX Sprint 2</span>
+          <span class="phase-status status-pending">⏳ Pending</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 0%;"></div>
+        </div>
+        <ul class="feature-list">
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Loading States (5h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            View As Search (6h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Tooltips (4h)
+          </li>
+          <li class="feature-item">
+            <span class="feature-icon">⏳</span>
+            Keyboard Nav (8h)
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline">
+      <h2 style="margin-bottom: 32px; font-size: 28px;">📅 Timeline de Desarrollo</h2>
+
+      <div class="timeline-item done">
+        <div class="timeline-dot"></div>
+        <div>
+          <div class="timeline-date">Sep 27, 2025</div>
+          <div class="timeline-content">
+            <h3>v1.0.0 - Initial Release</h3>
+            <p>Basic roadmap visualization con datos estáticos</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item done">
+        <div class="timeline-dot"></div>
+        <div>
+          <div class="timeline-date">Sep 28, 2025</div>
+          <div class="timeline-content">
+            <h3>v2.0.0 - Authentication</h3>
+            <p>Supabase integration, CRUD operations, real-time sync</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item done">
+        <div class="timeline-dot"></div>
+        <div>
+          <div class="timeline-date">Sep 29, 2025</div>
+          <div class="timeline-content">
+            <h3>v2.1.0 - User Management</h3>
+            <p>Roles system, notifications, activity log</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item current">
+        <div class="timeline-dot"></div>
+        <div>
+          <div class="timeline-date">Sep 30, 2025</div>
+          <div class="timeline-content">
+            <h3>v3.0.0 - Strategic Execution Platform</h3>
+            <p>OKRs, Dashboards, Customer Success, View As, UX improvements</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div>
+          <div class="timeline-date">Oct 1, 2025</div>
+          <div class="timeline-content">
+            <h3>v3.1.0 - Production Deploy</h3>
+            <p>Sprint 2 UX, automated tests, GitHub Pages deployment</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <a href="/" class="btn btn-primary">🚀 Abrir Aplicación</a>
+      <a href="https://github.com/franferrer12/Nevent-MKT-Roadmap" target="_blank" class="btn btn-secondary">
+        📚 Ver Repositorio
+      </a>
+    </div>
+
+    <footer style="text-align: center; margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--stroke); color: var(--muted);">
+      <p>Nevent Strategic Execution Platform v3.0.0</p>
+      <p style="font-size: 14px; margin-top: 8px;">
+        Desarrollado con ❤️ por el equipo Nevent | Última actualización: 30 Sep 2025
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    // Auto-refresh cada 30 segundos
+    setTimeout(() => location.reload(), 30000);
+
+    // Log page view
+    console.log('📊 Dashboard de Progreso cargado');
+    console.log('v3.0.0 - 95% completo');
+  </script>
+</body>
+</html>

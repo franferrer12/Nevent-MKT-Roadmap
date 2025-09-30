@@ -1,0 +1,14 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 Ask a Question
+    url: https://github.com/franferrer12/Nevent-MKT-Roadmap/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: 📚 Documentation
+    url: https://github.com/franferrer12/Nevent-MKT-Roadmap/tree/main/docs
+    about: View comprehensive documentation
+  - name: 🔧 Troubleshooting Guide
+    url: https://github.com/franferrer12/Nevent-MKT-Roadmap/blob/main/docs/troubleshooting.md
+    about: Common issues and solutions
+  - name: 📧 Contact Maintainer
+    url: mailto:fran.ferrer@nevent.es
+    about: For urgent or private matters, contact the maintainer directly
