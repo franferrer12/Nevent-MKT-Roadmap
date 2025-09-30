@@ -1792,15 +1792,64 @@
         return '<p class="empty-state">No tienes OKRs creados todavía.</p>';
       }
 
-      return myOKRs.map(okr => `
-        <div class="okr-card">
-          <div class="okr-header">
-            <h4>${okr.title}</h4>
-            <span class="status-badge">${okr.status}</span>
+      return myOKRs.map(okr => {
+        const statusColor = {
+          'completed': 'var(--success)',
+          'on_track': 'var(--success)',
+          'at_risk': 'var(--warning)',
+          'off_track': 'var(--danger)',
+          'not_started': 'var(--muted)'
+        }[okr.status] || 'var(--muted)';
+
+        const statusText = {
+          'completed': '✅ Completado',
+          'on_track': '🟢 On Track',
+          'at_risk': '🟡 At Risk',
+          'off_track': '🔴 Off Track',
+          'not_started': '⚪ No iniciado'
+        }[okr.status] || okr.status;
+
+        const keyResults = Array.isArray(okr.key_results) ? okr.key_results : [];
+
+        return `
+          <div class="okr-card" style="background: var(--bg); border: 1px solid var(--stroke); border-radius: 8px; padding: 16px; margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+              <div style="flex: 1;">
+                <h4 style="margin: 0 0 4px 0;">${okr.title}</h4>
+                <span style="font-size: 13px; color: var(--muted);">${okr.quarter} • ${okr.deadline || 'Sin deadline'}</span>
+              </div>
+              <span style="padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500; background: ${statusColor}20; color: ${statusColor};">
+                ${statusText}
+              </span>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span style="font-size: 13px; color: var(--muted);">Progreso</span>
+                <span style="font-size: 13px; font-weight: 600; color: var(--accent1);">${okr.progress || 0}%</span>
+              </div>
+              <div style="width: 100%; height: 6px; background: var(--stroke); border-radius: 3px; overflow: hidden;">
+                <div style="width: ${okr.progress || 0}%; height: 100%; background: linear-gradient(90deg, var(--accent1), var(--accent2)); transition: width 0.3s;"></div>
+              </div>
+            </div>
+
+            ${keyResults.length > 0 ? `
+              <div style="margin-top: 12px;">
+                <strong style="font-size: 13px; color: var(--muted);">Key Results:</strong>
+                ${keyResults.slice(0, 3).map(kr => `
+                  <div style="margin-top: 8px; padding-left: 8px; border-left: 2px solid var(--stroke);">
+                    <div style="font-size: 13px; color: var(--ink); margin-bottom: 2px;">${kr.description}</div>
+                    <div style="font-size: 12px; color: var(--muted);">
+                      ${kr.current || 0} / ${kr.target} ${kr.unit} (${kr.progress || 0}%)
+                    </div>
+                  </div>
+                `).join('')}
+                ${keyResults.length > 3 ? `<div style="font-size: 12px; color: var(--muted); margin-top: 8px;">+${keyResults.length - 3} más...</div>` : ''}
+              </div>
+            ` : ''}
           </div>
-          <p style="color: var(--muted); font-size: 14px;">${okr.description || 'Sin descripción'}</p>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     function renderInitiativesList() {
@@ -1808,15 +1857,61 @@
         return '<p class="empty-state">No tienes Initiatives creadas todavía.</p>';
       }
 
-      return myInitiatives.map(initiative => `
-        <div class="initiative-card">
-          <div class="initiative-header">
-            <h4>${initiative.title}</h4>
-            <span class="status-badge">${initiative.health}</span>
+      return myInitiatives.map(initiative => {
+        const healthColor = {
+          'on_track': 'var(--success)',
+          'at_risk': 'var(--warning)',
+          'off_track': 'var(--danger)'
+        }[initiative.health] || 'var(--muted)';
+
+        const healthIcon = {
+          'on_track': '🟢',
+          'at_risk': '🟡',
+          'off_track': '🔴'
+        }[initiative.health] || '⚪';
+
+        const budgetPercent = initiative.budget_allocated > 0
+          ? Math.round((initiative.budget_spent / initiative.budget_allocated) * 100)
+          : 0;
+
+        return `
+          <div class="initiative-card" style="background: var(--bg); border: 1px solid var(--stroke); border-radius: 8px; padding: 16px; margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+              <div style="flex: 1;">
+                <h4 style="margin: 0 0 4px 0;">${initiative.title}</h4>
+                <span style="font-size: 13px; color: var(--muted);">${initiative.quarter || 'Sin trimestre'}</span>
+              </div>
+              <span style="padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500; background: ${healthColor}20; color: ${healthColor};">
+                ${healthIcon} ${initiative.health}
+              </span>
+            </div>
+
+            ${initiative.description ? `
+              <p style="color: var(--muted); font-size: 13px; margin-bottom: 12px;">${initiative.description}</p>
+            ` : ''}
+
+            <div style="margin-bottom: 12px;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span style="font-size: 13px; color: var(--muted);">Progreso</span>
+                <span style="font-size: 13px; font-weight: 600; color: var(--accent1);">${initiative.progress || 0}%</span>
+              </div>
+              <div style="width: 100%; height: 6px; background: var(--stroke); border-radius: 3px; overflow: hidden;">
+                <div style="width: ${initiative.progress || 0}%; height: 100%; background: linear-gradient(90deg, var(--accent1), var(--accent2)); transition: width 0.3s;"></div>
+              </div>
+            </div>
+
+            ${initiative.budget_allocated > 0 ? `
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+                <span style="color: var(--muted);">Budget:</span>
+                <span style="color: var(--ink);">
+                  €${(initiative.budget_spent || 0).toLocaleString()} / €${initiative.budget_allocated.toLocaleString()}
+                  <span style="color: ${budgetPercent > 90 ? 'var(--danger)' : 'var(--muted)'};">(${budgetPercent}%)</span>
+                </span>
+              </div>
+            ` : ''}
           </div>
-          <p style="color: var(--muted); font-size: 14px;">${initiative.description || 'Sin descripción'}</p>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     function calculateCompletedOKRs() {
