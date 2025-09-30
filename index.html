@@ -907,6 +907,29 @@
       }
     }
 
+    /* Segment Tabs for CS Dashboard */
+    .segment-tab {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      padding: 12px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .segment-tab:hover {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .segment-tab.active {
+      color: var(--accent1);
+      border-bottom-color: var(--accent1);
+    }
+
     /* CEO Dashboard Styles */
     .ceo-dashboard {
       display: none;
@@ -1479,6 +1502,10 @@
             <span class="tab-icon">👥</span>
             <span class="tab-label">Director Dashboard</span>
           </button>
+          <button class="nav-tab" data-view="cs-dashboard" data-required-role="csm" onclick="switchView('cs-dashboard')">
+            <span class="tab-icon">🤝</span>
+            <span class="tab-label">Customer Success</span>
+          </button>
         </div>
       </nav>
 
@@ -1518,6 +1545,11 @@
       <!-- Director Dashboard View -->
       <div id="directorDashboardView" class="view-content director-dashboard" style="display: none;">
         <!-- Director Dashboard will be populated by JavaScript -->
+      </div>
+
+      <!-- Customer Success Dashboard -->
+      <div id="csDashboardView" class="view-content cs-dashboard" style="display: none;">
+        <!-- CS Dashboard will be populated by JavaScript -->
       </div>
     </div>
   </div>
@@ -1795,6 +1827,123 @@
 
         <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
           💾 Crear OKR de Empresa
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Customer Management -->
+  <div id="customerModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="customerModalTitle">🤝 Nuevo Cliente</h2>
+        <button class="close-btn" onclick="closeCustomerModal()">&times;</button>
+      </div>
+
+      <form id="customerForm" onsubmit="saveCustomer(event)">
+        <input type="hidden" id="customerEditId" />
+
+        <div class="form-group">
+          <label>Nombre del Cliente *</label>
+          <input
+            type="text"
+            id="customerName"
+            placeholder="Ej: Acme Corporation"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label>CRM ID</label>
+          <input
+            type="text"
+            id="customerCrmId"
+            placeholder="ID en tu CRM (opcional)"
+          />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+          <div class="form-group">
+            <label>MRR (€/mes) *</label>
+            <input
+              type="number"
+              id="customerMrr"
+              placeholder="500"
+              step="0.01"
+              min="0"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Estado *</label>
+            <select id="customerStatus" required>
+              <option value="prospect">🔍 Prospecto</option>
+              <option value="active" selected>✅ Activo</option>
+              <option value="churned">❌ Churned</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Customer Success Manager</label>
+          <select id="customerCsm">
+            <option value="">Sin asignar</option>
+            <!-- Will be populated dynamically -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Onboarding Completado</label>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <input type="checkbox" id="customerOnboardingCompleted" style="width: auto; cursor: pointer;" />
+            <label for="customerOnboardingCompleted" style="margin: 0; cursor: pointer; color: var(--muted); font-size: 14px;">
+              Cliente ha completado el proceso de onboarding
+            </label>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+          <div class="form-group">
+            <label>Fecha Primera Evento</label>
+            <input type="date" id="customerFirstEventDate" />
+          </div>
+
+          <div class="form-group">
+            <label>Último QBR</label>
+            <input type="date" id="customerLastQbr" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+          <div class="form-group">
+            <label>Eventos Creados</label>
+            <input type="number" id="customerEventsCreated" placeholder="0" min="0" value="0" />
+          </div>
+
+          <div class="form-group">
+            <label>Total Asistentes</label>
+            <input type="number" id="customerTotalAttendees" placeholder="0" min="0" value="0" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+          <div class="form-group">
+            <label>% Activación (0-100)</label>
+            <input type="number" id="customerActivationPercent" placeholder="0" min="0" max="100" value="0" />
+          </div>
+
+          <div class="form-group">
+            <label>Health Score (0-100)</label>
+            <input type="number" id="customerHealthScore" placeholder="50" min="0" max="100" value="50" />
+            <p style="color: var(--muted); font-size: 12px; margin-top: 4px;">
+              Se calculará automáticamente si se deja en 50
+            </p>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
+          💾 Guardar Cliente
         </button>
       </form>
     </div>
@@ -2641,6 +2790,231 @@
       }
     }
 
+    // Customer Management Functions
+    let allCustomers = [];
+    let allCsmUsers = [];
+
+    function openCustomerModal(customerId = null) {
+      const modal = document.getElementById('customerModal');
+      const form = document.getElementById('customerForm');
+      const title = document.getElementById('customerModalTitle');
+
+      // Reset form
+      form.reset();
+      document.getElementById('customerEditId').value = '';
+
+      if (customerId) {
+        // Edit mode
+        title.textContent = '🤝 Editar Cliente';
+        const customer = allCustomers.find(c => c.id === customerId);
+        if (customer) {
+          document.getElementById('customerEditId').value = customer.id;
+          document.getElementById('customerName').value = customer.name || '';
+          document.getElementById('customerCrmId').value = customer.crm_id || '';
+          document.getElementById('customerMrr').value = customer.mrr || 0;
+          document.getElementById('customerStatus').value = customer.status || 'active';
+          document.getElementById('customerCsm').value = customer.csm_user_id || '';
+          document.getElementById('customerOnboardingCompleted').checked = customer.onboarding_completed || false;
+          document.getElementById('customerFirstEventDate').value = customer.first_event_date ? customer.first_event_date.split('T')[0] : '';
+          document.getElementById('customerLastQbr').value = customer.last_qbr_date ? customer.last_qbr_date.split('T')[0] : '';
+          document.getElementById('customerEventsCreated').value = customer.events_created || 0;
+          document.getElementById('customerTotalAttendees').value = customer.total_attendees || 0;
+          document.getElementById('customerActivationPercent').value = customer.activation_percent || 0;
+          document.getElementById('customerHealthScore').value = customer.health_score || 50;
+        }
+      } else {
+        // Create mode
+        title.textContent = '🤝 Nuevo Cliente';
+        document.getElementById('customerStatus').value = 'active';
+        document.getElementById('customerHealthScore').value = 50;
+      }
+
+      populateCsmDropdown();
+      modal.classList.add('active');
+    }
+
+    function closeCustomerModal() {
+      document.getElementById('customerModal').classList.remove('active');
+    }
+
+    async function populateCsmDropdown() {
+      const select = document.getElementById('customerCsm');
+      select.innerHTML = '<option value="">Sin asignar</option>';
+
+      // Load all users (in a real app, filter by CSM role)
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select('id, email, full_name')
+          .order('full_name');
+
+        if (error) throw error;
+
+        allCsmUsers = data || [];
+        allCsmUsers.forEach(user => {
+          const option = document.createElement('option');
+          option.value = user.id;
+          option.textContent = user.full_name || user.email;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error loading CSM users:', error);
+      }
+    }
+
+    async function saveCustomer(event) {
+      event.preventDefault();
+
+      if (!currentUser) {
+        showToast('Debes iniciar sesión para guardar clientes', 'warning');
+        return;
+      }
+
+      const editId = document.getElementById('customerEditId').value;
+      const name = document.getElementById('customerName').value;
+      const crm_id = document.getElementById('customerCrmId').value || null;
+      const mrr = parseFloat(document.getElementById('customerMrr').value) || 0;
+      const status = document.getElementById('customerStatus').value;
+      const csm_user_id = document.getElementById('customerCsm').value || null;
+      const onboarding_completed = document.getElementById('customerOnboardingCompleted').checked;
+      const first_event_date = document.getElementById('customerFirstEventDate').value || null;
+      const last_qbr_date = document.getElementById('customerLastQbr').value || null;
+      const events_created = parseInt(document.getElementById('customerEventsCreated').value) || 0;
+      const total_attendees = parseInt(document.getElementById('customerTotalAttendees').value) || 0;
+      const activation_percent = parseInt(document.getElementById('customerActivationPercent').value) || 0;
+      let health_score = parseInt(document.getElementById('customerHealthScore').value) || 50;
+
+      // Auto-calculate health score if still at default 50
+      if (health_score === 50) {
+        health_score = calculateCustomerHealthScore({
+          mrr,
+          status,
+          onboarding_completed,
+          events_created,
+          activation_percent
+        });
+      }
+
+      const customerData = {
+        name,
+        crm_id,
+        mrr,
+        status,
+        csm_user_id,
+        onboarding_completed,
+        first_event_date,
+        last_qbr_date,
+        events_created,
+        total_attendees,
+        activation_percent,
+        health_score,
+        updated_at: new Date().toISOString()
+      };
+
+      try {
+        if (editId) {
+          // Update existing customer
+          const { error } = await supabase
+            .from('customers')
+            .update(customerData)
+            .eq('id', editId);
+
+          if (error) throw error;
+          showToast(`Cliente actualizado: ${name}`, 'success');
+        } else {
+          // Create new customer
+          customerData.id = generateId();
+          customerData.created_at = new Date().toISOString();
+
+          const { error } = await supabase
+            .from('customers')
+            .insert([customerData]);
+
+          if (error) throw error;
+          showToast(`Cliente creado: ${name}`, 'success');
+        }
+
+        closeCustomerModal();
+
+        // Reload customers if on CS dashboard
+        if (currentView === 'cs-dashboard') {
+          await loadAllCustomers();
+          await renderCSDashboard();
+        }
+      } catch (error) {
+        handleSupabaseError(error, editId ? 'actualizar cliente' : 'crear cliente');
+      }
+    }
+
+    async function loadAllCustomers() {
+      try {
+        const { data, error } = await supabase
+          .from('customers')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        allCustomers = data || [];
+        return allCustomers;
+      } catch (error) {
+        handleSupabaseError(error, 'cargar clientes');
+        return [];
+      }
+    }
+
+    async function deleteCustomer(customerId) {
+      if (!confirm('¿Estás seguro de eliminar este cliente? Esta acción no se puede deshacer.')) {
+        return;
+      }
+
+      try {
+        const { error } = await supabase
+          .from('customers')
+          .delete()
+          .eq('id', customerId);
+
+        if (error) throw error;
+
+        showToast('Cliente eliminado', 'success');
+
+        // Reload customers
+        if (currentView === 'cs-dashboard') {
+          await loadAllCustomers();
+          await renderCSDashboard();
+        }
+      } catch (error) {
+        handleSupabaseError(error, 'eliminar cliente');
+      }
+    }
+
+    function calculateCustomerHealthScore(customer) {
+      // Simple health score algorithm
+      let score = 0;
+
+      // MRR contribution (30 points)
+      if (customer.mrr > 1000) score += 30;
+      else if (customer.mrr > 500) score += 20;
+      else if (customer.mrr > 100) score += 10;
+
+      // Status (20 points)
+      if (customer.status === 'active') score += 20;
+      else if (customer.status === 'prospect') score += 10;
+
+      // Onboarding (20 points)
+      if (customer.onboarding_completed) score += 20;
+
+      // Activity (15 points)
+      if (customer.events_created > 10) score += 15;
+      else if (customer.events_created > 5) score += 10;
+      else if (customer.events_created > 0) score += 5;
+
+      // Activation (15 points)
+      score += Math.round((customer.activation_percent / 100) * 15);
+
+      return Math.min(score, 100);
+    }
+
     // Dashboard Functions
     async function loadDepartments() {
       try {
@@ -3068,6 +3442,7 @@
       document.getElementById('userDashboardView').style.display = 'none';
       document.getElementById('ceoDashboardView').style.display = 'none';
       document.getElementById('directorDashboardView').style.display = 'none';
+      document.getElementById('csDashboardView').style.display = 'none';
 
       // Show selected view
       if (viewName === 'timeline') {
@@ -3081,6 +3456,9 @@
       } else if (viewName === 'director-dashboard') {
         document.getElementById('directorDashboardView').style.display = 'block';
         renderDirectorDashboard();
+      } else if (viewName === 'cs-dashboard') {
+        document.getElementById('csDashboardView').style.display = 'block';
+        renderCSDashboard();
       }
     }
 
@@ -3662,6 +4040,219 @@
     }
 
     // ================================================================
+    // CUSTOMER SUCCESS DASHBOARD
+    // ================================================================
+
+    async function renderCSDashboard() {
+      const container = document.getElementById('csDashboardView');
+
+      if (!currentUser) {
+        container.innerHTML = '<p class="empty-state">Por favor, inicia sesión para ver el dashboard</p>';
+        return;
+      }
+
+      // Load customers
+      const customers = await loadAllCustomers();
+      const metrics = calculateCSMetrics(customers);
+
+      const html = `
+        <!-- CS Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2xl);">
+          <div>
+            <h1 style="font-size: var(--font-size-h1); margin-bottom: var(--space-xs);">🤝 Customer Success</h1>
+            <p style="color: var(--muted); font-size: 16px;">Gestión de clientes y health score</p>
+          </div>
+          <button class="btn btn-primary" onclick="openCustomerModal()">
+            ➕ Nuevo Cliente
+          </button>
+        </div>
+
+        <!-- CS Metrics -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-lg); margin-bottom: var(--space-2xl);">
+          <div class="metric-card">
+            <div class="metric-label">Total Clientes</div>
+            <div class="metric-value">${metrics.totalCustomers}</div>
+            <div class="metric-comparison">
+              ${metrics.activeCustomers} activos • ${metrics.prospects} prospectos
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">MRR Total</div>
+            <div class="metric-value">€${metrics.totalMrr.toLocaleString()}</div>
+            <div class="metric-comparison">
+              Promedio: €${metrics.avgMrr} por cliente
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Health Score Promedio</div>
+            <div class="metric-value" style="color: ${getHealthColor(metrics.avgHealth)};">${metrics.avgHealth}</div>
+            <div class="metric-comparison">
+              ${metrics.healthyCustomers} clientes saludables (≥80)
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Tasa de Onboarding</div>
+            <div class="metric-value">${metrics.onboardingRate}%</div>
+            <div class="metric-comparison">
+              ${metrics.onboardedCustomers}/${metrics.activeCustomers} completados
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer Segments Tabs -->
+        <div style="margin-bottom: var(--space-lg);">
+          <div style="display: flex; gap: 8px; border-bottom: 1px solid var(--stroke);">
+            <button class="segment-tab active" data-segment="all" onclick="filterCustomerSegment('all')">
+              Todos (${metrics.totalCustomers})
+            </button>
+            <button class="segment-tab" data-segment="active" onclick="filterCustomerSegment('active')">
+              Activos (${metrics.activeCustomers})
+            </button>
+            <button class="segment-tab" data-segment="at-risk" onclick="filterCustomerSegment('at-risk')">
+              En Riesgo (${metrics.atRiskCustomers})
+            </button>
+            <button class="segment-tab" data-segment="churned" onclick="filterCustomerSegment('churned')">
+              Churned (${metrics.churnedCustomers})
+            </button>
+          </div>
+        </div>
+
+        <!-- Customer List -->
+        <div id="customerList"></div>
+      `;
+
+      container.innerHTML = html;
+      renderCustomerList(customers, 'all');
+    }
+
+    function calculateCSMetrics(customers) {
+      const totalCustomers = customers.length;
+      const activeCustomers = customers.filter(c => c.status === 'active').length;
+      const prospects = customers.filter(c => c.status === 'prospect').length;
+      const churnedCustomers = customers.filter(c => c.status === 'churned').length;
+      const totalMrr = customers.reduce((sum, c) => sum + (c.mrr || 0), 0);
+      const avgMrr = totalCustomers > 0 ? Math.round(totalMrr / totalCustomers) : 0;
+
+      const healthScores = customers.map(c => c.health_score || 0);
+      const avgHealth = totalCustomers > 0 ? Math.round(healthScores.reduce((sum, h) => sum + h, 0) / totalCustomers) : 0;
+      const healthyCustomers = customers.filter(c => (c.health_score || 0) >= 80).length;
+      const atRiskCustomers = customers.filter(c => {
+        const health = c.health_score || 0;
+        return health < 60 && c.status === 'active';
+      }).length;
+
+      const onboardedCustomers = customers.filter(c => c.onboarding_completed).length;
+      const onboardingRate = activeCustomers > 0 ? Math.round((onboardedCustomers / activeCustomers) * 100) : 0;
+
+      return {
+        totalCustomers,
+        activeCustomers,
+        prospects,
+        churnedCustomers,
+        totalMrr,
+        avgMrr,
+        avgHealth,
+        healthyCustomers,
+        atRiskCustomers,
+        onboardedCustomers,
+        onboardingRate
+      };
+    }
+
+    function renderCustomerList(customers, segment) {
+      const container = document.getElementById('customerList');
+
+      // Filter by segment
+      let filteredCustomers = customers;
+      if (segment === 'active') {
+        filteredCustomers = customers.filter(c => c.status === 'active');
+      } else if (segment === 'at-risk') {
+        filteredCustomers = customers.filter(c => {
+          const health = c.health_score || 0;
+          return health < 60 && c.status === 'active';
+        });
+      } else if (segment === 'churned') {
+        filteredCustomers = customers.filter(c => c.status === 'churned');
+      }
+
+      if (filteredCustomers.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>No hay clientes en este segmento</h3>
+            <p>Los clientes aparecerán aquí cuando los agregues.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const html = `
+        <div style="display: grid; gap: var(--space-md);">
+          ${filteredCustomers.map(customer => {
+            const healthColor = getHealthColor(customer.health_score || 0);
+            const statusIcon = customer.status === 'active' ? '✅' : customer.status === 'prospect' ? '🔍' : '❌';
+            const statusLabel = customer.status === 'active' ? 'Activo' : customer.status === 'prospect' ? 'Prospecto' : 'Churned';
+
+            return `
+              <div class="customer-card" style="background: var(--card); border: 1px solid var(--stroke); border-radius: var(--radius-lg); padding: var(--space-lg); display: flex; justify-content: space-between; align-items: center; transition: all 0.2s;">
+                <div style="flex: 1;">
+                  <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-sm);">
+                    <h3 style="font-size: 18px; margin: 0;">${customer.name}</h3>
+                    <span style="background: ${customer.status === 'active' ? 'var(--success)' : customer.status === 'prospect' ? 'var(--accent2)' : 'var(--danger)'}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">
+                      ${statusIcon} ${statusLabel}
+                    </span>
+                    ${customer.onboarding_completed ? '<span style="background: var(--accent1); color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;">✓ Onboarded</span>' : ''}
+                  </div>
+                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--space-md); margin-top: var(--space-sm);">
+                    <div>
+                      <div style="font-size: 12px; color: var(--muted);">MRR</div>
+                      <div style="font-weight: 600;">€${(customer.mrr || 0).toLocaleString()}/mes</div>
+                    </div>
+                    <div>
+                      <div style="font-size: 12px; color: var(--muted);">Health Score</div>
+                      <div style="font-weight: 600; color: ${healthColor};">${customer.health_score || 0}/100</div>
+                    </div>
+                    <div>
+                      <div style="font-size: 12px; color: var(--muted);">Eventos</div>
+                      <div style="font-weight: 600;">${customer.events_created || 0}</div>
+                    </div>
+                    <div>
+                      <div style="font-size: 12px; color: var(--muted);">Activación</div>
+                      <div style="font-weight: 600;">${customer.activation_percent || 0}%</div>
+                    </div>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                  <button class="btn btn-secondary" style="padding: 8px 16px;" onclick="openCustomerModal('${customer.id}')">
+                    ✏️ Editar
+                  </button>
+                  <button class="btn" style="padding: 8px 16px; background: var(--danger); color: white;" onclick="deleteCustomer('${customer.id}')">
+                    🗑️ Eliminar
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+
+      container.innerHTML = html;
+    }
+
+    function filterCustomerSegment(segment) {
+      // Update active tab
+      document.querySelectorAll('.segment-tab').forEach(tab => {
+        if (tab.dataset.segment === segment) {
+          tab.classList.add('active');
+        } else {
+          tab.classList.remove('active');
+        }
+      });
+
+      // Re-render customer list
+      renderCustomerList(allCustomers, segment);
+    }
+
+    // ================================================================
     // INITIALIZATION
     // ================================================================
 
@@ -3709,6 +4300,17 @@
           directorTab.style.display = 'flex';
         } else {
           directorTab.style.display = 'none';
+        }
+      }
+
+      // Show CS Dashboard to CSMs, Directors, and CEOs
+      const csmTab = document.querySelector('[data-required-role="csm"]');
+      if (csmTab) {
+        if (userRole === 'csm' || userRole === 'director' || userRole === 'ceo') {
+          csmTab.setAttribute('data-user-has-role', 'true');
+          csmTab.style.display = 'flex';
+        } else {
+          csmTab.style.display = 'none';
         }
       }
     }
