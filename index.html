@@ -3089,8 +3089,8 @@
         <!-- Company OKRs Section -->
         <div style="margin-bottom: var(--space-2xl);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg);">
-            <h2 style="font-size: var(--font-size-h2);">🎯 Company OKRs - Q4 2025</h2>
-            <button class="btn btn-primary" onclick="openCompanyOKRModal()">➕ Create Company OKR</button>
+            <h2 style="font-size: var(--font-size-h2);">🎯 Company OKRs - ${companyOKRs[0]?.fiscal_year || new Date().getFullYear()}</h2>
+            <button class="btn btn-primary" onclick="openCompanyOKRModal()">➕ Nuevo OKR de Empresa</button>
           </div>
           <div id="companyOKRsList"></div>
         </div>
@@ -3238,6 +3238,11 @@
     function renderDepartmentHealthGrid(departments) {
       const container = document.getElementById('departmentHealthGrid');
 
+      if (!departments || departments.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--muted);">No hay departamentos activos</div>';
+        return;
+      }
+
       container.innerHTML = `
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;">
           ${departments.map(dept => `
@@ -3266,10 +3271,6 @@
 
     function showDepartmentDetail(deptId) {
       showToast('Vista de departamento - Próximamente', 'info');
-    }
-
-    function openCompanyOKRModal() {
-      showToast('Modal de creación de Company OKR - Próximamente', 'info');
     }
 
     // ================================================================
@@ -3335,7 +3336,7 @@
             <div class="metric-label">Team OKRs</div>
             <div class="metric-value">${metrics.okrsOnTrack}/${metrics.totalOKRs}</div>
             <div class="metric-comparison">
-              ${Math.round((metrics.okrsOnTrack / metrics.totalOKRs) * 100)}% on track
+              ${metrics.totalOKRs > 0 ? Math.round((metrics.okrsOnTrack / metrics.totalOKRs) * 100) : 0}% on track
             </div>
           </div>
 
@@ -3359,7 +3360,7 @@
         <!-- Department OKRs Kanban -->
         <div class="department-okrs">
           <div class="section-header">
-            <h2 class="section-title">🎯 ${department.name} OKRs - Q4 2025</h2>
+            <h2 class="section-title">🎯 ${department.name} OKRs</h2>
           </div>
           <div id="okrKanban"></div>
         </div>
@@ -3368,7 +3369,7 @@
         <div class="budget-section">
           <div class="budget-header">
             <div>
-              <div class="budget-subtitle">Q4 2025 Budget</div>
+              <div class="budget-subtitle">💰 Budget Total</div>
               <div class="budget-total">€${(metrics.budgetAllocated / 1000).toFixed(0)}K</div>
             </div>
             <div style="text-align: right;">
