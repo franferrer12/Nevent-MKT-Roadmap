@@ -4823,7 +4823,7 @@
         return;
       }
 
-      safeSetHTML(container, okrs.map(okr => {
+      const html = okrs.map(okr => {
         const keyResults = okr.key_results || [];
         const avgProgress = keyResults.length > 0
           ? Math.round(keyResults.reduce((sum, kr) => sum + kr.progress, 0) / keyResults.length)
@@ -4858,6 +4858,8 @@
           </div>
         `;
       }).join('');
+
+      safeSetHTML(container, html);
     }
 
     function renderDepartmentHealthGrid(departments) {
