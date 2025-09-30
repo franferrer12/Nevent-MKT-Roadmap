@@ -1,0 +1,69 @@
+{
+  "agents": {
+    "cto": {
+      "name": "CTO Agent",
+      "role": "Development Lead",
+      "responsibilities": [
+        "Implement features from roadmap",
+        "Write clean, maintainable code",
+        "Create commits with clear messages",
+        "Update action status in Supabase"
+      ],
+      "model": "claude-sonnet-4",
+      "maxTokens": 8000,
+      "temperature": 0.7
+    },
+    "qa": {
+      "name": "QA Agent",
+      "role": "Quality Assurance",
+      "responsibilities": [
+        "Review code quality and standards",
+        "Test functionality",
+        "Identify bugs and issues",
+        "Provide constructive feedback"
+      ],
+      "model": "claude-sonnet-4",
+      "maxTokens": 8000,
+      "temperature": 0.5
+    },
+    "productManager": {
+      "name": "Product Manager Agent",
+      "role": "Product Strategy",
+      "responsibilities": [
+        "Analyze completed features",
+        "Review user feedback and metrics",
+        "Suggest new features for roadmap",
+        "Update priorities based on impact",
+        "Create new actions in Supabase"
+      ],
+      "model": "claude-sonnet-4",
+      "maxTokens": 8000,
+      "temperature": 0.8
+    }
+  },
+  "workflow": {
+    "cycles": 5,
+    "maxIterationsPerFeature": 3,
+    "autoCommit": true,
+    "requireQAApproval": true,
+    "pmReviewAfterCompletion": true
+  },
+  "supabase": {
+    "tables": {
+      "actions": "roadmap_actions",
+      "okrs": "user_okrs",
+      "initiatives": "initiatives",
+      "departments": "departments"
+    }
+  },
+  "git": {
+    "developmentBranch": "development",
+    "stagingBranch": "staging",
+    "productionBranch": "main"
+  },
+  "logging": {
+    "enabled": true,
+    "level": "info",
+    "path": ".agents/logs/"
+  }
+}

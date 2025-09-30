@@ -1,0 +1,25 @@
+{
+  "name": "nevent-mkt-roadmap",
+  "version": "3.0.0",
+  "description": "Nevent Strategic Execution Platform with AI Agent Automation",
+  "type": "module",
+  "scripts": {
+    "agents:start": "node .agents/orchestrator.mjs",
+    "agents:cto": "node .agents/cto-agent.mjs",
+    "agents:qa": "node .agents/qa-agent.mjs",
+    "agents:pm": "node .agents/pm-agent.mjs",
+    "test": "node tests/validation.test.js",
+    "dev": "npx live-server --port=8080 --no-browser"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "@anthropic-ai/sdk": "^0.20.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Nevent Team",
+  "license": "MIT"
+}
