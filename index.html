@@ -269,6 +269,50 @@
       transform: translateY(-1px);
     }
 
+    /* WCAG 2.1 AA Focus Indicators */
+    .btn:focus,
+    button:focus,
+    input:focus,
+    select:focus,
+    textarea:focus,
+    a:focus {
+      outline: 3px solid var(--accent1);
+      outline-offset: 2px;
+    }
+
+    .btn:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    a:focus-visible {
+      outline: 3px solid var(--accent1);
+      outline-offset: 2px;
+    }
+
+    /* Screen Reader Only Class */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    .sr-only-focusable:active,
+    .sr-only-focusable:focus {
+      position: static;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      clip: auto;
+      white-space: normal;
+    }
+
     .btn-primary {
       background: var(--accent1);
       border-color: var(--accent1);
@@ -1901,43 +1945,61 @@
   </div>
 
   <!-- Toast Container -->
-  <div id="toastContainer"></div>
-  
-  <div id="loginPage">
+  <div id="toastContainer" role="region" aria-label="Notificaciones"></div>
+
+  <!-- Screen Reader Announcements -->
+  <div id="srAnnouncements"
+       role="status"
+       aria-live="polite"
+       aria-atomic="true"
+       style="position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;">
+  </div>
+
+  <div id="loginPage" role="main" aria-label="Página de inicio de sesión">
     <div class="login-container">
       <div class="login-logo">
-        <h1>🚀 Roadmap Nevent</h1>
+        <h1 aria-label="Roadmap Nevent">🚀 Roadmap Nevent</h1>
         <p>2025-2026</p>
       </div>
-      
-      <form id="loginForm" onsubmit="handleLogin(event)">
+
+      <form id="loginForm" onsubmit="handleLogin(event)" aria-labelledby="login-heading">
+        <h2 id="login-heading" class="sr-only">Formulario de inicio de sesión</h2>
+
         <div class="form-group">
           <label for="loginEmail">Email</label>
-          <input 
-            type="email" 
-            id="loginEmail" 
+          <input
+            type="email"
+            id="loginEmail"
+            name="email"
             placeholder="tu.email@nevent.es"
             required
             autocomplete="email"
+            aria-required="true"
+            aria-describedby="email-hint"
           />
+          <span id="email-hint" class="sr-only">Ingresa tu correo electrónico corporativo</span>
         </div>
-        
+
         <div class="form-group">
           <label for="loginPassword">Contraseña</label>
-          <input 
-            type="password" 
-            id="loginPassword" 
+          <input
+            type="password"
+            id="loginPassword"
+            name="password"
             placeholder="••••••••"
             required
             autocomplete="current-password"
+            aria-required="true"
+            aria-describedby="password-hint"
           />
+          <span id="password-hint" class="sr-only">Ingresa tu contraseña</span>
         </div>
-        
-        <button type="submit" class="login-btn" id="loginBtn">
+
+        <button type="submit" class="login-btn" id="loginBtn" aria-label="Iniciar sesión en la aplicación">
           Iniciar sesión
         </button>
-        
-        <div id="loginError" class="error-message"></div>
+
+        <div id="loginError" class="error-message" role="alert" aria-live="assertive"></div>
       </form>
     </div>
   </div>
@@ -1950,18 +2012,28 @@
         <button class="exit-btn" onclick="exitViewAsMode()">↩️ Volver a mi cuenta</button>
       </div>
 
-      <header>
+      <header role="banner">
         <h1>🚀 Roadmap Nevent 2025-2026</h1>
-        <div class="header-actions">
-          <button class="btn btn-primary" onclick="openAddActionModal()">➕ Nueva Acción</button>
-          <button class="btn" onclick="syncData()">🔄 Sincronizar</button>
+        <div class="header-actions" role="toolbar" aria-label="Acciones principales">
+          <button class="btn btn-primary" onclick="openAddActionModal()" aria-label="Crear nueva acción en el roadmap">
+            ➕ Nueva Acción
+          </button>
+          <button class="btn" onclick="syncData()" aria-label="Sincronizar datos con el servidor">
+            🔄 Sincronizar
+          </button>
 
           <!-- View As User Selector (CEO only) -->
           <div id="viewAsSelector" class="view-as-container" style="display: none;">
-            <button class="btn btn-secondary" onclick="toggleViewAsDropdown()" id="viewAsButton">
-              👤 <span id="currentUserBadge">Usuario</span> <span style="font-size: 10px;">▼</span>
+            <button class="btn btn-secondary"
+                    onclick="toggleViewAsDropdown()"
+                    id="viewAsButton"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    aria-controls="viewAsDropdown"
+                    aria-label="Selector de vista de usuario">
+              👤 <span id="currentUserBadge">Usuario</span> <span style="font-size: 10px;" aria-hidden="true">▼</span>
             </button>
-            <div id="viewAsDropdown" class="view-as-dropdown" style="display: none;">
+            <div id="viewAsDropdown" class="view-as-dropdown" style="display: none;" role="menu" aria-label="Lista de usuarios">
               <div class="dropdown-header">
                 🔄 Cambiar vista de usuario
                 <span class="dropdown-subtitle">Jerarquía de acceso</span>
@@ -1972,30 +2044,65 @@
             </div>
           </div>
 
-          <button class="btn logout-btn" onclick="handleLogout()">🚪 Salir</button>
+          <button class="btn logout-btn" onclick="handleLogout()" aria-label="Cerrar sesión y salir de la aplicación">
+            🚪 Salir
+          </button>
         </div>
       </header>
 
       <!-- Navigation Tabs -->
-      <nav class="main-navigation" role="navigation" aria-label="Main navigation">
-        <div class="nav-tabs">
-          <button class="nav-tab active" data-view="timeline" onclick="switchView('timeline')">
-            <span class="tab-icon">📊</span>
+      <nav class="main-navigation" role="navigation" aria-label="Navegación principal">
+        <div class="nav-tabs" role="tablist" aria-label="Vistas de la aplicación">
+          <button class="nav-tab active"
+                  data-view="timeline"
+                  onclick="switchView('timeline')"
+                  role="tab"
+                  aria-selected="true"
+                  aria-controls="timeline-panel"
+                  aria-label="Vista de línea de tiempo del roadmap">
+            <span class="tab-icon" aria-hidden="true">📊</span>
             <span class="tab-label">Timeline</span>
           </button>
-          <button class="nav-tab" data-view="user-dashboard" onclick="switchView('user-dashboard')">
-            <span class="tab-icon">👤</span>
+          <button class="nav-tab"
+                  data-view="user-dashboard"
+                  onclick="switchView('user-dashboard')"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="user-dashboard-panel"
+                  aria-label="Mi dashboard personal con OKRs">
+            <span class="tab-icon" aria-hidden="true">👤</span>
             <span class="tab-label">Mi Dashboard</span>
           </button>
-          <button class="nav-tab" data-view="ceo-dashboard" data-required-role="ceo" onclick="switchView('ceo-dashboard')">
-            <span class="tab-icon">🌍</span>
+          <button class="nav-tab"
+                  data-view="ceo-dashboard"
+                  data-required-role="ceo"
+                  onclick="switchView('ceo-dashboard')"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="ceo-dashboard-panel"
+                  aria-label="Dashboard ejecutivo con vista global de la compañía">
+            <span class="tab-icon" aria-hidden="true">🌍</span>
             <span class="tab-label">CEO Dashboard</span>
           </button>
-          <button class="nav-tab" data-view="director-dashboard" data-required-role="director" onclick="switchView('director-dashboard')">
-            <span class="tab-icon">👥</span>
+          <button class="nav-tab"
+                  data-view="director-dashboard"
+                  data-required-role="director"
+                  onclick="switchView('director-dashboard')"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="director-dashboard-panel"
+                  aria-label="Dashboard de director con vista de equipo">
+            <span class="tab-icon" aria-hidden="true">👥</span>
             <span class="tab-label">Director Dashboard</span>
           </button>
-          <button class="nav-tab" data-view="cs-dashboard" data-required-role="csm" onclick="switchView('cs-dashboard')">
+          <button class="nav-tab"
+                  data-view="cs-dashboard"
+                  data-required-role="csm"
+                  onclick="switchView('cs-dashboard')"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="cs-dashboard-panel"
+                  aria-label="Dashboard de Customer Success con gestión de clientes">
             <span class="tab-icon">🤝</span>
             <span class="tab-label">Customer Success</span>
           </button>
@@ -4464,13 +4571,27 @@
         previous_view: currentView
       });
 
-      // Update tabs
+      // Update tabs with ARIA states
       document.querySelectorAll('.nav-tab').forEach(tab => {
         tab.classList.remove('active');
+        tab.setAttribute('aria-selected', 'false');
+        tab.setAttribute('tabindex', '-1');
         if (tab.dataset.view === viewName) {
           tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+          tab.setAttribute('tabindex', '0');
         }
       });
+
+      // Announce view change to screen readers
+      const viewNames = {
+        'timeline': 'Vista de línea de tiempo cargada',
+        'user-dashboard': 'Mi Dashboard cargado',
+        'ceo-dashboard': 'Dashboard ejecutivo cargado',
+        'director-dashboard': 'Dashboard de director cargado',
+        'cs-dashboard': 'Dashboard de Customer Success cargado'
+      };
+      announceToScreenReader(viewNames[viewName] || 'Vista cambiada');
 
       // Hide all views
       document.getElementById('timelineView').style.display = 'none';
@@ -5787,6 +5908,117 @@
     }
 
     // ================================================================
+    // SCREEN READER ANNOUNCEMENTS (WCAG 2.1 AA)
+    // ================================================================
+
+    function announceToScreenReader(message, priority = 'polite') {
+      const srAnnouncements = document.getElementById('srAnnouncements');
+      if (!srAnnouncements) return;
+
+      // Clear previous announcement
+      srAnnouncements.textContent = '';
+
+      // Set priority
+      srAnnouncements.setAttribute('aria-live', priority); // 'polite' or 'assertive'
+
+      // Announce new message after a brief delay
+      setTimeout(() => {
+        srAnnouncements.textContent = message;
+      }, 100);
+
+      // Clear after 5 seconds
+      setTimeout(() => {
+        srAnnouncements.textContent = '';
+      }, 5000);
+    }
+
+    // ================================================================
+    // KEYBOARD NAVIGATION (WCAG 2.1 AA)
+    // ================================================================
+
+    function initializeKeyboardNavigation() {
+      // Tab navigation with Arrow keys
+      const navTabs = document.querySelectorAll('.nav-tab');
+
+      navTabs.forEach((tab, index) => {
+        tab.addEventListener('keydown', (e) => {
+          let newIndex;
+
+          if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            newIndex = index - 1 < 0 ? navTabs.length - 1 : index - 1;
+            navTabs[newIndex].focus();
+          } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            newIndex = index + 1 >= navTabs.length ? 0 : index + 1;
+            navTabs[newIndex].focus();
+          } else if (e.key === 'Home') {
+            e.preventDefault();
+            navTabs[0].focus();
+          } else if (e.key === 'End') {
+            e.preventDefault();
+            navTabs[navTabs.length - 1].focus();
+          } else if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            tab.click();
+          }
+        });
+      });
+
+      // Close modals with Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          // Close any open modals
+          const modals = document.querySelectorAll('.modal[style*="display: flex"], .modal[style*="display: block"]');
+          modals.forEach(modal => {
+            modal.style.display = 'none';
+          });
+
+          // Close dropdowns
+          const dropdowns = document.querySelectorAll('.view-as-dropdown[style*="display: block"]');
+          dropdowns.forEach(dropdown => {
+            dropdown.style.display = 'none';
+            const button = document.getElementById('viewAsButton');
+            if (button) button.setAttribute('aria-expanded', 'false');
+          });
+        }
+      });
+
+      // Skip to main content link
+      const skipLink = document.createElement('a');
+      skipLink.href = '#mainContent';
+      skipLink.textContent = 'Saltar al contenido principal';
+      skipLink.className = 'skip-link';
+      skipLink.style.cssText = `
+        position: absolute;
+        top: -40px;
+        left: 0;
+        background: var(--accent1);
+        color: white;
+        padding: 8px 16px;
+        text-decoration: none;
+        z-index: 100;
+        border-radius: 0 0 8px 0;
+        font-weight: 600;
+      `;
+      skipLink.addEventListener('focus', () => {
+        skipLink.style.top = '0';
+      });
+      skipLink.addEventListener('blur', () => {
+        skipLink.style.top = '-40px';
+      });
+      document.body.insertBefore(skipLink, document.body.firstChild);
+
+      // Add main content ID
+      const mainContent = document.getElementById('timelineView');
+      if (mainContent) {
+        mainContent.setAttribute('id', 'mainContent');
+        mainContent.setAttribute('role', 'main');
+        mainContent.setAttribute('aria-label', 'Contenido principal del roadmap');
+      }
+    }
+
+    // ================================================================
     // INITIALIZATION
     // ================================================================
 
@@ -5794,6 +6026,7 @@
       checkSession();
       setupOfflineDetection();
       initializeRoleBasedNav();
+      initializeKeyboardNavigation();
 
       // Show welcome message when user logs in successfully
       const urlParams = new URLSearchParams(window.location.search);
