@@ -1002,6 +1002,337 @@
         display: none;
       }
     }
+
+    /* Director Dashboard Styles */
+    .director-dashboard {
+      padding: var(--space-xl);
+    }
+
+    .director-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-2xl);
+      padding-bottom: var(--space-lg);
+      border-bottom: 2px solid var(--stroke);
+    }
+
+    .director-title {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+
+    .director-title h1 {
+      font-size: var(--font-size-h1);
+      margin: 0;
+    }
+
+    .dept-badge {
+      padding: 8px 16px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      border-radius: var(--radius-lg);
+      font-size: 14px;
+      font-weight: var(--font-weight-bold);
+    }
+
+    .director-actions {
+      display: flex;
+      gap: var(--space-md);
+    }
+
+    .director-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .metric-card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      transition: all var(--transition-base);
+    }
+
+    .metric-card:hover {
+      border-color: var(--accent1);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .metric-label {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .metric-value {
+      font-size: 32px;
+      font-weight: var(--font-weight-bold);
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .metric-comparison {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .department-okrs {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-lg);
+    }
+
+    .section-title {
+      font-size: var(--font-size-h2);
+      margin: 0;
+    }
+
+    .okr-kanban {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .kanban-column {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-xl);
+      padding: var(--space-lg);
+    }
+
+    .kanban-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-md);
+      border-bottom: 1px solid var(--stroke);
+    }
+
+    .kanban-title {
+      font-size: 16px;
+      font-weight: var(--font-weight-bold);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .kanban-count {
+      background: var(--bg);
+      padding: 4px 10px;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      font-weight: var(--font-weight-bold);
+    }
+
+    .okr-card-mini {
+      background: var(--bg);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-lg);
+      padding: var(--space-md);
+      margin-bottom: var(--space-sm);
+      cursor: pointer;
+      transition: all var(--transition-base);
+    }
+
+    .okr-card-mini:hover {
+      border-color: var(--accent1);
+      transform: translateX(4px);
+    }
+
+    .okr-card-mini h4 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    .okr-card-mini .progress-mini {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .budget-section {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-xl);
+      padding: var(--space-xl);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .budget-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: var(--space-lg);
+    }
+
+    .budget-total {
+      font-size: 40px;
+      font-weight: var(--font-weight-bold);
+      color: var(--success);
+    }
+
+    .budget-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .budget-bar {
+      height: 40px;
+      background: var(--bg);
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: var(--space-md);
+    }
+
+    .budget-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--success), var(--accent2));
+      border-radius: var(--radius-lg);
+      transition: width 0.6s ease;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 12px;
+      font-weight: var(--font-weight-bold);
+      font-size: 14px;
+    }
+
+    .budget-breakdown {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+    }
+
+    .budget-item {
+      text-align: center;
+    }
+
+    .budget-item-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .budget-item-value {
+      font-size: 20px;
+      font-weight: var(--font-weight-bold);
+    }
+
+    .team-section {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .team-member-card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius-xl);
+      padding: var(--space-lg);
+      display: flex;
+      gap: var(--space-md);
+      transition: all var(--transition-base);
+    }
+
+    .team-member-card:hover {
+      border-color: var(--accent1);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .member-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .member-info {
+      flex: 1;
+    }
+
+    .member-name {
+      font-size: 16px;
+      font-weight: var(--font-weight-bold);
+      margin-bottom: 4px;
+    }
+
+    .member-role {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .member-okrs {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .member-okrs strong {
+      color: var(--success);
+    }
+
+    @media (max-width: 1200px) {
+      .director-metrics {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .okr-kanban {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .director-dashboard {
+        padding: var(--space-md);
+      }
+
+      .director-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-md);
+      }
+
+      .director-metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .budget-breakdown {
+        grid-template-columns: 1fr;
+      }
+
+      .team-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1078,6 +1409,10 @@
             <span class="tab-icon">🌍</span>
             <span class="tab-label">CEO Dashboard</span>
           </button>
+          <button class="nav-tab" data-view="director-dashboard" data-required-role="director" onclick="switchView('director-dashboard')">
+            <span class="tab-icon">👥</span>
+            <span class="tab-label">Director Dashboard</span>
+          </button>
         </div>
       </nav>
 
@@ -1112,6 +1447,11 @@
       <!-- CEO Dashboard View -->
       <div id="ceoDashboardView" class="view-content ceo-dashboard" style="display: none;">
         <!-- CEO Dashboard will be populated by JavaScript -->
+      </div>
+
+      <!-- Director Dashboard View -->
+      <div id="directorDashboardView" class="view-content director-dashboard" style="display: none;">
+        <!-- Director Dashboard will be populated by JavaScript -->
       </div>
     </div>
   </div>
@@ -2661,6 +3001,7 @@
       document.getElementById('timelineView').style.display = 'none';
       document.getElementById('userDashboardView').style.display = 'none';
       document.getElementById('ceoDashboardView').style.display = 'none';
+      document.getElementById('directorDashboardView').style.display = 'none';
 
       // Show selected view
       if (viewName === 'timeline') {
@@ -2671,6 +3012,9 @@
       } else if (viewName === 'ceo-dashboard') {
         document.getElementById('ceoDashboardView').style.display = 'block';
         renderCEODashboard();
+      } else if (viewName === 'director-dashboard') {
+        document.getElementById('directorDashboardView').style.display = 'block';
+        renderDirectorDashboard();
       }
     }
 
@@ -2929,6 +3273,321 @@
     }
 
     // ================================================================
+    // DIRECTOR DASHBOARD
+    // ================================================================
+
+    async function renderDirectorDashboard() {
+      const container = document.getElementById('directorDashboardView');
+
+      if (!currentUser) {
+        container.innerHTML = '<p class="empty-state">Por favor, inicia sesión para ver el dashboard</p>';
+        return;
+      }
+
+      // Load director's department data
+      const department = await loadDirectorDepartment();
+
+      if (!department) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>No se encontró departamento</h3>
+            <p>Este usuario no está asignado como director de ningún departamento.</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Load team OKRs and metrics
+      const teamOKRs = await loadTeamOKRs(department.id);
+      const teamMembers = await loadTeamMembers(department.id);
+      const metrics = calculateDirectorMetrics(department, teamOKRs, teamMembers);
+
+      const html = `
+        <!-- Director Header -->
+        <div class="director-header">
+          <div class="director-title">
+            <h1>${department.icon} ${department.name}</h1>
+            <span class="dept-badge">Director Dashboard</span>
+          </div>
+          <div class="director-actions">
+            <button class="btn btn-secondary" onclick="openDepartmentOKRModal()">
+              ➕ Department OKR
+            </button>
+            <button class="btn btn-primary" onclick="openTeamReview()">
+              📊 Team Review
+            </button>
+          </div>
+        </div>
+
+        <!-- Director Metrics -->
+        <div class="director-metrics">
+          <div class="metric-card">
+            <div class="metric-label">Department Health</div>
+            <div class="metric-value" style="color: ${getHealthColor(metrics.health)};">
+              ${metrics.health}
+            </div>
+            <div class="metric-comparison">
+              ${metrics.healthTrend >= 0 ? '↗' : '↘'} ${Math.abs(metrics.healthTrend)} vs last quarter
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-label">Team OKRs</div>
+            <div class="metric-value">${metrics.okrsOnTrack}/${metrics.totalOKRs}</div>
+            <div class="metric-comparison">
+              ${Math.round((metrics.okrsOnTrack / metrics.totalOKRs) * 100)}% on track
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-label">Team Size</div>
+            <div class="metric-value">${metrics.teamSize}</div>
+            <div class="metric-comparison">
+              ${metrics.teamGrowth > 0 ? '+' : ''}${metrics.teamGrowth} since Q3
+            </div>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-label">Avg. Performance</div>
+            <div class="metric-value" style="color: var(--success);">${metrics.avgPerformance}%</div>
+            <div class="metric-comparison">
+              Based on ${metrics.completedOKRs} completed OKRs
+            </div>
+          </div>
+        </div>
+
+        <!-- Department OKRs Kanban -->
+        <div class="department-okrs">
+          <div class="section-header">
+            <h2 class="section-title">🎯 ${department.name} OKRs - Q4 2025</h2>
+          </div>
+          <div id="okrKanban"></div>
+        </div>
+
+        <!-- Budget Section -->
+        <div class="budget-section">
+          <div class="budget-header">
+            <div>
+              <div class="budget-subtitle">Q4 2025 Budget</div>
+              <div class="budget-total">€${(metrics.budgetAllocated / 1000).toFixed(0)}K</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="budget-subtitle">Spent</div>
+              <div style="font-size: 28px; font-weight: bold; color: ${metrics.budgetPercent > 90 ? 'var(--danger)' : 'var(--ink)'};">
+                €${(metrics.budgetSpent / 1000).toFixed(0)}K
+              </div>
+            </div>
+          </div>
+
+          <div class="budget-bar">
+            <div class="budget-fill" style="width: ${metrics.budgetPercent}%;">
+              ${metrics.budgetPercent}%
+            </div>
+          </div>
+
+          <div class="budget-breakdown">
+            <div class="budget-item">
+              <div class="budget-item-label">Allocated</div>
+              <div class="budget-item-value" style="color: var(--accent2);">
+                €${(metrics.budgetAllocated / 1000).toFixed(0)}K
+              </div>
+            </div>
+            <div class="budget-item">
+              <div class="budget-item-label">Spent</div>
+              <div class="budget-item-value" style="color: ${metrics.budgetPercent > 90 ? 'var(--danger)' : 'var(--success)'};">
+                €${(metrics.budgetSpent / 1000).toFixed(0)}K
+              </div>
+            </div>
+            <div class="budget-item">
+              <div class="budget-item-label">Remaining</div>
+              <div class="budget-item-value" style="color: var(--muted);">
+                €${((metrics.budgetAllocated - metrics.budgetSpent) / 1000).toFixed(0)}K
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Members Section -->
+        <div class="team-section">
+          <div class="section-header">
+            <h2 class="section-title">👥 Team Members (${teamMembers.length})</h2>
+          </div>
+          <div id="teamGrid"></div>
+        </div>
+      `;
+
+      container.innerHTML = html;
+
+      // Render sub-components
+      renderOKRKanban(teamOKRs);
+      renderTeamGrid(teamMembers);
+    }
+
+    async function loadDirectorDepartment() {
+      // For now, simulate director's department based on user
+      // In production, query departments table where director_id = currentUser.id
+      try {
+        const { data, error } = await supabase
+          .from('departments')
+          .select('*')
+          .eq('status', 'active')
+          .limit(1)
+          .single();
+
+        if (error) throw error;
+        return data;
+      } catch (error) {
+        console.error('Error loading director department:', error);
+        return null;
+      }
+    }
+
+    async function loadTeamOKRs(departmentId) {
+      try {
+        const { data, error } = await supabase
+          .from('user_okrs')
+          .select('*, users:user_id(email)')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        return data || [];
+      } catch (error) {
+        handleSupabaseError(error, 'cargar OKRs del equipo');
+        return [];
+      }
+    }
+
+    async function loadTeamMembers(departmentId) {
+      // Simulate team members - in production, query users table filtered by department
+      return [
+        { id: 1, name: 'Ana García', role: 'Senior Marketing Manager', avatar: '👩', okrs: 3, onTrack: 2 },
+        { id: 2, name: 'Carlos Ruiz', role: 'Content Strategist', avatar: '👨', okrs: 2, onTrack: 2 },
+        { id: 3, name: 'María López', role: 'Social Media Manager', avatar: '👩', okrs: 3, onTrack: 1 },
+        { id: 4, name: 'Pedro Sánchez', role: 'Marketing Analyst', avatar: '👨', okrs: 2, onTrack: 1 }
+      ];
+    }
+
+    function calculateDirectorMetrics(department, teamOKRs, teamMembers) {
+      const totalOKRs = teamOKRs.length;
+      const okrsOnTrack = teamOKRs.filter(okr => okr.status === 'on_track').length;
+      const completedOKRs = teamOKRs.filter(okr => okr.status === 'completed').length;
+
+      const avgPerformance = totalOKRs > 0
+        ? Math.round(teamOKRs.reduce((sum, okr) => sum + (okr.progress || 0), 0) / totalOKRs)
+        : 0;
+
+      const budgetAllocated = department.budget?.allocated || 120000;
+      const budgetSpent = department.budget?.spent || 68000;
+      const budgetPercent = Math.round((budgetSpent / budgetAllocated) * 100);
+
+      return {
+        health: department.health_score || 75,
+        healthTrend: 5,
+        totalOKRs,
+        okrsOnTrack,
+        completedOKRs,
+        teamSize: teamMembers.length,
+        teamGrowth: 1,
+        avgPerformance,
+        budgetAllocated,
+        budgetSpent,
+        budgetPercent
+      };
+    }
+
+    function renderOKRKanban(teamOKRs) {
+      const kanbanContainer = document.getElementById('okrKanban');
+
+      const notStarted = teamOKRs.filter(okr => okr.status === 'not_started');
+      const onTrack = teamOKRs.filter(okr => okr.status === 'on_track');
+      const completed = teamOKRs.filter(okr => okr.status === 'completed');
+
+      const html = `
+        <div class="okr-kanban">
+          <!-- Not Started Column -->
+          <div class="kanban-column">
+            <div class="kanban-header">
+              <span class="kanban-title">🔴 Not Started</span>
+              <span class="kanban-count">${notStarted.length}</span>
+            </div>
+            ${notStarted.map(okr => renderOKRCardMini(okr)).join('')}
+            ${notStarted.length === 0 ? '<p style="color: var(--muted); font-size: 13px; text-align: center;">No OKRs</p>' : ''}
+          </div>
+
+          <!-- On Track Column -->
+          <div class="kanban-column">
+            <div class="kanban-header">
+              <span class="kanban-title">🟢 On Track</span>
+              <span class="kanban-count">${onTrack.length}</span>
+            </div>
+            ${onTrack.map(okr => renderOKRCardMini(okr)).join('')}
+            ${onTrack.length === 0 ? '<p style="color: var(--muted); font-size: 13px; text-align: center;">No OKRs</p>' : ''}
+          </div>
+
+          <!-- Completed Column -->
+          <div class="kanban-column">
+            <div class="kanban-header">
+              <span class="kanban-title">✅ Completed</span>
+              <span class="kanban-count">${completed.length}</span>
+            </div>
+            ${completed.map(okr => renderOKRCardMini(okr)).join('')}
+            ${completed.length === 0 ? '<p style="color: var(--muted); font-size: 13px; text-align: center;">No OKRs</p>' : ''}
+          </div>
+        </div>
+      `;
+
+      kanbanContainer.innerHTML = html;
+    }
+
+    function renderOKRCardMini(okr) {
+      return `
+        <div class="okr-card-mini">
+          <h4>${okr.title}</h4>
+          <div class="progress-mini">
+            ${okr.progress || 0}% complete · ${okr.key_results?.length || 0} KRs
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTeamGrid(teamMembers) {
+      const gridContainer = document.getElementById('teamGrid');
+
+      const html = `
+        <div class="team-grid">
+          ${teamMembers.map(member => `
+            <div class="team-member-card">
+              <div class="member-avatar">${member.avatar}</div>
+              <div class="member-info">
+                <div class="member-name">${member.name}</div>
+                <div class="member-role">${member.role}</div>
+                <div class="member-okrs">
+                  <strong>${member.onTrack}/${member.okrs}</strong> OKRs on track
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      gridContainer.innerHTML = html;
+    }
+
+    function getHealthColor(health) {
+      if (health >= 80) return 'var(--success)';
+      if (health >= 60) return 'var(--warning)';
+      return 'var(--danger)';
+    }
+
+    function openDepartmentOKRModal() {
+      showToast('Department OKR creation coming soon', 'info');
+    }
+
+    function openTeamReview() {
+      showToast('Team review feature coming soon', 'info');
+    }
+
+    // ================================================================
     // INITIALIZATION
     // ================================================================
 
@@ -2952,12 +3611,18 @@
     });
 
     function initializeRoleBasedNav() {
-      // For now, show CEO dashboard to all users (dev mode)
+      // For now, show CEO and Director dashboards to all users (dev mode)
       // In production, check currentUserRole
       const ceoTab = document.querySelector('[data-required-role="ceo"]');
       if (ceoTab) {
         ceoTab.setAttribute('data-user-has-role', 'true');
         ceoTab.style.display = 'flex';
+      }
+
+      const directorTab = document.querySelector('[data-required-role="director"]');
+      if (directorTab) {
+        directorTab.setAttribute('data-user-has-role', 'true');
+        directorTab.style.display = 'flex';
       }
     }
   </script>
