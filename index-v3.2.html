@@ -2182,6 +2182,16 @@
             <span class="tab-icon">🤝</span>
             <span class="tab-label">Customer Success</span>
           </button>
+          <button class="nav-tab"
+                  data-view="campaigns-dashboard"
+                  onclick="switchView('campaigns-dashboard')"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="campaigns-dashboard-panel"
+                  aria-label="Dashboard de Campañas de Marketing">
+            <span class="tab-icon">📊</span>
+            <span class="tab-label">Campaigns</span>
+          </button>
         </div>
       </nav>
 
@@ -2226,6 +2236,11 @@
       <!-- Customer Success Dashboard -->
       <div id="csDashboardView" class="view-content cs-dashboard" style="display: none;">
         <!-- CS Dashboard will be populated by JavaScript -->
+      </div>
+
+      <!-- Campaigns Dashboard -->
+      <div id="campaignsDashboardView" class="view-content campaigns-dashboard" style="display: none;">
+        <!-- Campaigns Dashboard will be populated by JavaScript -->
       </div>
     </div>
   </div>
@@ -2837,6 +2852,122 @@
 
         <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
           💾 Guardar Cliente
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Create Campaign -->
+  <div id="campaignModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="campaignModalTitle">📊 Nueva Campaña</h2>
+        <button class="close-btn" onclick="closeCampaignModal()">&times;</button>
+      </div>
+
+      <form id="campaignForm" onsubmit="saveCampaign(event)">
+        <input type="hidden" id="campaignEditId" />
+
+        <div class="form-group">
+          <label>Nombre de la Campaña *</label>
+          <input
+            type="text"
+            id="campaignName"
+            placeholder="Ej: Campaña Black Friday 2026"
+            required
+            maxlength="100"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea
+            id="campaignDescription"
+            placeholder="Describe los objetivos y alcance de esta campaña..."
+            rows="3"
+            maxlength="500"
+          ></textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+          <div class="form-group">
+            <label>Presupuesto Asignado (€) *</label>
+            <input
+              type="number"
+              id="campaignBudgetAllocated"
+              placeholder="10000"
+              step="100"
+              min="0"
+              max="10000000"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Presupuesto Gastado (€)</label>
+            <input
+              type="number"
+              id="campaignBudgetSpent"
+              placeholder="0"
+              step="100"
+              min="0"
+              max="10000000"
+              value="0"
+            />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+          <div class="form-group">
+            <label>Fecha de Inicio *</label>
+            <input type="date" id="campaignStartDate" required />
+          </div>
+
+          <div class="form-group">
+            <label>Fecha de Fin *</label>
+            <input type="date" id="campaignEndDate" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Estado *</label>
+          <select id="campaignStatus" required>
+            <option value="planning">📋 Planificación</option>
+            <option value="active" selected>✅ Activa</option>
+            <option value="paused">⏸️ Pausada</option>
+            <option value="completed">✔️ Completada</option>
+            <option value="cancelled">❌ Cancelada</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Enlazar a OKR (Opcional)</label>
+          <select id="campaignLinkedOkr">
+            <option value="">Sin enlazar</option>
+            <!-- Will be populated dynamically -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Departamento (Opcional)</label>
+          <select id="campaignDepartment">
+            <option value="">Sin asignar</option>
+            <!-- Will be populated dynamically -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Miembros del Equipo</label>
+          <div id="campaignTeamMembersContainer" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--stroke); border-radius: 8px; padding: 12px; background: var(--neutral-800);">
+            <!-- Will be populated dynamically with checkboxes -->
+          </div>
+          <p style="color: var(--muted); font-size: 13px; margin-top: 8px;">
+            Selecciona los miembros que trabajarán en esta campaña
+          </p>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
+          💾 Guardar Campaña
         </button>
       </form>
     </div>
@@ -5362,7 +5493,8 @@
         'user-dashboard': ['user', 'csm', 'director', 'ceo'],
         'ceo-dashboard': ['ceo'],
         'director-dashboard': ['director', 'ceo'],
-        'cs-dashboard': ['csm', 'director', 'ceo']
+        'cs-dashboard': ['csm', 'director', 'ceo'],
+        'campaigns-dashboard': ['user', 'csm', 'director', 'ceo']
       };
 
       if (!rolePermissions[viewName]?.includes(userRole)) {
@@ -5375,7 +5507,8 @@
         'user-dashboard': document.getElementById('userDashboardView'),
         'ceo-dashboard': document.getElementById('ceoDashboardView'),
         'director-dashboard': document.getElementById('directorDashboardView'),
-        'cs-dashboard': document.getElementById('csDashboardView')
+        'cs-dashboard': document.getElementById('csDashboardView'),
+        'campaigns-dashboard': document.getElementById('campaignsDashboardView')
       };
 
       // Check if the specific view element exists
@@ -5410,7 +5543,8 @@
         'user-dashboard': 'Mi Dashboard cargado',
         'ceo-dashboard': 'Dashboard ejecutivo cargado',
         'director-dashboard': 'Dashboard de director cargado',
-        'cs-dashboard': 'Dashboard de Customer Success cargado'
+        'cs-dashboard': 'Dashboard de Customer Success cargado',
+        'campaigns-dashboard': 'Dashboard de Campañas cargado'
       };
       announceToScreenReader(viewNames[viewName] || 'Vista cambiada');
 
@@ -5434,6 +5568,9 @@
       } else if (viewName === 'cs-dashboard') {
         viewElements['cs-dashboard'].style.display = 'block';
         renderCSDashboard();
+      } else if (viewName === 'campaigns-dashboard') {
+        viewElements['campaigns-dashboard'].style.display = 'block';
+        renderCampaignsDashboard();
       }
     }
 
@@ -6559,6 +6696,569 @@
       // Sync metrics to Company OKRs after delete
       setTimeout(() => syncCSMetricsToCompanyOKRs(), 500);
     };
+
+    // ================================================================
+    // CAMPAIGN MANAGEMENT MODULE
+    // ================================================================
+
+    let allCampaigns = [];
+    let campaignFilterStatus = 'all';
+
+    // Load campaigns from Supabase
+    async function loadCampaigns() {
+      try {
+        const { data, error } = await supabase
+          .from('campaigns')
+          .select(`
+            *,
+            campaign_team(
+              user_id,
+              role,
+              users(full_name, avatar_url)
+            )
+          `)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        allCampaigns = data || [];
+        return allCampaigns;
+      } catch (error) {
+        console.error('Error loading campaigns:', error);
+        showToast('Error al cargar campañas', 'error');
+        return [];
+      }
+    }
+
+    // Render campaigns dashboard
+    async function renderCampaignsDashboard() {
+      const container = document.getElementById('campaignsDashboardView');
+
+      if (!currentUser) {
+        safeSetHTML(container, '<p class="empty-state">Por favor, inicia sesión para ver el dashboard</p>');
+        return;
+      }
+
+      await loadCampaigns();
+
+      // Filter campaigns by status
+      let filteredCampaigns = allCampaigns;
+      if (campaignFilterStatus !== 'all') {
+        filteredCampaigns = allCampaigns.filter(c => c.status === campaignFilterStatus);
+      }
+
+      const html = `
+        <!-- Campaign Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg);">
+          <div>
+            <h1 style="font-size: var(--font-size-h1); margin-bottom: 8px;">📊 Campaigns</h1>
+            <p style="color: var(--muted); font-size: 14px;">Gestiona tus campañas de marketing y su ROI</p>
+          </div>
+          <button class="btn btn-primary" onclick="openCampaignModal()">
+            ➕ Nueva Campaña
+          </button>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div style="display: flex; gap: 12px; margin-bottom: var(--space-xl); border-bottom: 1px solid var(--stroke); padding-bottom: 12px;">
+          <button
+            class="filter-tab ${campaignFilterStatus === 'all' ? 'active' : ''}"
+            onclick="filterCampaigns('all')"
+            style="padding: 8px 16px; background: ${campaignFilterStatus === 'all' ? 'var(--accent1)' : 'transparent'}; color: ${campaignFilterStatus === 'all' ? 'white' : 'var(--muted)'}; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s;"
+          >
+            Todas (${allCampaigns.length})
+          </button>
+          <button
+            class="filter-tab ${campaignFilterStatus === 'active' ? 'active' : ''}"
+            onclick="filterCampaigns('active')"
+            style="padding: 8px 16px; background: ${campaignFilterStatus === 'active' ? 'var(--accent1)' : 'transparent'}; color: ${campaignFilterStatus === 'active' ? 'white' : 'var(--muted)'}; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s;"
+          >
+            Activas (${allCampaigns.filter(c => c.status === 'active').length})
+          </button>
+          <button
+            class="filter-tab ${campaignFilterStatus === 'planning' ? 'active' : ''}"
+            onclick="filterCampaigns('planning')"
+            style="padding: 8px 16px; background: ${campaignFilterStatus === 'planning' ? 'var(--accent1)' : 'transparent'}; color: ${campaignFilterStatus === 'planning' ? 'white' : 'var(--muted)'}; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s;"
+          >
+            Planificación (${allCampaigns.filter(c => c.status === 'planning').length})
+          </button>
+          <button
+            class="filter-tab ${campaignFilterStatus === 'completed' ? 'active' : ''}"
+            onclick="filterCampaigns('completed')"
+            style="padding: 8px 16px; background: ${campaignFilterStatus === 'completed' ? 'var(--accent1)' : 'transparent'}; color: ${campaignFilterStatus === 'completed' ? 'white' : 'var(--muted)'}; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s;"
+          >
+            Completadas (${allCampaigns.filter(c => c.status === 'completed').length})
+          </button>
+        </div>
+
+        <!-- Campaign Grid -->
+        <div id="campaignsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--space-lg);">
+          ${filteredCampaigns.length === 0 ? `
+            <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: var(--space-2xl);">
+              <div style="font-size: 64px; margin-bottom: 16px;">📊</div>
+              <h3>No hay campañas ${campaignFilterStatus !== 'all' ? 'en este estado' : ''}</h3>
+              <p style="color: var(--muted); margin-bottom: 24px;">
+                ${campaignFilterStatus === 'all' ? 'Crea tu primera campaña de marketing para empezar a hacer seguimiento del presupuesto y ROI' : 'Las campañas aparecerán aquí cuando las crees'}
+              </p>
+              ${campaignFilterStatus === 'all' ? `
+                <button class="btn btn-primary" onclick="openCampaignModal()">
+                  ➕ Crear Primera Campaña
+                </button>
+              ` : ''}
+            </div>
+          ` : filteredCampaigns.map(campaign => renderCampaignCard(campaign)).join('')}
+        </div>
+      `;
+
+      safeSetHTML(container, html);
+    }
+
+    // Render campaign card
+    function renderCampaignCard(campaign) {
+      const budgetAllocated = parseFloat(campaign.budget_allocated) || 0;
+      const budgetSpent = parseFloat(campaign.budget_spent) || 0;
+      const budgetRemaining = budgetAllocated - budgetSpent;
+      const budgetProgress = budgetAllocated > 0 ? (budgetSpent / budgetAllocated) * 100 : 0;
+      const roi = calculateROI(budgetAllocated, budgetSpent);
+
+      const statusConfig = {
+        'planning': { label: '📋 Planificación', color: 'var(--warning)' },
+        'active': { label: '✅ Activa', color: 'var(--success)' },
+        'paused': { label: '⏸️ Pausada', color: 'var(--muted)' },
+        'completed': { label: '✔️ Completada', color: 'var(--accent2)' },
+        'cancelled': { label: '❌ Cancelada', color: 'var(--danger)' }
+      };
+
+      const status = statusConfig[campaign.status] || statusConfig['planning'];
+
+      // Format dates
+      const startDate = campaign.start_date ? new Date(campaign.start_date).toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
+      const endDate = campaign.end_date ? new Date(campaign.end_date).toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
+
+      // Get team members
+      const teamMembers = campaign.campaign_team || [];
+      const teamAvatars = teamMembers.slice(0, 3).map(member => {
+        const user = member.users;
+        const initials = user?.full_name ? user.full_name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : '??';
+        return `
+          <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent1); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; border: 2px solid var(--card);" title="${user?.full_name || 'Unknown'}">
+            ${initials}
+          </div>
+        `;
+      }).join('');
+
+      const moreTeamCount = teamMembers.length > 3 ? teamMembers.length - 3 : 0;
+
+      return `
+        <div style="background: var(--card); border-radius: 16px; padding: 24px; border: 1px solid var(--stroke); transition: all 0.2s; cursor: pointer;" onmouseover="this.style.borderColor='var(--accent1)'" onmouseout="this.style.borderColor='var(--stroke)'">
+          <!-- Campaign Header -->
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+            <div style="flex: 1;">
+              <h3 style="font-size: 18px; margin-bottom: 8px; color: var(--ink);">${DOMPurify.sanitize(campaign.name)}</h3>
+              <span style="display: inline-block; padding: 4px 12px; background: ${status.color}20; color: ${status.color}; border-radius: 12px; font-size: 12px; font-weight: 600;">
+                ${status.label}
+              </span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button
+                onclick="event.stopPropagation(); openEditCampaignModal('${campaign.id}')"
+                style="padding: 6px 10px; background: var(--neutral-700); color: var(--ink); border: none; border-radius: 6px; cursor: pointer; font-size: 12px;"
+                title="Editar"
+              >
+                ✏️
+              </button>
+              <button
+                onclick="event.stopPropagation(); deleteCampaign('${campaign.id}')"
+                style="padding: 6px 10px; background: var(--neutral-700); color: var(--danger); border: none; border-radius: 6px; cursor: pointer; font-size: 12px;"
+                title="Eliminar"
+              >
+                🗑️
+              </button>
+            </div>
+          </div>
+
+          <!-- Description -->
+          ${campaign.description ? `
+            <p style="color: var(--muted); font-size: 13px; margin-bottom: 16px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+              ${DOMPurify.sanitize(campaign.description)}
+            </p>
+          ` : ''}
+
+          <!-- Budget Progress -->
+          <div style="margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span style="font-size: 13px; color: var(--muted);">Presupuesto</span>
+              <span style="font-size: 13px; font-weight: 600; color: var(--ink);">
+                €${budgetSpent.toLocaleString()} / €${budgetAllocated.toLocaleString()}
+              </span>
+            </div>
+            <div style="width: 100%; height: 8px; background: var(--neutral-700); border-radius: 4px; overflow: hidden;">
+              <div style="width: ${Math.min(budgetProgress, 100)}%; height: 100%; background: ${budgetProgress > 90 ? 'var(--danger)' : budgetProgress > 70 ? 'var(--warning)' : 'var(--success)'}; transition: width 0.3s;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+              <span style="font-size: 11px; color: var(--muted);">${budgetProgress.toFixed(1)}% gastado</span>
+              <span style="font-size: 11px; color: ${budgetRemaining >= 0 ? 'var(--success)' : 'var(--danger)'};">
+                €${budgetRemaining.toLocaleString()} restante
+              </span>
+            </div>
+          </div>
+
+          <!-- ROI Metric -->
+          <div style="padding: 12px; background: ${roi.value >= 0 ? 'var(--success)' : 'var(--danger)'}15; border-radius: 8px; margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 13px; color: var(--muted);">ROI</span>
+              <span style="font-size: 20px; font-weight: 700; color: ${roi.value >= 0 ? 'var(--success)' : 'var(--danger)'};">
+                ${roi.display}
+              </span>
+            </div>
+          </div>
+
+          <!-- Date Range -->
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding: 8px; background: var(--neutral-800); border-radius: 6px;">
+            <span style="font-size: 12px; color: var(--muted);">📅</span>
+            <span style="font-size: 12px; color: var(--ink);">${startDate} - ${endDate}</span>
+          </div>
+
+          <!-- Team Avatars -->
+          ${teamMembers.length > 0 ? `
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 12px; color: var(--muted);">Equipo:</span>
+              <div style="display: flex; align-items: center; gap: -8px;">
+                ${teamAvatars}
+                ${moreTeamCount > 0 ? `
+                  <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--neutral-700); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; border: 2px solid var(--card); color: var(--muted);">
+                    +${moreTeamCount}
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          ` : `
+            <div style="color: var(--muted); font-size: 12px;">Sin equipo asignado</div>
+          `}
+        </div>
+      `;
+    }
+
+    // Calculate ROI
+    function calculateROI(budgetAllocated, budgetSpent) {
+      const allocated = parseFloat(budgetAllocated) || 0;
+      const spent = parseFloat(budgetSpent) || 0;
+
+      if (allocated === 0) {
+        return { value: 0, display: '0%' };
+      }
+
+      // Simple ROI calculation: (Allocated - Spent) / Spent * 100
+      // Negative means overspent, positive means under budget
+      const roi = ((allocated - spent) / allocated) * 100;
+
+      return {
+        value: roi,
+        display: `${roi > 0 ? '+' : ''}${roi.toFixed(1)}%`
+      };
+    }
+
+    // Filter campaigns by status
+    function filterCampaigns(status) {
+      campaignFilterStatus = status;
+      renderCampaignsDashboard();
+
+      analytics.track('campaigns_filtered', {
+        filter: status,
+        campaign_count: allCampaigns.filter(c => status === 'all' || c.status === status).length
+      });
+    }
+
+    // Open campaign modal
+    async function openCampaignModal() {
+      const modal = document.getElementById('campaignModal');
+      const form = document.getElementById('campaignForm');
+      const titleEl = document.getElementById('campaignModalTitle');
+
+      // Reset form
+      form.reset();
+      document.getElementById('campaignEditId').value = '';
+      document.getElementById('campaignBudgetSpent').value = '0';
+      titleEl.textContent = '📊 Nueva Campaña';
+
+      // Populate dropdowns
+      await populateCampaignDropdowns();
+
+      modal.style.display = 'flex';
+
+      analytics.track('campaign_modal_opened', { mode: 'create' });
+    }
+
+    // Open edit campaign modal
+    async function openEditCampaignModal(campaignId) {
+      const modal = document.getElementById('campaignModal');
+      const form = document.getElementById('campaignForm');
+      const titleEl = document.getElementById('campaignModalTitle');
+
+      // Find campaign
+      const campaign = allCampaigns.find(c => c.id === campaignId);
+      if (!campaign) {
+        showToast('Campaña no encontrada', 'error');
+        return;
+      }
+
+      // Populate form
+      document.getElementById('campaignEditId').value = campaign.id;
+      document.getElementById('campaignName').value = campaign.name || '';
+      document.getElementById('campaignDescription').value = campaign.description || '';
+      document.getElementById('campaignBudgetAllocated').value = campaign.budget_allocated || 0;
+      document.getElementById('campaignBudgetSpent').value = campaign.budget_spent || 0;
+      document.getElementById('campaignStartDate').value = campaign.start_date || '';
+      document.getElementById('campaignEndDate').value = campaign.end_date || '';
+      document.getElementById('campaignStatus').value = campaign.status || 'planning';
+      document.getElementById('campaignLinkedOkr').value = campaign.linked_okr_id || '';
+      document.getElementById('campaignDepartment').value = campaign.department_id || '';
+
+      titleEl.textContent = '✏️ Editar Campaña';
+
+      // Populate dropdowns
+      await populateCampaignDropdowns();
+
+      // Select team members
+      const teamMemberIds = (campaign.campaign_team || []).map(t => t.user_id);
+      document.querySelectorAll('#campaignTeamMembersContainer input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = teamMemberIds.includes(checkbox.value);
+      });
+
+      modal.style.display = 'flex';
+
+      analytics.track('campaign_modal_opened', { mode: 'edit', campaign_id: campaignId });
+    }
+
+    // Close campaign modal
+    function closeCampaignModal() {
+      const modal = document.getElementById('campaignModal');
+      modal.style.display = 'none';
+    }
+
+    // Populate campaign dropdowns
+    async function populateCampaignDropdowns() {
+      try {
+        // Load OKRs
+        const { data: okrs } = await supabase
+          .from('company_okrs')
+          .select('id, objective')
+          .order('created_at', { ascending: false });
+
+        const okrSelect = document.getElementById('campaignLinkedOkr');
+        okrSelect.innerHTML = '<option value="">Sin enlazar</option>';
+        (okrs || []).forEach(okr => {
+          const option = document.createElement('option');
+          option.value = okr.id;
+          option.textContent = okr.objective;
+          okrSelect.appendChild(option);
+        });
+
+        // Load departments
+        const { data: departments } = await supabase
+          .from('departments')
+          .select('id, name')
+          .order('name');
+
+        const deptSelect = document.getElementById('campaignDepartment');
+        deptSelect.innerHTML = '<option value="">Sin asignar</option>';
+        (departments || []).forEach(dept => {
+          const option = document.createElement('option');
+          option.value = dept.id;
+          option.textContent = dept.name;
+          deptSelect.appendChild(option);
+        });
+
+        // Load users for team selection
+        const { data: users } = await supabase
+          .from('users')
+          .select('id, full_name, email')
+          .order('full_name');
+
+        const teamContainer = document.getElementById('campaignTeamMembersContainer');
+        teamContainer.innerHTML = '';
+        (users || []).forEach(user => {
+          const div = document.createElement('div');
+          div.style.cssText = 'display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 6px; transition: background 0.2s;';
+          div.onmouseover = function() { this.style.background = 'var(--neutral-700)'; };
+          div.onmouseout = function() { this.style.background = 'transparent'; };
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.value = user.id;
+          checkbox.id = `team-member-${user.id}`;
+          checkbox.style.cssText = 'cursor: pointer;';
+
+          const label = document.createElement('label');
+          label.htmlFor = `team-member-${user.id}`;
+          label.style.cssText = 'cursor: pointer; flex: 1; font-size: 14px;';
+          label.textContent = `${user.full_name} (${user.email})`;
+
+          div.appendChild(checkbox);
+          div.appendChild(label);
+          teamContainer.appendChild(div);
+        });
+      } catch (error) {
+        console.error('Error populating dropdowns:', error);
+      }
+    }
+
+    // Save campaign
+    async function saveCampaign(event) {
+      event.preventDefault();
+
+      if (!currentUser) {
+        showToast('Debes iniciar sesión para guardar campañas', 'warning');
+        return;
+      }
+
+      const submitBtn = event.target.querySelector('button[type="submit"]');
+
+      try {
+        await withButtonLoading(submitBtn, async () => {
+          const campaignId = document.getElementById('campaignEditId').value;
+          const isEdit = !!campaignId;
+
+          // Collect form data
+          const campaignData = {
+            name: document.getElementById('campaignName').value.trim(),
+            description: document.getElementById('campaignDescription').value.trim() || null,
+            budget_allocated: parseFloat(document.getElementById('campaignBudgetAllocated').value) || 0,
+            budget_spent: parseFloat(document.getElementById('campaignBudgetSpent').value) || 0,
+            start_date: document.getElementById('campaignStartDate').value || null,
+            end_date: document.getElementById('campaignEndDate').value || null,
+            status: document.getElementById('campaignStatus').value,
+            linked_okr_id: document.getElementById('campaignLinkedOkr').value || null,
+            department_id: document.getElementById('campaignDepartment').value || null,
+            owner_id: currentUser.id,
+            updated_at: new Date().toISOString()
+          };
+
+          // Validate dates
+          if (campaignData.start_date && campaignData.end_date) {
+            const start = new Date(campaignData.start_date);
+            const end = new Date(campaignData.end_date);
+            if (end < start) {
+              showToast('La fecha de fin debe ser posterior a la fecha de inicio', 'error');
+              return;
+            }
+          }
+
+          // Get selected team members
+          const selectedTeamMembers = Array.from(
+            document.querySelectorAll('#campaignTeamMembersContainer input[type="checkbox"]:checked')
+          ).map(checkbox => checkbox.value);
+
+          let savedCampaignId;
+
+          if (isEdit) {
+            // Update existing campaign
+            const { error } = await supabase
+              .from('campaigns')
+              .update(campaignData)
+              .eq('id', campaignId);
+
+            if (error) throw error;
+
+            savedCampaignId = campaignId;
+
+            // Delete existing team members
+            await supabase
+              .from('campaign_team')
+              .delete()
+              .eq('campaign_id', campaignId);
+
+            analytics.track('campaign_updated', {
+              campaign_id: campaignId,
+              campaign_name: campaignData.name
+            });
+          } else {
+            // Create new campaign
+            campaignData.created_at = new Date().toISOString();
+
+            const { data, error } = await supabase
+              .from('campaigns')
+              .insert([campaignData])
+              .select()
+              .single();
+
+            if (error) throw error;
+
+            savedCampaignId = data.id;
+
+            analytics.track('campaign_created', {
+              campaign_id: savedCampaignId,
+              campaign_name: campaignData.name
+            });
+          }
+
+          // Insert team members
+          if (selectedTeamMembers.length > 0) {
+            const teamData = selectedTeamMembers.map(userId => ({
+              campaign_id: savedCampaignId,
+              user_id: userId,
+              role: 'member',
+              created_at: new Date().toISOString()
+            }));
+
+            const { error: teamError } = await supabase
+              .from('campaign_team')
+              .insert(teamData);
+
+            if (teamError) throw teamError;
+          }
+
+          // Log activity
+          const { error: activityError } = await supabase
+            .from('campaign_activities')
+            .insert([{
+              campaign_id: savedCampaignId,
+              user_id: currentUser.id,
+              activity_type: isEdit ? 'updated' : 'created',
+              description: isEdit ? `Campaña actualizada` : `Campaña creada`,
+              created_at: new Date().toISOString()
+            }]);
+
+          if (activityError) console.error('Error logging activity:', activityError);
+
+          showToast(`Campaña ${isEdit ? 'actualizada' : 'creada'} exitosamente`, 'success');
+          closeCampaignModal();
+          await renderCampaignsDashboard();
+        });
+      } catch (error) {
+        console.error('Error saving campaign:', error);
+        showToast('Error al guardar la campaña: ' + error.message, 'error');
+      }
+    }
+
+    // Delete campaign
+    async function deleteCampaign(campaignId) {
+      const campaign = allCampaigns.find(c => c.id === campaignId);
+      if (!campaign) return;
+
+      const confirmed = confirm(`¿Estás seguro de que quieres eliminar la campaña "${campaign.name}"?\n\nEsta acción no se puede deshacer.`);
+      if (!confirmed) return;
+
+      try {
+        const { error } = await supabase
+          .from('campaigns')
+          .delete()
+          .eq('id', campaignId);
+
+        if (error) throw error;
+
+        showToast('Campaña eliminada exitosamente', 'success');
+        await renderCampaignsDashboard();
+
+        analytics.track('campaign_deleted', {
+          campaign_id: campaignId,
+          campaign_name: campaign.name
+        });
+      } catch (error) {
+        console.error('Error deleting campaign:', error);
+        showToast('Error al eliminar la campaña: ' + error.message, 'error');
+      }
+    }
 
     // ================================================================
     // VIEW AS USER SYSTEM (Multi-Tenant Interno)
