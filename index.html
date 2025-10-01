@@ -4265,6 +4265,17 @@
       `;
 
       safeSetHTML(dashboardContainer, html);
+
+      // Add event listeners after DOM is updated (onclick attributes are removed by DOMPurify)
+      const newOKRBtn = dashboardContainer.querySelector('.dashboard-actions .btn-secondary:first-child');
+      const newInitiativeBtn = dashboardContainer.querySelector('.dashboard-actions .btn-secondary:last-child');
+
+      if (newOKRBtn) {
+        newOKRBtn.addEventListener('click', openOKRModal);
+      }
+      if (newInitiativeBtn) {
+        newInitiativeBtn.addEventListener('click', openInitiativeModal);
+      }
     }
 
     function renderOKRsList() {
