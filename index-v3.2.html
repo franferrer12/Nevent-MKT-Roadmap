@@ -2654,72 +2654,6 @@
     </div>
   </div>
 
-  <!-- Modal: Create Customer -->
-  <div id="customerCreationModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">🤝 Nuevo Cliente</h2>
-        <button class="close-btn" onclick="closeCustomerCreationModal()">&times;</button>
-      </div>
-
-      <form id="customerCreationForm" onsubmit="saveNewCustomer(event)">
-        <!-- Company Name -->
-        <div class="form-group">
-          <label>Nombre de la Empresa</label>
-          <input type="text" id="customerCompanyName" placeholder="Ej: Acme Corp" required maxlength="100" />
-        </div>
-
-        <!-- Contact Name -->
-        <div class="form-group">
-          <label>Nombre del Contacto</label>
-          <input type="text" id="customerContactName" placeholder="Ej: Juan Pérez" required maxlength="100" />
-        </div>
-
-        <!-- Email -->
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="customerEmail" placeholder="contacto@empresa.com" required />
-        </div>
-
-        <!-- Status -->
-        <div class="form-group">
-          <label>Estado</label>
-          <select id="customerStatus" required>
-            <option value="prospect">Prospect</option>
-            <option value="active" selected>Active</option>
-            <option value="churned">Churned</option>
-          </select>
-        </div>
-
-        <!-- MRR -->
-        <div class="form-group">
-          <label>MRR (Monthly Recurring Revenue)</label>
-          <input type="number" id="customerMRR" placeholder="5000" min="0" step="100" />
-          <p style="color: var(--muted); font-size: 12px; margin-top: 4px;">Ingresos recurrentes mensuales en €</p>
-        </div>
-
-        <!-- Health Score -->
-        <div class="form-group">
-          <label>Health Score (0-100)</label>
-          <input type="number" id="customerHealthScore" placeholder="75" min="0" max="100" value="50" />
-        </div>
-
-        <!-- CSM Assigned -->
-        <div class="form-group">
-          <label>CSM Asignado</label>
-          <select id="customerCSM">
-            <option value="">Sin asignar</option>
-            <!-- Populated dynamically -->
-          </select>
-        </div>
-
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
-          💾 Crear Cliente
-        </button>
-      </form>
-    </div>
-  </div>
-
   <!-- Modal: Confirmation Dialog -->
   <div id="confirmDialog" class="modal">
     <div class="modal-content" style="max-width: 480px;">
@@ -4361,96 +4295,6 @@
     }
 
     // Customer Creation Modal Functions
-    async function openCustomerCreationModal() {
-      document.getElementById('customerCreationModal').classList.add('active');
-      document.getElementById('customerCreationForm').reset();
-
-      // Populate CSM dropdown
-      await populateCSMDropdown();
-    }
-
-    function closeCustomerCreationModal() {
-      document.getElementById('customerCreationModal').classList.remove('active');
-    }
-
-    async function populateCSMDropdown() {
-      try {
-        const { data, error } = await supabase
-          .from('users')
-          .select('id, full_name')
-          .eq('role', 'csm')
-          .order('full_name');
-
-        if (error) throw error;
-
-        const select = document.getElementById('customerCSM');
-        select.innerHTML = '<option value="">Sin asignar</option>';
-
-        data.forEach(csm => {
-          const option = document.createElement('option');
-          option.value = csm.id;
-          option.textContent = csm.full_name;
-          select.appendChild(option);
-        });
-      } catch (error) {
-        console.error('Error loading CSMs:', error);
-      }
-    }
-
-    async function saveNewCustomer(event) {
-      event.preventDefault();
-
-      if (!currentUser) {
-        showToast('Debes iniciar sesión', 'warning');
-        return;
-      }
-
-      if (currentUser.role !== 'csm' && currentUser.role !== 'ceo') {
-        showToast('Solo CSMs pueden crear clientes', 'error');
-        return;
-      }
-
-      const newCustomer = {
-        company_name: document.getElementById('customerCompanyName').value,
-        contact_name: document.getElementById('customerContactName').value,
-        email: document.getElementById('customerEmail').value,
-        status: document.getElementById('customerStatus').value,
-        mrr: parseFloat(document.getElementById('customerMRR').value) || 0,
-        health_score: parseInt(document.getElementById('customerHealthScore').value) || 50,
-        csm_id: document.getElementById('customerCSM').value || currentUser.id,
-        onboarding_completed: false,
-        last_interaction: new Date().toISOString(),
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      };
-
-      const form = event.target;
-      const submitBtn = form.querySelector('button[type="submit"]');
-
-      await withButtonLoading(submitBtn, async () => {
-        try {
-          const { data, error } = await supabase
-            .from('customers')
-            .insert([newCustomer])
-            .select();
-
-          if (error) throw error;
-
-          showToast(`Cliente creado: ${newCustomer.company_name}`, 'success');
-          closeCustomerCreationModal();
-
-          // Refresh CS dashboard
-          if (currentView === 'cs-dashboard') {
-            await loadAllCustomers();
-            renderCSManagerDashboard();
-          }
-        } catch (error) {
-          console.error('Error creating customer:', error);
-          showToast(`Error: ${error.message}`, 'error');
-        }
-      });
-    }
-
     // Initiative Modal Functions
     function openInitiativeModal() {
       document.getElementById('initiativeModal').classList.add('active');
@@ -6709,17 +6553,22 @@
       try {
         const { data, error } = await supabase
           .from('campaigns')
-          .select(`
-            *,
-            campaign_team(
-              user_id,
-              role,
-              users(full_name, avatar_url)
-            )
-          `)
+          .select('*')
           .order('created_at', { ascending: false });
 
         if (error) throw error;
+
+        // Load team members separately for each campaign
+        if (data && data.length > 0) {
+          for (const campaign of data) {
+            const { data: teamData } = await supabase
+              .from('campaign_team')
+              .select('user_id, role')
+              .eq('campaign_id', campaign.id);
+
+            campaign.campaign_team = teamData || [];
+          }
+        }
 
         allCampaigns = data || [];
         return allCampaigns;
@@ -6838,10 +6687,10 @@
       // Get team members
       const teamMembers = campaign.campaign_team || [];
       const teamAvatars = teamMembers.slice(0, 3).map(member => {
-        const user = member.users;
-        const initials = user?.full_name ? user.full_name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : '??';
+        const userId = member.user_id || '';
+        const initials = userId.substring(0, 2).toUpperCase();
         return `
-          <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent1); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; border: 2px solid var(--card);" title="${user?.full_name || 'Unknown'}">
+          <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent1); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; border: 2px solid var(--card);" title="Team Member">
             ${initials}
           </div>
         `;
