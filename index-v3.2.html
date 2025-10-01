@@ -6661,54 +6661,58 @@
 
       safeSetHTML(container, html);
 
-      // Remove previous listeners to avoid duplicates
-      const newContainer = container.cloneNode(false);
-      while (container.firstChild) {
-        newContainer.appendChild(container.firstChild);
-      }
-      container.parentNode.replaceChild(newContainer, container);
+      // Add event listeners using event delegation (no need to remove/re-add)
+      // Event delegation on parent container handles dynamically added elements
+      setTimeout(() => {
+        const updatedContainer = document.getElementById('campaignsDashboardView');
+        if (!updatedContainer) return;
 
-      // Add event listeners for all buttons (after safeSetHTML with event delegation)
-      newContainer.addEventListener('click', (e) => {
-        console.log('Click detected:', e.target);
+        // Remove old listener by cloning (only once per render)
+        const clone = updatedContainer.cloneNode(true);
+        updatedContainer.parentNode.replaceChild(clone, updatedContainer);
 
-        // Handle filter buttons first
-        const filterButton = e.target.closest('[data-filter]');
-        if (filterButton) {
-          const filter = filterButton.getAttribute('data-filter');
-          console.log('Filter clicked:', filter);
-          if (filter) {
-            filterCampaigns(filter);
+        // Add new listener to the cloned container
+        clone.addEventListener('click', (e) => {
+          console.log('Click detected:', e.target);
+
+          // Handle filter buttons first
+          const filterButton = e.target.closest('[data-filter]');
+          if (filterButton) {
+            const filter = filterButton.getAttribute('data-filter');
+            console.log('Filter clicked:', filter);
+            if (filter) {
+              filterCampaigns(filter);
+            }
+            return;
           }
-          return;
-        }
 
-        // Handle campaign actions
-        const actionButton = e.target.closest('[data-action]');
-        if (actionButton) {
-          const action = actionButton.getAttribute('data-action');
-          const campaignId = actionButton.getAttribute('data-campaign-id');
-          console.log('Action clicked:', action, campaignId);
+          // Handle campaign actions
+          const actionButton = e.target.closest('[data-action]');
+          if (actionButton) {
+            const action = actionButton.getAttribute('data-action');
+            const campaignId = actionButton.getAttribute('data-campaign-id');
+            console.log('Action clicked:', action, campaignId);
 
-          switch (action) {
-            case 'openCampaignModal':
-              openCampaignModal();
-              break;
-            case 'editCampaign':
-              if (campaignId) {
-                e.stopPropagation();
-                openEditCampaignModal(campaignId);
-              }
-              break;
-            case 'deleteCampaign':
-              if (campaignId) {
-                e.stopPropagation();
-                deleteCampaign(campaignId);
-              }
-              break;
+            switch (action) {
+              case 'openCampaignModal':
+                openCampaignModal();
+                break;
+              case 'editCampaign':
+                if (campaignId) {
+                  e.stopPropagation();
+                  openEditCampaignModal(campaignId);
+                }
+                break;
+              case 'deleteCampaign':
+                if (campaignId) {
+                  e.stopPropagation();
+                  deleteCampaign(campaignId);
+                }
+                break;
+            }
           }
-        }
-      });
+        });
+      }, 0);
     }
 
     // Render campaign card
