@@ -220,5 +220,55 @@ CREATE TABLE public.users (
 
 ---
 
-**Última actualización:** 2025-09-30
+## ✅ Estado Actual (v3.1.0)
+
+### Usuarios Creados y Verificados
+
+Los siguientes 4 usuarios están creados en producción y funcionando correctamente:
+
+| Email | Password | Role | Status | UUID |
+|-------|----------|------|--------|------|
+| `ceo@nevent.es` | `Test1234!` | CEO | ✅ Active | `2c90b8d1-944c-432a-aa2b-ee9be48bf737` |
+| `director@nevent.es` | `Test1234!` | Director | ✅ Active | `d375a17a-94ad-404f-8e2b-b4f9aa32f2e5` |
+| `csm@nevent.es` | `Test1234!` | CSM | ✅ Active | `e6d67d4c-ae0a-4760-8ea1-5eb2a3a1d317` |
+| `fran.ferrer@nevent.es` | `Test1234!` | User | ✅ Active | `b77a031c-81e2-412b-87f7-4c40c077a4b4` |
+| `user@nevent.es` | `Test1234!` | User | ✅ Active | `4caa1161-f23b-4028-9d3e-b5a46ee1be35` |
+
+**Total:** 5 usuarios de prueba activos
+
+### Funcionalidades Verificadas
+
+| Funcionalidad | CEO | Director | CSM | User | Status |
+|---------------|-----|----------|-----|------|--------|
+| Login | ✅ | ✅ | ✅ | ✅ | Funcional |
+| My Dashboard | ✅ | ✅ | ✅ | ✅ | Funcional |
+| CEO Dashboard | ✅ | ❌ | ❌ | ❌ | Funcional |
+| Director Dashboard | ✅ | ✅ | ❌ | ❌ | Funcional |
+| CS Dashboard | ✅ | ❌ | ✅ | ❌ | Funcional |
+| View As System | ✅ | ❌ | ❌ | ❌ | Funcional |
+| Create OKR | ✅ | ✅ | ✅ | ✅ | Funcional |
+| Create Initiative | ✅ | ✅ | ✅ | ✅ | Funcional |
+| CS Metrics Sync | ✅ | ❌ | ✅ | ❌ | Funcional |
+
+### View As System (CEO Only)
+
+El usuario `ceo@nevent.es` puede cambiar su vista para simular otros roles:
+
+```
+CEO Dashboard → View As Selector → Select User
+  ├─ Director (director@nevent.es) → Ve Director Dashboard
+  ├─ CSM (csm@nevent.es) → Ve CS Dashboard
+  └─ User (fran.ferrer@nevent.es) → Ve My Dashboard
+```
+
+**Cómo usar View As:**
+1. Inicia sesión como `ceo@nevent.es`
+2. Click en el botón "👤 Usuario ▼" (esquina superior derecha)
+3. Selecciona un usuario de la lista
+4. El banner amarillo "👁️ Viendo como: [email]" aparece
+5. Para salir: click en el mismo usuario (CEO) en el selector
+
+---
+
+**Última actualización:** 2025-10-01 (v3.1.0)
 **Mantenido por:** fran.ferrer@nevent.es

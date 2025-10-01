@@ -7,6 +7,72 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.1.0] - 2025-10-01
+
+### 🐛 Critical Production Fixes
+
+#### Fixed Issues
+1. **Departments API 400 Error**
+   - Added missing `status` column to departments table
+   - Migration: `ADD_DEPARTMENTS_STATUS.sql`
+   - All 12 departments now load correctly with status filter
+
+2. **OKR Creation Failing (PGRST204)**
+   - Fixed schema mismatch: `deadline` → `end_date`
+   - Code aligned with database schema
+   - OKR creation now fully functional
+
+3. **Dashboard Buttons Not Responding**
+   - Fixed DOMPurify removing onclick attributes
+   - Added event listeners after safeSetHTML() for:
+     - My Dashboard: New OKR, New Initiative buttons
+     - CEO Dashboard: Company OKR button, KPI cards
+     - Director Dashboard: Department OKR, Team Review buttons
+     - CS Dashboard: Segment tabs, Sync, New Customer buttons
+   - All interactive elements now functional
+
+4. **View As Functionality Broken**
+   - Fixed parameter mismatch: `switchToUser(user)` → `switchToUser(user.id)`
+   - Added `data-user-id` attributes to user items
+   - Tenant switching now works correctly for all roles
+
+5. **CS Metrics Sync Failing**
+   - Fixed RLS policies for `company_okrs` table (user_approvals → users)
+   - Inserted Company OKRs seed data (co-2025-growth, co-2025-product, co-2025-team)
+   - Migration: `FIX_COMPANY_OKRS_RLS.sql`
+   - CS metrics now sync correctly to Company OKRs
+
+### 🗄️ Database Changes
+- Added `status` column to departments (active/inactive)
+- Fixed RLS policies for company_okrs (now uses users table)
+- Inserted 3 Company OKRs for fiscal year 2025
+
+### 🧪 Testing
+- ✅ Login flow validated
+- ✅ OKR creation validated (personal OKRs)
+- ✅ All 4 dashboards validated (My, CEO, Director, CS)
+- ✅ View As tenant switching validated (CEO → Director/CSM/User)
+- ✅ CS metrics sync validated
+
+### 📦 Migrations Required
+```sql
+-- 1. Add departments status column
+migrations/ADD_DEPARTMENTS_STATUS.sql
+
+-- 2. Fix company_okrs RLS policies
+migrations/FIX_COMPANY_OKRS_RLS.sql
+
+-- 3. Insert Company OKRs (if empty)
+INSERT INTO company_okrs (id, fiscal_year, objective, key_results, health_score) VALUES ...
+```
+
+### 🔗 Links
+- **Commit:** d59691f
+- **Tag:** v3.1.0
+- **GitHub:** https://github.com/franferrer12/Nevent-MKT-Roadmap/releases/tag/v3.1.0
+
+---
+
 ## [Unreleased]
 
 ### ✅ Completed Sprint (2025-09-30 - Part 4)

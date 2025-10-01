@@ -3,8 +3,9 @@
 > De roadmap táctico a plataforma estratégica end-to-end
 
 [![Live Demo](https://img.shields.io/badge/demo-live-success)](https://franferrer12.github.io/Nevent-MKT-Roadmap/)
-[![Version](https://img.shields.io/badge/version-3.0.0--alpha-blue)](https://github.com/franferrer12/Nevent-MKT-Roadmap/releases)
+[![Version](https://img.shields.io/badge/version-3.1.0-blue)](https://github.com/franferrer12/Nevent-MKT-Roadmap/releases/tag/v3.1.0)
 [![License](https://img.shields.io/badge/license-MIT-green)]()
+[![Status](https://img.shields.io/badge/status-production%20ready-brightgreen)]()
 
 Sistema de ejecución estratégica que conecta objetivos del CEO con el trabajo diario del equipo, con seguimiento en tiempo real y jerarquía Company OKRs → Departments → User OKRs → Initiatives → Actions.
 
@@ -96,35 +97,48 @@ Comprehensive documentation available in [`/docs`](./docs):
 
 ## 🎯 Roadmap
 
-### v2.1.0 (Production) ✅
+### v3.1.0 (Production) ✅ **CURRENT**
 
-- [x] Sistema de autenticación
-- [x] Roles (admin/editor/viewer)
-- [x] CRUD de acciones
-- [x] Timeline visual
-- [x] Sincronización en tiempo real
-- [x] Notificaciones in-app
-- [x] Panel de gestión de usuarios
+**Released:** October 1, 2025
 
-### v3.0.0 (In Development) 🚧
+- [x] Schema de base de datos completo (Company OKRs, Departments, User OKRs, Initiatives, Actions)
+- [x] 4 Dashboards funcionales (My, CEO, Director, CS)
+- [x] Sistema de autenticación por roles (CEO, Director, CSM, User)
+- [x] View As system (CEO puede ver como otros roles)
+- [x] Creación de OKRs personales
+- [x] Creación de Initiatives
+- [x] CS Dashboard con métricas (NRR, Churn, Customer Health)
+- [x] Sincronización CS metrics → Company OKRs
+- [x] Analytics system (localStorage-based)
+- [x] Confirmation dialogs (prevención de eliminaciones accidentales)
+- [x] Visual overlay en View As mode
+- [x] RLS policies configuradas correctamente
+- [x] 12 Departments con status filter
+- [x] 3 Company OKRs (Growth, Product, Team)
 
-- [x] Schema de base de datos (OKRs, Initiatives, Departments)
-- [x] Dashboard básico
-- [ ] Modales de creación de OKRs
-- [ ] Modales de creación de Initiatives
-- [ ] Vinculación Actions → Initiatives
-- [ ] Health scores automáticos
-- [ ] Dashboard ejecutivo (CEO)
-- [ ] Dashboard departamental (Director)
+**Documentation:**
+- [x] CHANGELOG.md actualizado
+- [x] RELEASE_NOTES_v3.1.0.md creado
+- [x] Migrations documentadas
+- [x] Test users documentados
 
-### v3.1.0+ (Future) 📅
+### v3.2.0 (Planned) 📅
 
-- [ ] Tracking manual de métricas
-- [ ] Gráficos con ApexCharts
-- [ ] Customer Success integration
-- [ ] Automatizaciones y alertas
-- [ ] Exportación a PDF
-- [ ] Integración con CRM
+- [ ] Company OKR creation modal (CEO Dashboard)
+- [ ] Department OKR creation modal (Director Dashboard)
+- [ ] Team Review functionality (Director Dashboard)
+- [ ] Customer creation modal (CS Dashboard)
+- [ ] Gráficos interactivos con ApexCharts
+- [ ] Health scores con alertas automáticas
+- [ ] Tracking manual de métricas con formularios
+
+### v3.3.0+ (Future) 🔮
+
+- [ ] Exportación a PDF de dashboards
+- [ ] Integración con CRM (HubSpot, Salesforce)
+- [ ] Automatizaciones y alertas por email
+- [ ] Mobile app (React Native)
+- [ ] AI-powered insights y recomendaciones
 
 ---
 

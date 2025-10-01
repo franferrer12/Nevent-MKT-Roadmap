@@ -1,25 +1,81 @@
 # 🚀 Production Deployment Guide
 
 **Target**: GitHub Pages
-**Version**: v3.0.0
-**Estimated Time**: 45 minutes
+**Version**: v3.1.0 (Latest)
+**Status**: ✅ Production Ready
+**Last Deploy**: October 1, 2025
 
 ---
 
-## ⚡ Quick Deploy (If DB is Ready)
+## ⚡ Quick Deploy (For v3.1.0+)
 
 ```bash
-# 1. Verify everything is ready
-node setup-production.mjs
+# 1. Pull latest code
+git pull origin main
+git checkout v3.1.0
 
-# 2. Deploy
-git add .
-git commit -m "chore: production ready"
-git tag -a v3.0.0 -m "Release v3.0.0"
-git push origin main --tags
+# 2. Apply required migrations in Supabase SQL Editor
+# - migrations/ADD_DEPARTMENTS_STATUS.sql
+# - migrations/FIX_COMPANY_OKRS_RLS.sql
+# - Insert Company OKRs (see RELEASE_NOTES_v3.1.0.md)
 
-# 3. Wait 2-3 minutes, then access:
-# https://franferrer12.github.io/Nevent-MKT-Roadmap/
+# 3. Deploy (GitHub Pages auto-deploys from main branch)
+# Already deployed at: https://franferrer12.github.io/Nevent-MKT-Roadmap/
+
+# 4. Verify production
+# Login with: ceo@nevent.es / Test1234!
+```
+
+## 🆕 v3.1.0 Hotfix Migrations
+
+If upgrading from v3.0.0, execute these in Supabase:
+
+### 1. Add Departments Status Column
+```sql
+-- migrations/ADD_DEPARTMENTS_STATUS.sql
+ALTER TABLE public.departments
+ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'active'
+CHECK (status IN ('active', 'inactive'));
+
+UPDATE public.departments
+SET status = 'active'
+WHERE status IS NULL;
+```
+
+### 2. Fix Company OKRs RLS Policies
+```sql
+-- migrations/FIX_COMPANY_OKRS_RLS.sql
+DROP POLICY IF EXISTS "CEO can manage company OKRs" ON company_okrs;
+DROP POLICY IF EXISTS "All can read company OKRs" ON company_okrs;
+
+CREATE POLICY "CEO can manage company OKRs"
+ON company_okrs FOR ALL
+USING (
+  EXISTS (
+    SELECT 1 FROM users
+    WHERE users.id = auth.uid()
+    AND users.role = 'ceo'
+  )
+);
+
+CREATE POLICY "All authenticated users can read company OKRs"
+ON company_okrs FOR SELECT
+USING (
+  EXISTS (
+    SELECT 1 FROM users
+    WHERE users.id = auth.uid()
+  )
+);
+```
+
+### 3. Insert Company OKRs (if empty)
+```sql
+-- Check if empty
+SELECT COUNT(*) FROM company_okrs;
+
+-- If 0, insert seed data (see v3.0.0_seed_data.sql lines 26-123)
+INSERT INTO company_okrs (id, fiscal_year, objective, key_results, health_score)
+VALUES (...);  -- See full SQL in migrations/v3.0.0_seed_data.sql
 ```
 
 ---
