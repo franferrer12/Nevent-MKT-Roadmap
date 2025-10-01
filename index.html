@@ -2980,7 +2980,18 @@
 
     async function checkSession() {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session }, error } = await supabase.auth.getSession();
+
+        // If refresh token is invalid, clear storage and show login
+        if (error && error.message?.includes('Refresh Token')) {
+          console.warn('Invalid refresh token detected, clearing auth storage');
+          await supabase.auth.signOut();
+          localStorage.clear();
+          document.getElementById('loginPage').style.display = 'flex';
+          document.getElementById('mainApp').style.display = 'none';
+          return;
+        }
+
         if (session) {
           currentUser = session.user;
 
@@ -3017,7 +3028,12 @@
           setupAuthListener();
         }
       } catch (error) {
-        // Silent fail on session check - user will see login page
+        // If any auth error occurs, clear storage and show login
+        console.warn('Session check failed:', error.message);
+        await supabase.auth.signOut();
+        localStorage.clear();
+        document.getElementById('loginPage').style.display = 'flex';
+        document.getElementById('mainApp').style.display = 'none';
       }
     }
 
