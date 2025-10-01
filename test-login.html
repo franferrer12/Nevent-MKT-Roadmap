@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Login - Nevent</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #333;
+      background: #2a2a2a;
+      color: #fff;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    button {
+      background: #ff006e;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      width: 100%;
+    }
+    button:hover {
+      background: #d90062;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    .success {
+      background: #1e4620;
+      border: 1px solid #2ea043;
+    }
+    .error {
+      background: #4a1818;
+      border: 1px solid #cf222e;
+    }
+    .info {
+      background: #1f3a5f;
+      border: 1px solid #388bfd;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔐 Test Login - Nevent</h1>
+  <p>Diagnóstico de autenticación con Supabase</p>
+
+  <form id="loginForm">
+    <div class="form-group">
+      <label>Email:</label>
+      <input type="email" id="email" value="ceo@nevent.es" required>
+    </div>
+    <div class="form-group">
+      <label>Password:</label>
+      <input type="password" id="password" value="Test1234!" required>
+    </div>
+    <button type="submit">🔍 Test Login</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    const SUPABASE_URL = 'https://tvbqzqripcevaryquhfg.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2YnF6cXJpcGNldmFyeXF1aGZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkxNTI4MzEsImV4cCI6MjA3NDcyODgzMX0.BVHINkyJtK4mwRLX1Nt7_gJbd3ht2qGfvqLvmehkyIM';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const resultDiv = document.getElementById('result');
+
+    function showResult(message, type = 'info') {
+      resultDiv.className = `result ${type}`;
+      resultDiv.textContent = message;
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      showResult('🔄 Intentando login...', 'info');
+
+      try {
+        // Step 1: Try to login
+        const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (authError) {
+          showResult(`❌ LOGIN FAILED\n\nError: ${authError.message}\n\nDetails:\n${JSON.stringify(authError, null, 2)}`, 'error');
+          return;
+        }
+
+        // Step 2: Check if user profile exists
+        const { data: userData, error: userError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', authData.user.id)
+          .single();
+
+        if (userError) {
+          showResult(`⚠️ LOGIN SUCCESS but profile fetch failed\n\nUser ID: ${authData.user.id}\nEmail: ${authData.user.email}\nError: ${userError.message}`, 'error');
+          return;
+        }
+
+        // Step 3: Success
+        showResult(`✅ LOGIN SUCCESS!\n\nUser Data:\n${JSON.stringify(userData, null, 2)}\n\nAuth Data:\n- User ID: ${authData.user.id}\n- Email: ${authData.user.email}\n- Email Confirmed: ${authData.user.email_confirmed_at ? 'YES' : 'NO'}\n- Session: ${authData.session ? 'EXISTS' : 'MISSING'}`, 'success');
+
+      } catch (err) {
+        showResult(`💥 UNEXPECTED ERROR\n\n${err.message}\n\nStack:\n${err.stack}`, 'error');
+      }
+    });
+
+    // Auto-test on load
+    showResult('📋 Ready to test. Click "Test Login" or modify credentials.', 'info');
+  </script>
+</body>
+</html>

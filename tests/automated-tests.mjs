@@ -105,7 +105,7 @@ async function testDatabaseIntegrity() {
     // Test 1.4: Check company_okrs structure
     const { data: companyOkrs, error: okrsError } = await supabase
       .from('company_okrs')
-      .select('id, title, fiscal_year, key_results')
+      .select('id, objective, fiscal_year, key_results')
       .limit(1);
 
     assert(

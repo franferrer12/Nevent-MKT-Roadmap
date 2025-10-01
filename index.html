@@ -2824,6 +2824,9 @@
           document.getElementById('loginPage').style.display = 'none';
           document.getElementById('mainApp').style.display = 'block';
 
+          // Wait for DOM to be ready after showing mainApp
+          await new Promise(resolve => setTimeout(resolve, 0));
+
           await loadData();
           await loadMyOKRs();
           await loadMyInitiatives();
@@ -2998,6 +3001,10 @@
 
           document.getElementById('loginPage').style.display = 'none';
           document.getElementById('mainApp').style.display = 'block';
+
+          // Wait for DOM to be ready after showing mainApp
+          await new Promise(resolve => setTimeout(resolve, 0));
+
           await loadData();
           await loadMyOKRs();
           await loadMyInitiatives();
@@ -4718,6 +4725,41 @@
     let currentView = 'timeline';
 
     function switchView(viewName) {
+      // Safety check: ensure user is logged in
+      if (!currentUser) {
+        console.warn('switchView called before login');
+        return;
+      }
+
+      // Check role-based permissions
+      const userRole = currentUser.role || 'user';
+      const rolePermissions = {
+        'timeline': ['user', 'csm', 'director', 'ceo'],
+        'user-dashboard': ['user', 'csm', 'director', 'ceo'],
+        'ceo-dashboard': ['ceo'],
+        'director-dashboard': ['director', 'ceo'],
+        'cs-dashboard': ['csm', 'director', 'ceo']
+      };
+
+      if (!rolePermissions[viewName]?.includes(userRole)) {
+        console.warn(`User with role '${userRole}' does not have permission to access '${viewName}'`);
+        return;
+      }
+
+      const viewElements = {
+        'timeline': document.getElementById('timelineView'),
+        'user-dashboard': document.getElementById('userDashboardView'),
+        'ceo-dashboard': document.getElementById('ceoDashboardView'),
+        'director-dashboard': document.getElementById('directorDashboardView'),
+        'cs-dashboard': document.getElementById('csDashboardView')
+      };
+
+      // Check if the specific view element exists
+      if (!viewElements[viewName]) {
+        console.error(`switchView: View element '${viewName}' not found in DOM`);
+        return;
+      }
+
       currentView = viewName;
 
       // Track view change
@@ -4748,27 +4790,25 @@
       };
       announceToScreenReader(viewNames[viewName] || 'Vista cambiada');
 
-      // Hide all views
-      document.getElementById('timelineView').style.display = 'none';
-      document.getElementById('userDashboardView').style.display = 'none';
-      document.getElementById('ceoDashboardView').style.display = 'none';
-      document.getElementById('directorDashboardView').style.display = 'none';
-      document.getElementById('csDashboardView').style.display = 'none';
+      // Hide all views (only those that exist)
+      Object.values(viewElements).forEach(el => {
+        if (el) el.style.display = 'none';
+      });
 
       // Show selected view
       if (viewName === 'timeline') {
-        document.getElementById('timelineView').style.display = 'block';
+        viewElements['timeline'].style.display = 'block';
       } else if (viewName === 'user-dashboard') {
-        document.getElementById('userDashboardView').style.display = 'block';
+        viewElements['user-dashboard'].style.display = 'block';
         renderMyDashboard();
       } else if (viewName === 'ceo-dashboard') {
-        document.getElementById('ceoDashboardView').style.display = 'block';
+        viewElements['ceo-dashboard'].style.display = 'block';
         renderCEODashboard();
       } else if (viewName === 'director-dashboard') {
-        document.getElementById('directorDashboardView').style.display = 'block';
+        viewElements['director-dashboard'].style.display = 'block';
         renderDirectorDashboard();
       } else if (viewName === 'cs-dashboard') {
-        document.getElementById('csDashboardView').style.display = 'block';
+        viewElements['cs-dashboard'].style.display = 'block';
         renderCSDashboard();
       }
     }
