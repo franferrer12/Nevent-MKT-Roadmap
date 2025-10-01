@@ -2892,7 +2892,7 @@
 
         <div class="form-group">
           <label>Miembros del Equipo</label>
-          <div id="campaignTeamMembersContainer" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--stroke); border-radius: 8px; padding: 12px; background: var(--neutral-800);">
+          <div id="campaignTeamMembersContainer" style="max-height: 250px; overflow-y: auto; border: 1px solid var(--stroke); border-radius: 8px; padding: 8px; background: rgba(0,0,0,0.2);">
             <!-- Will be populated dynamically with checkboxes -->
           </div>
           <p style="color: var(--muted); font-size: 13px; margin-top: 8px;">
@@ -6980,22 +6980,45 @@
 
         const teamContainer = document.getElementById('campaignTeamMembersContainer');
         teamContainer.innerHTML = '';
+
+        if (!users || users.length === 0) {
+          teamContainer.innerHTML = '<p style="color: var(--muted); text-align: center; padding: 20px; font-size: 14px;">No hay usuarios disponibles</p>';
+          return;
+        }
+
         (users || []).forEach(user => {
           const div = document.createElement('div');
-          div.style.cssText = 'display: flex; align-items: center; gap: 8px; padding: 8px; border-radius: 6px; transition: background 0.2s;';
-          div.onmouseover = function() { this.style.background = 'var(--neutral-700)'; };
+          div.style.cssText = 'display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 6px; transition: all 0.2s; margin-bottom: 4px; cursor: pointer;';
+          div.onmouseover = function() { this.style.background = 'rgba(156, 39, 176, 0.1)'; };
           div.onmouseout = function() { this.style.background = 'transparent'; };
 
           const checkbox = document.createElement('input');
           checkbox.type = 'checkbox';
           checkbox.value = user.id;
           checkbox.id = `team-member-${user.id}`;
-          checkbox.style.cssText = 'cursor: pointer;';
+          checkbox.style.cssText = 'cursor: pointer; width: 18px; height: 18px; flex-shrink: 0;';
 
           const label = document.createElement('label');
           label.htmlFor = `team-member-${user.id}`;
-          label.style.cssText = 'cursor: pointer; flex: 1; font-size: 14px;';
-          label.textContent = `${user.full_name} (${user.email})`;
+          label.style.cssText = 'cursor: pointer; flex: 1; font-size: 14px; color: var(--ink); user-select: none;';
+
+          const nameSpan = document.createElement('span');
+          nameSpan.style.cssText = 'display: block; font-weight: 500;';
+          nameSpan.textContent = user.full_name;
+
+          const emailSpan = document.createElement('span');
+          emailSpan.style.cssText = 'display: block; font-size: 12px; color: var(--muted); margin-top: 2px;';
+          emailSpan.textContent = user.email;
+
+          label.appendChild(nameSpan);
+          label.appendChild(emailSpan);
+
+          // Click on div also toggles checkbox
+          div.onclick = function(e) {
+            if (e.target !== checkbox) {
+              checkbox.checked = !checkbox.checked;
+            }
+          };
 
           div.appendChild(checkbox);
           div.appendChild(label);
