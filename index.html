@@ -5989,6 +5989,12 @@
 
       // Actualizar badge
       updateCurrentUserBadge();
+
+      // Add event listener for the dropdown button (onclick removed by DOMPurify)
+      const viewAsButton = document.getElementById('viewAsButton');
+      if (viewAsButton) {
+        viewAsButton.addEventListener('click', toggleViewAsDropdown);
+      }
     }
 
     async function loadUsersForViewAs() {
@@ -6034,6 +6040,18 @@
       }).join('');
 
       safeSetHTML(container, html);
+
+      // Add event listeners after DOM is updated (onclick attributes are removed by DOMPurify)
+      const userItems = container.querySelectorAll('.user-item');
+      userItems.forEach(item => {
+        const userId = item.dataset.userId;
+        if (userId) {
+          const user = allUsersForSwitch.find(u => u.id === userId);
+          if (user) {
+            item.addEventListener('click', () => switchToUser(user));
+          }
+        }
+      });
     }
 
     function getRoleIcon(role) {
