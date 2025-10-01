@@ -2553,6 +2553,158 @@
     </div>
   </div>
 
+  <!-- Modal: Create Department OKR -->
+  <div id="departmentOKRModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">🎯 Nuevo OKR de Departamento</h2>
+        <button class="close-btn" onclick="closeDepartmentOKRModal()">&times;</button>
+      </div>
+
+      <form id="departmentOKRForm" onsubmit="saveDepartmentOKR(event)">
+        <!-- Objective -->
+        <div class="form-group">
+          <label>Objetivo del Departamento</label>
+          <input type="text" id="deptOKRObjective" placeholder="Ej: Aumentar leads cualificados en 40%" required maxlength="200" />
+        </div>
+
+        <!-- Department Selection -->
+        <div class="form-group">
+          <label>Departamento</label>
+          <select id="deptOKRDepartment" required>
+            <option value="">Seleccionar...</option>
+            <!-- Options populated dynamically -->
+          </select>
+        </div>
+
+        <!-- Quarter -->
+        <div class="form-group">
+          <label>Trimestre</label>
+          <select id="deptOKRQuarter" required>
+            <option value="Q1 2026">Q1 2026</option>
+            <option value="Q2 2026">Q2 2026</option>
+            <option value="Q3 2026">Q3 2026</option>
+            <option value="Q4 2026">Q4 2026</option>
+          </select>
+        </div>
+
+        <!-- Contributes to Company OKR -->
+        <div class="form-group">
+          <label>Contribuye a OKR de Empresa</label>
+          <select id="deptOKRContributesTo">
+            <option value="">Ninguno (opcional)</option>
+            <!-- Options populated dynamically -->
+          </select>
+        </div>
+
+        <!-- Key Results (2-4) -->
+        <div class="form-group">
+          <label>Key Results</label>
+          <div id="deptKeyResultsContainer"></div>
+          <button type="button" class="btn btn-secondary" onclick="addDeptKeyResult()" style="width: 100%; margin-top: 8px;">
+            ➕ Agregar Key Result
+          </button>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
+          💾 Crear OKR de Departamento
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Team Review -->
+  <div id="teamReviewModal" class="modal">
+    <div class="modal-content" style="max-width: 900px;">
+      <div class="modal-header">
+        <h2 class="modal-title">👥 Revisión de Equipo</h2>
+        <button class="close-btn" onclick="closeTeamReviewModal()">&times;</button>
+      </div>
+
+      <!-- Filters -->
+      <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+        <select id="teamReviewStatusFilter" onchange="filterTeamReview()" style="flex: 1;">
+          <option value="all">Todos los estados</option>
+          <option value="on_track">On Track</option>
+          <option value="at_risk">At Risk</option>
+          <option value="behind">Behind</option>
+        </select>
+        <button class="btn btn-secondary" onclick="exportTeamReviewCSV()">
+          📊 Exportar CSV
+        </button>
+      </div>
+
+      <!-- Team Members List -->
+      <div id="teamReviewContainer" style="max-height: 500px; overflow-y: auto;"></div>
+    </div>
+  </div>
+
+  <!-- Modal: Create Customer -->
+  <div id="customerCreationModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">🤝 Nuevo Cliente</h2>
+        <button class="close-btn" onclick="closeCustomerCreationModal()">&times;</button>
+      </div>
+
+      <form id="customerCreationForm" onsubmit="saveNewCustomer(event)">
+        <!-- Company Name -->
+        <div class="form-group">
+          <label>Nombre de la Empresa</label>
+          <input type="text" id="customerCompanyName" placeholder="Ej: Acme Corp" required maxlength="100" />
+        </div>
+
+        <!-- Contact Name -->
+        <div class="form-group">
+          <label>Nombre del Contacto</label>
+          <input type="text" id="customerContactName" placeholder="Ej: Juan Pérez" required maxlength="100" />
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="customerEmail" placeholder="contacto@empresa.com" required />
+        </div>
+
+        <!-- Status -->
+        <div class="form-group">
+          <label>Estado</label>
+          <select id="customerStatus" required>
+            <option value="prospect">Prospect</option>
+            <option value="active" selected>Active</option>
+            <option value="churned">Churned</option>
+          </select>
+        </div>
+
+        <!-- MRR -->
+        <div class="form-group">
+          <label>MRR (Monthly Recurring Revenue)</label>
+          <input type="number" id="customerMRR" placeholder="5000" min="0" step="100" />
+          <p style="color: var(--muted); font-size: 12px; margin-top: 4px;">Ingresos recurrentes mensuales en €</p>
+        </div>
+
+        <!-- Health Score -->
+        <div class="form-group">
+          <label>Health Score (0-100)</label>
+          <input type="number" id="customerHealthScore" placeholder="75" min="0" max="100" value="50" />
+        </div>
+
+        <!-- CSM Assigned -->
+        <div class="form-group">
+          <label>CSM Asignado</label>
+          <select id="customerCSM">
+            <option value="">Sin asignar</option>
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
+          💾 Crear Cliente
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- Modal: Confirmation Dialog -->
   <div id="confirmDialog" class="modal">
     <div class="modal-content" style="max-width: 480px;">
@@ -3729,6 +3881,441 @@
         } catch (error) {
           handleSupabaseError(error, 'crear OKR de empresa');
           throw error;
+        }
+      });
+    }
+
+    // Department OKR Modal Functions
+    let deptKeyResultCounter = 0;
+
+    async function openDepartmentOKRModal() {
+      document.getElementById('departmentOKRModal').classList.add('active');
+      document.getElementById('departmentOKRForm').reset();
+      document.getElementById('deptKeyResultsContainer').innerHTML = '';
+      deptKeyResultCounter = 0;
+
+      // Populate departments dropdown
+      await populateDepartmentsDropdown();
+
+      // Populate company OKRs dropdown
+      await populateCompanyOKRsDropdown();
+
+      // Start with 2 key results
+      addDeptKeyResult();
+      addDeptKeyResult();
+    }
+
+    function closeDepartmentOKRModal() {
+      document.getElementById('departmentOKRModal').classList.remove('active');
+    }
+
+    async function populateDepartmentsDropdown() {
+      try {
+        const { data, error } = await supabase
+          .from('departments')
+          .select('id, name')
+          .eq('status', 'active')
+          .order('name');
+
+        if (error) throw error;
+
+        const select = document.getElementById('deptOKRDepartment');
+        select.innerHTML = '<option value="">Seleccionar...</option>';
+
+        data.forEach(dept => {
+          const option = document.createElement('option');
+          option.value = dept.id;
+          option.textContent = dept.name;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error loading departments:', error);
+      }
+    }
+
+    async function populateCompanyOKRsDropdown() {
+      try {
+        const { data, error } = await supabase
+          .from('company_okrs')
+          .select('id, objective')
+          .order('created_at', { ascending: false })
+          .limit(10);
+
+        if (error) throw error;
+
+        const select = document.getElementById('deptOKRContributesTo');
+        select.innerHTML = '<option value="">Ninguno (opcional)</option>';
+
+        data.forEach(okr => {
+          const option = document.createElement('option');
+          option.value = okr.id;
+          option.textContent = okr.objective;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error loading company OKRs:', error);
+      }
+    }
+
+    function addDeptKeyResult() {
+      const container = document.getElementById('deptKeyResultsContainer');
+      const krId = ++deptKeyResultCounter;
+
+      const krDiv = document.createElement('div');
+      krDiv.className = 'key-result-item';
+      krDiv.innerHTML = `
+        <div class="kr-header">
+          <label>Key Result ${krId}</label>
+          ${krId > 2 ? `<button type="button" class="remove-kr-btn" onclick="removeDeptKeyResult(${krId})">✕</button>` : ''}
+        </div>
+        <input
+          type="text"
+          id="deptKR${krId}"
+          placeholder="Ej: Generar 500 MQLs mensuales"
+          required
+        />
+        <div class="kr-metrics">
+          <input type="number" id="deptKRCurrent${krId}" placeholder="Actual" value="0" min="0" step="1" />
+          <input type="number" id="deptKRTarget${krId}" placeholder="Objetivo" required min="1" step="1" />
+          <input type="text" id="deptKRUnit${krId}" placeholder="Unidad (ej: leads)" maxlength="20" />
+        </div>
+      `;
+      container.appendChild(krDiv);
+
+      // Hide add button if max 4
+      if (deptKeyResultCounter >= 4) {
+        const addButton = document.querySelector('#departmentOKRForm .btn-secondary');
+        if (addButton) addButton.style.display = 'none';
+      }
+    }
+
+    function removeDeptKeyResult(krId) {
+      const krItem = document.querySelector(`#deptKR${krId}`).closest('.key-result-item');
+      if (krItem) {
+        krItem.remove();
+        deptKeyResultCounter--;
+
+        // Show add button again
+        const addButton = document.querySelector('#departmentOKRForm .btn-secondary');
+        if (addButton && deptKeyResultCounter < 4) {
+          addButton.style.display = 'inline-block';
+        }
+      }
+    }
+
+    async function saveDepartmentOKR(event) {
+      event.preventDefault();
+
+      if (!currentUser) {
+        showToast('Debes iniciar sesión', 'warning');
+        return;
+      }
+
+      if (currentUser.role !== 'director' && currentUser.role !== 'ceo') {
+        showToast('Solo directores pueden crear OKRs de departamento', 'error');
+        return;
+      }
+
+      const objective = document.getElementById('deptOKRObjective').value;
+      const department_id = document.getElementById('deptOKRDepartment').value;
+      const quarter = document.getElementById('deptOKRQuarter').value;
+      const contributes_to = document.getElementById('deptOKRContributesTo').value || null;
+
+      // Collect key results
+      const key_results = [];
+      let totalProgress = 0;
+
+      for (let i = 1; i <= deptKeyResultCounter; i++) {
+        const descInput = document.getElementById(`deptKR${i}`);
+        if (descInput && descInput.value) {
+          const current = parseFloat(document.getElementById(`deptKRCurrent${i}`).value) || 0;
+          const target = parseFloat(document.getElementById(`deptKRTarget${i}`).value) || 1;
+          const unit = document.getElementById(`deptKRUnit${i}`).value;
+
+          const progress = Math.min(Math.round((current / target) * 100), 100);
+          totalProgress += progress;
+
+          key_results.push({
+            id: `kr-${i}`,
+            description: descInput.value,
+            current,
+            target,
+            unit,
+            progress
+          });
+        }
+      }
+
+      if (key_results.length < 2) {
+        showToast('Debes agregar al menos 2 Key Results', 'warning');
+        return;
+      }
+
+      const avgProgress = Math.round(totalProgress / key_results.length);
+
+      const newDeptOKR = {
+        department_id,
+        quarter,
+        objective,
+        key_results,
+        status: avgProgress >= 70 ? 'on_track' : (avgProgress >= 40 ? 'at_risk' : 'behind'),
+        progress: avgProgress,
+        contributes_to,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      const form = event.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+
+      await withButtonLoading(submitBtn, async () => {
+        try {
+          const { data, error } = await supabase
+            .from('department_okrs')
+            .insert([newDeptOKR])
+            .select();
+
+          if (error) throw error;
+
+          showToast(`OKR de departamento creado: ${objective}`, 'success');
+          closeDepartmentOKRModal();
+
+          // Refresh Director dashboard
+          if (currentView === 'director-dashboard') {
+            renderDirectorDashboard();
+          }
+        } catch (error) {
+          console.error('Error creating department OKR:', error);
+          showToast(`Error: ${error.message}`, 'error');
+        }
+      });
+    }
+
+    // Team Review Modal Functions
+    async function openTeamReviewModal() {
+      document.getElementById('teamReviewModal').classList.add('active');
+      await loadTeamReview();
+    }
+
+    function closeTeamReviewModal() {
+      document.getElementById('teamReviewModal').classList.remove('active');
+    }
+
+    async function loadTeamReview() {
+      try {
+        // Load department members with their OKRs
+        const { data: members, error } = await supabase
+          .from('users')
+          .select(`
+            id,
+            full_name,
+            email,
+            role,
+            department_id,
+            okrs
+          `)
+          .eq('department_id', currentUser.department_id)
+          .order('full_name');
+
+        if (error) throw error;
+
+        renderTeamReview(members);
+      } catch (error) {
+        console.error('Error loading team review:', error);
+        showToast('Error al cargar revisión de equipo', 'error');
+      }
+    }
+
+    function renderTeamReview(members) {
+      const container = document.getElementById('teamReviewContainer');
+
+      if (!members || members.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 40px;">No hay miembros en tu equipo</p>';
+        return;
+      }
+
+      let html = '<div style="display: flex; flex-direction: column; gap: 12px;">';
+
+      members.forEach(member => {
+        const okrs = member.okrs || [];
+        const totalOKRs = okrs.length;
+        const onTrack = okrs.filter(o => o.status === 'on_track').length;
+        const atRisk = okrs.filter(o => o.status === 'at_risk').length;
+        const behind = okrs.filter(o => o.status === 'behind').length;
+
+        const avgProgress = totalOKRs > 0
+          ? Math.round(okrs.reduce((sum, o) => sum + (o.progress || 0), 0) / totalOKRs)
+          : 0;
+
+        const statusClass = avgProgress >= 70 ? 'on_track' : (avgProgress >= 40 ? 'at_risk' : 'behind');
+
+        html += `
+          <div class="team-member-card" data-status="${statusClass}" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 12px; padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div style="flex: 1;">
+                <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">${member.full_name}</h3>
+                <p style="font-size: 13px; color: var(--muted); margin-bottom: 12px;">${member.email}</p>
+
+                <div style="display: flex; gap: 12px; margin-top: 12px;">
+                  <div class="mini-stat">
+                    <span style="font-size: 20px; font-weight: 700; color: var(--status-success);">${onTrack}</span>
+                    <span style="font-size: 11px; color: var(--muted);">On Track</span>
+                  </div>
+                  <div class="mini-stat">
+                    <span style="font-size: 20px; font-weight: 700; color: var(--status-warning);">${atRisk}</span>
+                    <span style="font-size: 11px; color: var(--muted);">At Risk</span>
+                  </div>
+                  <div class="mini-stat">
+                    <span style="font-size: 20px; font-weight: 700; color: var(--status-error);">${behind}</span>
+                    <span style="font-size: 11px; color: var(--muted);">Behind</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="text-align: right;">
+                <div style="font-size: 32px; font-weight: 700; color: var(--nevent-purple);">${avgProgress}%</div>
+                <span class="status-badge status-${statusClass}" style="margin-top: 8px;">${statusClass.replace('_', ' ')}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
+    function filterTeamReview() {
+      const statusFilter = document.getElementById('teamReviewStatusFilter').value;
+      const cards = document.querySelectorAll('.team-member-card');
+
+      cards.forEach(card => {
+        const cardStatus = card.dataset.status;
+        if (statusFilter === 'all' || cardStatus === statusFilter) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function exportTeamReviewCSV() {
+      const cards = document.querySelectorAll('.team-member-card:not([style*="display: none"])');
+
+      let csv = 'Nombre,Email,Progress,On Track,At Risk,Behind,Status\n';
+
+      cards.forEach(card => {
+        const name = card.querySelector('h3').textContent;
+        const email = card.querySelector('p').textContent;
+        const progress = card.querySelector('[style*="font-size: 32px"]').textContent;
+        const miniStats = card.querySelectorAll('.mini-stat span:first-child');
+        const onTrack = miniStats[0].textContent;
+        const atRisk = miniStats[1].textContent;
+        const behind = miniStats[2].textContent;
+        const status = card.querySelector('.status-badge').textContent;
+
+        csv += `"${name}","${email}",${progress},"${onTrack}","${atRisk}","${behind}","${status}"\n`;
+      });
+
+      // Download CSV
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `team-review-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+
+      showToast('CSV exportado exitosamente', 'success');
+    }
+
+    // Customer Creation Modal Functions
+    async function openCustomerCreationModal() {
+      document.getElementById('customerCreationModal').classList.add('active');
+      document.getElementById('customerCreationForm').reset();
+
+      // Populate CSM dropdown
+      await populateCSMDropdown();
+    }
+
+    function closeCustomerCreationModal() {
+      document.getElementById('customerCreationModal').classList.remove('active');
+    }
+
+    async function populateCSMDropdown() {
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select('id, full_name')
+          .eq('role', 'csm')
+          .order('full_name');
+
+        if (error) throw error;
+
+        const select = document.getElementById('customerCSM');
+        select.innerHTML = '<option value="">Sin asignar</option>';
+
+        data.forEach(csm => {
+          const option = document.createElement('option');
+          option.value = csm.id;
+          option.textContent = csm.full_name;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error loading CSMs:', error);
+      }
+    }
+
+    async function saveNewCustomer(event) {
+      event.preventDefault();
+
+      if (!currentUser) {
+        showToast('Debes iniciar sesión', 'warning');
+        return;
+      }
+
+      if (currentUser.role !== 'csm' && currentUser.role !== 'ceo') {
+        showToast('Solo CSMs pueden crear clientes', 'error');
+        return;
+      }
+
+      const newCustomer = {
+        company_name: document.getElementById('customerCompanyName').value,
+        contact_name: document.getElementById('customerContactName').value,
+        email: document.getElementById('customerEmail').value,
+        status: document.getElementById('customerStatus').value,
+        mrr: parseFloat(document.getElementById('customerMRR').value) || 0,
+        health_score: parseInt(document.getElementById('customerHealthScore').value) || 50,
+        csm_id: document.getElementById('customerCSM').value || currentUser.id,
+        onboarding_completed: false,
+        last_interaction: new Date().toISOString(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      const form = event.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+
+      await withButtonLoading(submitBtn, async () => {
+        try {
+          const { data, error } = await supabase
+            .from('customers')
+            .insert([newCustomer])
+            .select();
+
+          if (error) throw error;
+
+          showToast(`Cliente creado: ${newCustomer.company_name}`, 'success');
+          closeCustomerCreationModal();
+
+          // Refresh CS dashboard
+          if (currentView === 'cs-dashboard') {
+            await loadAllCustomers();
+            renderCSManagerDashboard();
+          }
+        } catch (error) {
+          console.error('Error creating customer:', error);
+          showToast(`Error: ${error.message}`, 'error');
         }
       });
     }
@@ -5483,13 +6070,6 @@
       return 'var(--danger)';
     }
 
-    function openDepartmentOKRModal() {
-      showToast('Department OKR creation coming soon', 'info');
-    }
-
-    function openTeamReview() {
-      showToast('Team review feature coming soon', 'info');
-    }
 
     // ================================================================
     // CUSTOMER SUCCESS DASHBOARD
