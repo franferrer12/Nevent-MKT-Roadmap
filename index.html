@@ -4940,6 +4940,25 @@
 
       safeSetHTML(container, html);
 
+      // Add event listeners after DOM is updated (onclick attributes are removed by DOMPurify)
+      const newCompanyOKRBtn = container.querySelector('.btn.btn-primary');
+      if (newCompanyOKRBtn) {
+        newCompanyOKRBtn.addEventListener('click', openCompanyOKRModal);
+      }
+
+      // Add event listeners for KPI cards
+      const kpiCards = container.querySelectorAll('.kpi-card[role="button"]');
+      kpiCards.forEach((card, index) => {
+        const metrics = ['health', 'okrs', 'initiatives', 'budget'];
+        card.addEventListener('click', () => showMetricDetail(metrics[index]));
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            showMetricDetail(metrics[index]);
+          }
+        });
+      });
+
       // Render sub-components
       renderCompanyOKRsList(companyOKRs);
       renderDepartmentHealthGrid(departments);
@@ -5265,6 +5284,17 @@
       `;
 
       safeSetHTML(container, html);
+
+      // Add event listeners after DOM is updated (onclick attributes are removed by DOMPurify)
+      const deptOKRBtn = container.querySelector('.btn.btn-secondary');
+      const teamReviewBtn = container.querySelector('.btn.btn-primary');
+
+      if (deptOKRBtn) {
+        deptOKRBtn.addEventListener('click', openDepartmentOKRModal);
+      }
+      if (teamReviewBtn) {
+        teamReviewBtn.addEventListener('click', openTeamReview);
+      }
 
       // Render sub-components
       renderOKRKanban(teamOKRs);
@@ -5632,6 +5662,14 @@
       `;
 
       safeSetHTML(container, html);
+
+      // Add event listeners after DOM is updated (onclick attributes are removed by DOMPurify)
+      const segmentTabs = container.querySelectorAll('.segment-tab');
+      segmentTabs.forEach(tab => {
+        const segment = tab.dataset.segment;
+        tab.addEventListener('click', () => filterCustomerSegment(segment));
+      });
+
       renderCustomerList(customers, 'all');
     }
 
