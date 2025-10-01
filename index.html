@@ -5989,12 +5989,6 @@
 
       // Actualizar badge
       updateCurrentUserBadge();
-
-      // Add event listener for the dropdown button (onclick removed by DOMPurify)
-      const viewAsButton = document.getElementById('viewAsButton');
-      if (viewAsButton) {
-        viewAsButton.addEventListener('click', toggleViewAsDropdown);
-      }
     }
 
     async function loadUsersForViewAs() {
