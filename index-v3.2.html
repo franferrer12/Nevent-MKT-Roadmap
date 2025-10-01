@@ -6661,25 +6661,22 @@
 
       safeSetHTML(container, html);
 
-      // Add event listeners using event delegation (no need to remove/re-add)
-      // Event delegation on parent container handles dynamically added elements
-      setTimeout(() => {
+      // Add event listeners using event delegation
+      // Get fresh reference after safeSetHTML updates DOM
+      requestAnimationFrame(() => {
         const updatedContainer = document.getElementById('campaignsDashboardView');
         if (!updatedContainer) return;
 
-        // Remove old listener by cloning (only once per render)
+        // Remove old listener by cloning
         const clone = updatedContainer.cloneNode(true);
         updatedContainer.parentNode.replaceChild(clone, updatedContainer);
 
         // Add new listener to the cloned container
         clone.addEventListener('click', (e) => {
-          console.log('Click detected:', e.target);
-
           // Handle filter buttons first
           const filterButton = e.target.closest('[data-filter]');
           if (filterButton) {
             const filter = filterButton.getAttribute('data-filter');
-            console.log('Filter clicked:', filter);
             if (filter) {
               filterCampaigns(filter);
             }
@@ -6691,7 +6688,6 @@
           if (actionButton) {
             const action = actionButton.getAttribute('data-action');
             const campaignId = actionButton.getAttribute('data-campaign-id');
-            console.log('Action clicked:', action, campaignId);
 
             switch (action) {
               case 'openCampaignModal':
@@ -6712,7 +6708,7 @@
             }
           }
         });
-      }, 0);
+      });
     }
 
     // Render campaign card
