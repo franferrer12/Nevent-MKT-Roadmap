@@ -4106,7 +4106,7 @@
         const { data, error } = await supabase
           .from('departments')
           .select('*')
-          .eq('is_active', true)
+          .eq('status', 'active')
           .order('id');
 
         if (error) throw error;
@@ -4939,7 +4939,7 @@
         const { data, error } = await supabase
           .from('departments')
           .select('*')
-          .eq('is_active', true)
+          .eq('status', 'active')
           .order('name', { ascending: true });
 
         if (error) throw error;
@@ -5251,7 +5251,7 @@
         const { data, error } = await supabase
           .from('departments')
           .select('*')
-          .eq('is_active', true)
+          .eq('status', 'active')
           .limit(1);
 
         if (error) throw error;
@@ -5264,13 +5264,30 @@
 
     async function loadTeamOKRs(departmentId) {
       try {
-        const { data, error } = await supabase
+        // Get OKRs first
+        const { data: okrs, error } = await supabase
           .from('user_okrs')
-          .select('*, users:user_id(email)')
+          .select('*')
           .order('created_at', { ascending: false });
 
         if (error) throw error;
-        return data || [];
+
+        if (!okrs || okrs.length === 0) return [];
+
+        // Get user emails separately
+        const userIds = [...new Set(okrs.map(okr => okr.user_id))];
+        const { data: users } = await supabase
+          .from('users')
+          .select('id, email')
+          .in('id', userIds);
+
+        // Combine data
+        const okrsWithEmails = okrs.map(okr => ({
+          ...okr,
+          users: { email: users?.find(u => u.id === okr.user_id)?.email || 'Unknown' }
+        }));
+
+        return okrsWithEmails;
       } catch (error) {
         handleSupabaseError(error, 'cargar OKRs del equipo');
         return [];
