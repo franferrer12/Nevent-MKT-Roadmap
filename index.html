@@ -6247,15 +6247,15 @@
 
       // HIGH PRIORITY FIX: Skip to main content link (using CSS styles)
       const skipLink = document.createElement('a');
-      skipLink.href = '#mainContent';
+      skipLink.href = '#timelineView';  // FIX: Use original ID instead of mainContent
       skipLink.textContent = 'Saltar al contenido principal';
       skipLink.className = 'skip-link';
       document.body.insertBefore(skipLink, document.body.firstChild);
 
-      // Add main content ID
+      // Add main content landmark attributes (DO NOT change the ID!)
       const mainContent = document.getElementById('timelineView');
       if (mainContent) {
-        mainContent.setAttribute('id', 'mainContent');
+        // DO NOT change the ID - it's required by switchView()
         mainContent.setAttribute('role', 'main');
         mainContent.setAttribute('aria-label', 'Contenido principal del roadmap');
       }
