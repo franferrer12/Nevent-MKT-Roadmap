@@ -5865,7 +5865,10 @@
 
         // Find growth OKR (contains NRR key result)
         const growthOKR = companyOKRs.find(okr => okr.id === 'co-2025-growth');
-        if (!growthOKR) return;
+        if (!growthOKR) {
+          console.warn('Growth OKR not found (co-2025-growth)');
+          return false;
+        }
 
         // Update NRR Key Result (kr-3)
         const keyResults = growthOKR.key_results;
@@ -5912,8 +5915,13 @@
     }
 
     // Manual sync trigger with user feedback
-    async function syncCSMetricsToCompanyOKRsManual() {
-      const button = event.target;
+    async function syncCSMetricsToCompanyOKRsManual(event) {
+      const button = event?.currentTarget || event?.target;
+      if (!button) {
+        showToast('Error: botón no encontrado', 'error');
+        return;
+      }
+
       const originalText = button.innerHTML;
 
       button.innerHTML = '⏳ Sincronizando...';
@@ -6042,7 +6050,7 @@
         if (userId) {
           const user = allUsersForSwitch.find(u => u.id === userId);
           if (user) {
-            item.addEventListener('click', () => switchToUser(user));
+            item.addEventListener('click', () => switchToUser(user.id));
           }
         }
       });
