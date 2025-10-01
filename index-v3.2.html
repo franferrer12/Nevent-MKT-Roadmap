@@ -6661,15 +6661,22 @@
 
       safeSetHTML(container, html);
 
+      // Remove previous listeners to avoid duplicates
+      const newContainer = container.cloneNode(false);
+      while (container.firstChild) {
+        newContainer.appendChild(container.firstChild);
+      }
+      container.parentNode.replaceChild(newContainer, container);
+
       // Add event listeners for all buttons (after safeSetHTML with event delegation)
-      container.addEventListener('click', (e) => {
-        const action = e.target.getAttribute('data-action') || e.target.closest('[data-action]')?.getAttribute('data-action');
+      newContainer.addEventListener('click', (e) => {
+        console.log('Click detected:', e.target);
 
-        if (!action) return;
-
-        // Handle filter buttons
-        if (e.target.classList.contains('filter-tab')) {
-          const filter = e.target.getAttribute('data-filter');
+        // Handle filter buttons first
+        const filterButton = e.target.closest('[data-filter]');
+        if (filterButton) {
+          const filter = filterButton.getAttribute('data-filter');
+          console.log('Filter clicked:', filter);
           if (filter) {
             filterCampaigns(filter);
           }
@@ -6677,24 +6684,29 @@
         }
 
         // Handle campaign actions
-        const campaignId = e.target.getAttribute('data-campaign-id') || e.target.closest('[data-campaign-id]')?.getAttribute('data-campaign-id');
+        const actionButton = e.target.closest('[data-action]');
+        if (actionButton) {
+          const action = actionButton.getAttribute('data-action');
+          const campaignId = actionButton.getAttribute('data-campaign-id');
+          console.log('Action clicked:', action, campaignId);
 
-        switch (action) {
-          case 'openCampaignModal':
-            openCampaignModal();
-            break;
-          case 'editCampaign':
-            if (campaignId) {
-              e.stopPropagation();
-              openEditCampaignModal(campaignId);
-            }
-            break;
-          case 'deleteCampaign':
-            if (campaignId) {
-              e.stopPropagation();
-              deleteCampaign(campaignId);
-            }
-            break;
+          switch (action) {
+            case 'openCampaignModal':
+              openCampaignModal();
+              break;
+            case 'editCampaign':
+              if (campaignId) {
+                e.stopPropagation();
+                openEditCampaignModal(campaignId);
+              }
+              break;
+            case 'deleteCampaign':
+              if (campaignId) {
+                e.stopPropagation();
+                deleteCampaign(campaignId);
+              }
+              break;
+          }
         }
       });
     }
