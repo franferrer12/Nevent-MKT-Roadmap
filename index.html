@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🚀 Roadmap Nevent 2025-2026</title>
+  <title>🚀 Roadmap Nevent 2025-2026 - v3.2.0 (UX Enhanced)</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js"></script>
+  <!-- 🎨 Professional Design System v3.2.1 -->
+  <link rel="stylesheet" href="styles-v3.2-PROFESSIONAL.css">
   <style>
     :root {
       /* Base colors */
@@ -14,18 +16,18 @@
       --ink: #FFFFFF;
       --muted: #BBBBBB;
       --stroke: #333;
-      --accent1: #EC008C;
-      --accent2: #5CC2E5;
-      --brand: #EC008C;
+      --accent1: #9C27B0; /* Morado principal Nevent (era #EC008C rosa) */
+      --accent2: #673AB7; /* Violeta Nevent (era #5CC2E5 cyan) */
+      --brand: #9C27B0; /* Morado principal Nevent */
       --success: #10b981;
       --warning: #f59e0b;
       --danger: #ef4444;
 
-      /* Extended palette */
-      --accent1-light: #FF1A9E;
-      --accent1-dark: #CC0070;
-      --accent2-light: #70D9FF;
-      --accent2-dark: #4AA8C7;
+      /* Extended palette - Variantes Nevent */
+      --accent1-light: #BA68C8; /* Morado claro (solo decorativo) */
+      --accent1-dark: #4A148C;  /* Morado oscuro (solo decorativo) */
+      --accent2-light: #9575CD; /* Violeta claro */
+      --accent2-dark: #512DA8;  /* Violeta oscuro */
 
       /* Neutral scale */
       --neutral-900: #0A0A0A;
@@ -155,7 +157,7 @@
     .form-group input:focus {
       outline: none;
       border-color: var(--accent1);
-      box-shadow: 0 0 0 3px rgba(236, 0, 140, 0.1);
+      box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.1); /* Morado Nevent */
     }
 
     .login-btn {
@@ -175,7 +177,7 @@
     .login-btn:hover {
       background: #d40080;
       transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(236, 0, 140, 0.3);
+      box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3); /* Morado Nevent */
     }
 
     .login-btn:active {
@@ -220,10 +222,10 @@
       padding: 16px;
       background: linear-gradient(
         to bottom,
-        rgba(236, 0, 140, 0.03) 0%,
+        rgba(156, 39, 176, 0.03) 0%, /* Morado Nevent */
         transparent 100%
       );
-      box-shadow: inset 0 0 20px rgba(236, 0, 140, 0.1), 0 0 30px rgba(236, 0, 140, 0.2);
+      box-shadow: inset 0 0 20px rgba(156, 39, 176, 0.1), 0 0 30px rgba(156, 39, 176, 0.2); /* Morado Nevent */
     }
 
     header {
@@ -467,7 +469,7 @@
       left: 50%;
       margin-left: -16px;
       margin-top: -16px;
-      border: 3px solid rgba(236, 0, 140, 0.2);
+      border: 3px solid rgba(156, 39, 176, 0.2); /* Morado Nevent */
       border-top-color: var(--accent1);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
@@ -545,7 +547,7 @@
     }
 
     .user-item.active {
-      background: rgba(236, 0, 140, 0.1);
+      background: rgba(156, 39, 176, 0.1); /* Morado Nevent */
       border-color: var(--accent1);
     }
 
@@ -616,7 +618,7 @@
       font-size: 16px;
       font-weight: 700;
       color: white;
-      box-shadow: 0 4px 12px rgba(236, 0, 140, 0.3);
+      box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3); /* Morado Nevent */
       position: sticky;
       top: 0;
       z-index: 999;
@@ -636,10 +638,10 @@
 
     @keyframes pulse-banner {
       0%, 100% {
-        box-shadow: 0 4px 12px rgba(236, 0, 140, 0.3);
+        box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3); /* Morado Nevent */
       }
       50% {
-        box-shadow: 0 4px 20px rgba(236, 0, 140, 0.5);
+        box-shadow: 0 4px 20px rgba(156, 39, 176, 0.5); /* Morado Nevent */
       }
     }
 
@@ -754,7 +756,7 @@
     .action-category {
       display: inline-block;
       padding: 4px 12px;
-      background: rgba(236, 0, 140, 0.1);
+      background: rgba(156, 39, 176, 0.1); /* Morado Nevent */
       color: var(--accent1);
       border-radius: 12px;
       font-size: 12px;
@@ -1181,7 +1183,7 @@
       max-width: 600px;
       width: 90%;
       padding: 40px;
-      box-shadow: 0 20px 60px rgba(236, 0, 140, 0.3);
+      box-shadow: 0 20px 60px rgba(156, 39, 176, 0.3); /* Morado Nevent */
       animation: fadeInScale 0.4s ease-out;
     }
 
@@ -1458,12 +1460,13 @@
 
     .nav-tab:hover {
       color: var(--ink);
-      background: rgba(236, 0, 140, 0.05);
+      background: rgba(156, 39, 176, 0.1); /* Tinte morado Nevent */
     }
 
     .nav-tab.active {
-      color: var(--accent1);
-      border-bottom-color: var(--accent1);
+      color: #9C27B0; /* Morado principal Nevent */
+      border-bottom-color: #9C27B0;
+      font-weight: var(--font-weight-semibold);
     }
 
     .nav-tab[data-required-role]:not([data-user-has-role]) {
@@ -1485,27 +1488,34 @@
       }
     }
 
-    /* Segment Tabs for CS Dashboard */
+    /* Segment Tabs for CS Dashboard - BLOQUES ELEVADOS */
     .segment-tab {
       background: transparent;
       border: none;
+      border-radius: 9999px; /* Pills redondeadas */
       color: var(--muted);
-      padding: 12px 16px;
+      padding: 8px 20px; /* Padding horizontal aumentado */
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
-      border-bottom: 2px solid transparent;
-      transition: all 0.2s;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    .segment-tab:hover {
-      color: var(--ink);
+    /* Hover para tabs inactivos */
+    .segment-tab:not(.active):hover {
       background: rgba(255, 255, 255, 0.05);
+      color: var(--ink);
+      transform: translateY(-1px);
     }
 
     .segment-tab.active {
-      color: var(--accent1);
-      border-bottom-color: var(--accent1);
+      background: linear-gradient(120deg, #9C27B0, #673AB7);
+      color: #FFFFFF;
+      font-weight: 600;
+      box-shadow: 0 6px 16px rgba(156, 39, 176, 0.35); /* Sombra más profunda */
     }
 
     /* CEO Dashboard Styles */
@@ -2000,6 +2010,315 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* ================================================================
+       CMO DASHBOARD STYLES - Mobile-First Responsive
+       ================================================================ */
+
+    /* CMO Dashboard Container - Proper mobile margins */
+    #cmoDashboardView {
+      padding: 16px;
+    }
+
+    @media (min-width: 768px) {
+      #cmoDashboardView {
+        padding: 24px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      #cmoDashboardView {
+        padding: 32px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+    }
+
+    /* KPI Cards with hover effect */
+    .kpi-card-cmo {
+      transition: all 0.2s ease;
+    }
+
+    .kpi-card-cmo:hover {
+      border-color: var(--accent1);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(156, 39, 176, 0.2);
+    }
+
+    /* Mobile-first responsive grid for KPI cards */
+    .cmo-kpi-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .cmo-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .cmo-kpi-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    /* CMO Section Cards */
+    .cmo-section {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      padding: 16px;
+      transition: all 0.2s;
+    }
+
+    @media (min-width: 768px) {
+      .cmo-section {
+        padding: 24px;
+      }
+    }
+
+    /* Activity and Alert Items */
+    .activity-item,
+    .alert-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    @media (min-width: 768px) {
+      .activity-item,
+      .alert-item {
+        padding: 16px;
+      }
+    }
+
+    .activity-item:hover,
+    .alert-item:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Status dots */
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    .status-dot.green {
+      background: var(--success);
+    }
+
+    .status-dot.yellow {
+      background: var(--warning);
+    }
+
+    .status-dot.red {
+      background: var(--danger);
+    }
+
+    /* Quick Stats responsive grid */
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .quick-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .quick-stats > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        background: rgba(156, 39, 176, 0.05);
+        border-radius: 8px;
+      }
+    }
+
+    /* OKR Cards */
+    .okr-card {
+      padding: 16px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    @media (min-width: 768px) {
+      .okr-card {
+        padding: 20px;
+      }
+    }
+
+    .okr-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Progress bars */
+    .progress-bar-container {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      height: 8px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 8px;
+      transition: width 0.5s ease-in-out;
+    }
+
+    /* Button styles for CMO dashboard */
+    .btn-link {
+      padding: 4px 8px;
+      font-size: 13px;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      color: var(--accent1);
+      text-decoration: underline;
+      transition: all 0.2s;
+      min-height: 44px; /* Touch target */
+    }
+
+    .btn-link:hover {
+      color: var(--accent1-light);
+      transform: translateX(2px);
+    }
+
+    /* Mobile optimizations for CMO Dashboard */
+    @media (max-width: 640px) {
+      /* Reduce KPI card padding on mobile */
+      .kpi-card-cmo {
+        padding: 20px !important;
+      }
+
+      /* Reduce font sizes on mobile for better readability */
+      .kpi-card-cmo > div:nth-child(3) {
+        font-size: 28px !important;
+      }
+
+      /* Stack section headers vertically */
+      .cmo-section > div:first-child {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px;
+      }
+
+      /* Full width buttons on mobile */
+      .cmo-section button.btn {
+        width: 100%;
+      }
+
+      /* Reduce activity item padding */
+      .activity-list,
+      .alert-list {
+        margin-bottom: 16px;
+      }
+
+      /* Better mobile typography */
+      h1 {
+        font-size: 28px !important;
+      }
+
+      h2 {
+        font-size: 20px !important;
+      }
+
+      h3 {
+        font-size: 16px !important;
+      }
+
+      /* Touch-friendly margins */
+      .cmo-kpi-grid,
+      .cmo-section {
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      /* Ensure no horizontal scroll */
+      .view-content.cmo-dashboard {
+        overflow-x: hidden;
+        padding: 16px;
+      }
+    }
+
+    /* Tablet optimizations */
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .cmo-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .kpi-card-cmo {
+        padding: 20px !important;
+      }
+
+      .kpi-card-cmo > div:nth-child(3) {
+        font-size: 32px !important;
+      }
+    }
+
+    /* Desktop optimizations */
+    @media (min-width: 1025px) {
+      .view-content.cmo-dashboard {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+    }
+
+    /* Accessibility - Focus states */
+    .kpi-card-cmo:focus-within,
+    .activity-item:focus-within,
+    .alert-item:focus-within,
+    .okr-card:focus-within {
+      outline: 2px solid var(--accent1);
+      outline-offset: 2px;
+    }
+
+    /* Loading state for CMO dashboard */
+    .cmo-loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+      color: var(--muted);
+    }
+
+    /* Empty state styling */
+    .cmo-empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--muted);
+    }
+
+    .cmo-empty-state h3 {
+      margin-bottom: 12px;
+      color: var(--ink);
+    }
+
+    /* Animation for metrics updates */
+    @keyframes pulse-cmo {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    .kpi-card-cmo.updating {
+      animation: pulse-cmo 1s ease-in-out;
+    }
   </style>
 </head>
 <body>
@@ -2162,6 +2481,28 @@
             <span class="tab-label">Director Dashboard</span>
           </button>
           <button class="nav-tab"
+                  data-view="cmo-dashboard"
+                  data-required-role="cmo"
+                  onclick="switchView('cmo-dashboard')"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="cmo-dashboard-panel"
+                  aria-label="CMO Dashboard - Marketing y Customer Success Command Center">
+            <span class="tab-icon">📊</span>
+            <span class="tab-label">CMO Dashboard</span>
+          </button>
+          <button class="nav-tab"
+                  data-view="campaigns-dashboard"
+                  data-required-role="cmo"
+                  onclick="switchView('campaigns-dashboard')"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="campaigns-dashboard-panel"
+                  aria-label="Dashboard de Campañas de Marketing">
+            <span class="tab-icon">📧</span>
+            <span class="tab-label">Marketing</span>
+          </button>
+          <button class="nav-tab"
                   data-view="cs-dashboard"
                   data-required-role="csm"
                   onclick="switchView('cs-dashboard')"
@@ -2216,6 +2557,16 @@
       <!-- Customer Success Dashboard -->
       <div id="csDashboardView" class="view-content cs-dashboard" style="display: none;">
         <!-- CS Dashboard will be populated by JavaScript -->
+      </div>
+
+      <!-- CMO Dashboard View -->
+      <div id="cmoDashboardView" class="view-content cmo-dashboard" style="display: none;">
+        <!-- CMO Dashboard will be populated by JavaScript -->
+      </div>
+
+      <!-- Campaigns Dashboard -->
+      <div id="campaignsDashboardView" class="view-content campaigns-dashboard" style="display: none;">
+        <!-- Campaigns Dashboard will be populated by JavaScript -->
       </div>
     </div>
   </div>
@@ -2543,6 +2894,92 @@
     </div>
   </div>
 
+  <!-- Modal: Create Department OKR -->
+  <div id="departmentOKRModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">🎯 Nuevo OKR de Departamento</h2>
+        <button class="close-btn" onclick="closeDepartmentOKRModal()">&times;</button>
+      </div>
+
+      <form id="departmentOKRForm" onsubmit="saveDepartmentOKR(event)">
+        <!-- Objective -->
+        <div class="form-group">
+          <label>Objetivo del Departamento</label>
+          <input type="text" id="deptOKRObjective" placeholder="Ej: Aumentar leads cualificados en 40%" required maxlength="200" />
+        </div>
+
+        <!-- Department Selection -->
+        <div class="form-group">
+          <label>Departamento</label>
+          <select id="deptOKRDepartment" required>
+            <option value="">Seleccionar...</option>
+            <!-- Options populated dynamically -->
+          </select>
+        </div>
+
+        <!-- Quarter -->
+        <div class="form-group">
+          <label>Trimestre</label>
+          <select id="deptOKRQuarter" required>
+            <option value="Q1 2026">Q1 2026</option>
+            <option value="Q2 2026">Q2 2026</option>
+            <option value="Q3 2026">Q3 2026</option>
+            <option value="Q4 2026">Q4 2026</option>
+          </select>
+        </div>
+
+        <!-- Contributes to Company OKR -->
+        <div class="form-group">
+          <label>Contribuye a OKR de Empresa</label>
+          <select id="deptOKRContributesTo">
+            <option value="">Ninguno (opcional)</option>
+            <!-- Options populated dynamically -->
+          </select>
+        </div>
+
+        <!-- Key Results (2-4) -->
+        <div class="form-group">
+          <label>Key Results</label>
+          <div id="deptKeyResultsContainer"></div>
+          <button type="button" class="btn btn-secondary" onclick="addDeptKeyResult()" style="width: 100%; margin-top: 8px;">
+            ➕ Agregar Key Result
+          </button>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
+          💾 Crear OKR de Departamento
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Team Review -->
+  <div id="teamReviewModal" class="modal">
+    <div class="modal-content" style="max-width: 900px;">
+      <div class="modal-header">
+        <h2 class="modal-title">👥 Revisión de Equipo</h2>
+        <button class="close-btn" onclick="closeTeamReviewModal()">&times;</button>
+      </div>
+
+      <!-- Filters -->
+      <div style="display: flex; gap: 12px; margin-bottom: 24px;">
+        <select id="teamReviewStatusFilter" onchange="filterTeamReview()" style="flex: 1;">
+          <option value="all">Todos los estados</option>
+          <option value="on_track">On Track</option>
+          <option value="at_risk">At Risk</option>
+          <option value="behind">Behind</option>
+        </select>
+        <button class="btn btn-secondary" onclick="exportTeamReviewCSV()">
+          📊 Exportar CSV
+        </button>
+      </div>
+
+      <!-- Team Members List -->
+      <div id="teamReviewContainer" style="max-height: 500px; overflow-y: auto;"></div>
+    </div>
+  </div>
+
   <!-- Modal: Confirmation Dialog -->
   <div id="confirmDialog" class="modal">
     <div class="modal-content" style="max-width: 480px;">
@@ -2675,6 +3112,122 @@
 
         <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
           💾 Guardar Cliente
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Create Campaign -->
+  <div id="campaignModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="campaignModalTitle">📊 Nueva Campaña</h2>
+        <button class="close-btn" onclick="closeCampaignModal()">&times;</button>
+      </div>
+
+      <form id="campaignForm" onsubmit="saveCampaign(event)">
+        <input type="hidden" id="campaignEditId" />
+
+        <div class="form-group">
+          <label>Nombre de la Campaña *</label>
+          <input
+            type="text"
+            id="campaignName"
+            placeholder="Ej: Campaña Black Friday 2026"
+            required
+            maxlength="100"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea
+            id="campaignDescription"
+            placeholder="Describe los objetivos y alcance de esta campaña..."
+            rows="3"
+            maxlength="500"
+          ></textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+          <div class="form-group">
+            <label>Presupuesto Asignado (€) *</label>
+            <input
+              type="number"
+              id="campaignBudgetAllocated"
+              placeholder="10000"
+              step="100"
+              min="0"
+              max="10000000"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Presupuesto Gastado (€)</label>
+            <input
+              type="number"
+              id="campaignBudgetSpent"
+              placeholder="0"
+              step="100"
+              min="0"
+              max="10000000"
+              value="0"
+            />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+          <div class="form-group">
+            <label>Fecha de Inicio *</label>
+            <input type="date" id="campaignStartDate" required />
+          </div>
+
+          <div class="form-group">
+            <label>Fecha de Fin *</label>
+            <input type="date" id="campaignEndDate" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Estado *</label>
+          <select id="campaignStatus" required>
+            <option value="planning">📋 Planificación</option>
+            <option value="active" selected>✅ Activa</option>
+            <option value="paused">⏸️ Pausada</option>
+            <option value="completed">✔️ Completada</option>
+            <option value="cancelled">❌ Cancelada</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Enlazar a OKR (Opcional)</label>
+          <select id="campaignLinkedOkr">
+            <option value="">Sin enlazar</option>
+            <!-- Will be populated dynamically -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Departamento (Opcional)</label>
+          <select id="campaignDepartment">
+            <option value="">Sin asignar</option>
+            <!-- Will be populated dynamically -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Miembros del Equipo</label>
+          <div id="campaignTeamMembersContainer" style="max-height: 250px; overflow-y: auto; border: 1px solid var(--stroke); border-radius: 8px; padding: 8px; background: rgba(0,0,0,0.2);">
+            <!-- Will be populated dynamically with checkboxes -->
+          </div>
+          <p style="color: var(--muted); font-size: 13px; margin-top: 8px;">
+            Selecciona los miembros que trabajarán en esta campaña
+          </p>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 16px;">
+          💾 Guardar Campaña
         </button>
       </form>
     </div>
@@ -3723,6 +4276,351 @@
       });
     }
 
+    // Department OKR Modal Functions
+    let deptKeyResultCounter = 0;
+
+    async function openDepartmentOKRModal() {
+      document.getElementById('departmentOKRModal').classList.add('active');
+      document.getElementById('departmentOKRForm').reset();
+      document.getElementById('deptKeyResultsContainer').innerHTML = '';
+      deptKeyResultCounter = 0;
+
+      // Populate departments dropdown
+      await populateDepartmentsDropdown();
+
+      // Populate company OKRs dropdown
+      await populateCompanyOKRsDropdown();
+
+      // Start with 2 key results
+      addDeptKeyResult();
+      addDeptKeyResult();
+    }
+
+    function closeDepartmentOKRModal() {
+      document.getElementById('departmentOKRModal').classList.remove('active');
+    }
+
+    async function populateDepartmentsDropdown() {
+      try {
+        const { data, error } = await supabase
+          .from('departments')
+          .select('id, name')
+          .eq('status', 'active')
+          .order('name');
+
+        if (error) throw error;
+
+        const select = document.getElementById('deptOKRDepartment');
+        select.innerHTML = '<option value="">Seleccionar...</option>';
+
+        data.forEach(dept => {
+          const option = document.createElement('option');
+          option.value = dept.id;
+          option.textContent = dept.name;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error loading departments:', error);
+      }
+    }
+
+    async function populateCompanyOKRsDropdown() {
+      try {
+        const { data, error } = await supabase
+          .from('company_okrs')
+          .select('id, objective')
+          .order('created_at', { ascending: false })
+          .limit(10);
+
+        if (error) throw error;
+
+        const select = document.getElementById('deptOKRContributesTo');
+        select.innerHTML = '<option value="">Ninguno (opcional)</option>';
+
+        data.forEach(okr => {
+          const option = document.createElement('option');
+          option.value = okr.id;
+          option.textContent = okr.objective;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        console.error('Error loading company OKRs:', error);
+      }
+    }
+
+    function addDeptKeyResult() {
+      const container = document.getElementById('deptKeyResultsContainer');
+      const krId = ++deptKeyResultCounter;
+
+      const krDiv = document.createElement('div');
+      krDiv.className = 'key-result-item';
+      krDiv.innerHTML = `
+        <div class="kr-header">
+          <label>Key Result ${krId}</label>
+          ${krId > 2 ? `<button type="button" class="remove-kr-btn" onclick="removeDeptKeyResult(${krId})">✕</button>` : ''}
+        </div>
+        <input
+          type="text"
+          id="deptKR${krId}"
+          placeholder="Ej: Generar 500 MQLs mensuales"
+          required
+        />
+        <div class="kr-metrics">
+          <input type="number" id="deptKRCurrent${krId}" placeholder="Actual" value="0" min="0" step="1" />
+          <input type="number" id="deptKRTarget${krId}" placeholder="Objetivo" required min="1" step="1" />
+          <input type="text" id="deptKRUnit${krId}" placeholder="Unidad (ej: leads)" maxlength="20" />
+        </div>
+      `;
+      container.appendChild(krDiv);
+
+      // Hide add button if max 4
+      if (deptKeyResultCounter >= 4) {
+        const addButton = document.querySelector('#departmentOKRForm .btn-secondary');
+        if (addButton) addButton.style.display = 'none';
+      }
+    }
+
+    function removeDeptKeyResult(krId) {
+      const krItem = document.querySelector(`#deptKR${krId}`).closest('.key-result-item');
+      if (krItem) {
+        krItem.remove();
+        deptKeyResultCounter--;
+
+        // Show add button again
+        const addButton = document.querySelector('#departmentOKRForm .btn-secondary');
+        if (addButton && deptKeyResultCounter < 4) {
+          addButton.style.display = 'inline-block';
+        }
+      }
+    }
+
+    async function saveDepartmentOKR(event) {
+      event.preventDefault();
+
+      if (!currentUser) {
+        showToast('Debes iniciar sesión', 'warning');
+        return;
+      }
+
+      if (currentUser.role !== 'director' && currentUser.role !== 'ceo') {
+        showToast('Solo directores pueden crear OKRs de departamento', 'error');
+        return;
+      }
+
+      const objective = document.getElementById('deptOKRObjective').value;
+      const department_id = document.getElementById('deptOKRDepartment').value;
+      const quarter = document.getElementById('deptOKRQuarter').value;
+      const contributes_to = document.getElementById('deptOKRContributesTo').value || null;
+
+      // Collect key results
+      const key_results = [];
+      let totalProgress = 0;
+
+      for (let i = 1; i <= deptKeyResultCounter; i++) {
+        const descInput = document.getElementById(`deptKR${i}`);
+        if (descInput && descInput.value) {
+          const current = parseFloat(document.getElementById(`deptKRCurrent${i}`).value) || 0;
+          const target = parseFloat(document.getElementById(`deptKRTarget${i}`).value) || 1;
+          const unit = document.getElementById(`deptKRUnit${i}`).value;
+
+          const progress = Math.min(Math.round((current / target) * 100), 100);
+          totalProgress += progress;
+
+          key_results.push({
+            id: `kr-${i}`,
+            description: descInput.value,
+            current,
+            target,
+            unit,
+            progress
+          });
+        }
+      }
+
+      if (key_results.length < 2) {
+        showToast('Debes agregar al menos 2 Key Results', 'warning');
+        return;
+      }
+
+      const avgProgress = Math.round(totalProgress / key_results.length);
+
+      const newDeptOKR = {
+        department_id,
+        quarter,
+        objective,
+        key_results,
+        status: avgProgress >= 70 ? 'on_track' : (avgProgress >= 40 ? 'at_risk' : 'behind'),
+        progress: avgProgress,
+        contributes_to,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      const form = event.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+
+      await withButtonLoading(submitBtn, async () => {
+        try {
+          const { data, error } = await supabase
+            .from('department_okrs')
+            .insert([newDeptOKR])
+            .select();
+
+          if (error) throw error;
+
+          showToast(`OKR de departamento creado: ${objective}`, 'success');
+          closeDepartmentOKRModal();
+
+          // Refresh Director dashboard
+          if (currentView === 'director-dashboard') {
+            renderDirectorDashboard();
+          }
+        } catch (error) {
+          console.error('Error creating department OKR:', error);
+          showToast(`Error: ${error.message}`, 'error');
+        }
+      });
+    }
+
+    // Team Review Modal Functions
+    async function openTeamReviewModal() {
+      document.getElementById('teamReviewModal').classList.add('active');
+      await loadTeamReview();
+    }
+
+    function closeTeamReviewModal() {
+      document.getElementById('teamReviewModal').classList.remove('active');
+    }
+
+    async function loadTeamReview() {
+      try {
+        // Load department members with their OKRs
+        const { data: members, error } = await supabase
+          .from('users')
+          .select(`
+            id,
+            full_name,
+            email,
+            role,
+            department_id,
+            okrs
+          `)
+          .eq('department_id', currentUser.department_id)
+          .order('full_name');
+
+        if (error) throw error;
+
+        renderTeamReview(members);
+      } catch (error) {
+        console.error('Error loading team review:', error);
+        showToast('Error al cargar revisión de equipo', 'error');
+      }
+    }
+
+    function renderTeamReview(members) {
+      const container = document.getElementById('teamReviewContainer');
+
+      if (!members || members.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--muted); padding: 40px;">No hay miembros en tu equipo</p>';
+        return;
+      }
+
+      let html = '<div style="display: flex; flex-direction: column; gap: 12px;">';
+
+      members.forEach(member => {
+        const okrs = member.okrs || [];
+        const totalOKRs = okrs.length;
+        const onTrack = okrs.filter(o => o.status === 'on_track').length;
+        const atRisk = okrs.filter(o => o.status === 'at_risk').length;
+        const behind = okrs.filter(o => o.status === 'behind').length;
+
+        const avgProgress = totalOKRs > 0
+          ? Math.round(okrs.reduce((sum, o) => sum + (o.progress || 0), 0) / totalOKRs)
+          : 0;
+
+        const statusClass = avgProgress >= 70 ? 'on_track' : (avgProgress >= 40 ? 'at_risk' : 'behind');
+
+        html += `
+          <div class="team-member-card" data-status="${statusClass}" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 12px; padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div style="flex: 1;">
+                <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">${member.full_name}</h3>
+                <p style="font-size: 13px; color: var(--muted); margin-bottom: 12px;">${member.email}</p>
+
+                <div style="display: flex; gap: 12px; margin-top: 12px;">
+                  <div class="mini-stat">
+                    <span style="font-size: 20px; font-weight: 700; color: var(--status-success);">${onTrack}</span>
+                    <span style="font-size: 11px; color: var(--muted);">On Track</span>
+                  </div>
+                  <div class="mini-stat">
+                    <span style="font-size: 20px; font-weight: 700; color: var(--status-warning);">${atRisk}</span>
+                    <span style="font-size: 11px; color: var(--muted);">At Risk</span>
+                  </div>
+                  <div class="mini-stat">
+                    <span style="font-size: 20px; font-weight: 700; color: var(--status-error);">${behind}</span>
+                    <span style="font-size: 11px; color: var(--muted);">Behind</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="text-align: right;">
+                <div style="font-size: 32px; font-weight: 700; color: var(--nevent-purple);">${avgProgress}%</div>
+                <span class="status-badge status-${statusClass}" style="margin-top: 8px;">${statusClass.replace('_', ' ')}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
+    function filterTeamReview() {
+      const statusFilter = document.getElementById('teamReviewStatusFilter').value;
+      const cards = document.querySelectorAll('.team-member-card');
+
+      cards.forEach(card => {
+        const cardStatus = card.dataset.status;
+        if (statusFilter === 'all' || cardStatus === statusFilter) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function exportTeamReviewCSV() {
+      const cards = document.querySelectorAll('.team-member-card:not([style*="display: none"])');
+
+      let csv = 'Nombre,Email,Progress,On Track,At Risk,Behind,Status\n';
+
+      cards.forEach(card => {
+        const name = card.querySelector('h3').textContent;
+        const email = card.querySelector('p').textContent;
+        const progress = card.querySelector('[style*="font-size: 32px"]').textContent;
+        const miniStats = card.querySelectorAll('.mini-stat span:first-child');
+        const onTrack = miniStats[0].textContent;
+        const atRisk = miniStats[1].textContent;
+        const behind = miniStats[2].textContent;
+        const status = card.querySelector('.status-badge').textContent;
+
+        csv += `"${name}","${email}",${progress},"${onTrack}","${atRisk}","${behind}","${status}"\n`;
+      });
+
+      // Download CSV
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `team-review-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+
+      showToast('CSV exportado exitosamente', 'success');
+    }
+
+    // Customer Creation Modal Functions
     // Initiative Modal Functions
     function openInitiativeModal() {
       document.getElementById('initiativeModal').classList.add('active');
@@ -4761,11 +5659,13 @@
       // Check role-based permissions
       const userRole = currentUser.role || 'user';
       const rolePermissions = {
-        'timeline': ['user', 'csm', 'director', 'ceo'],
-        'user-dashboard': ['user', 'csm', 'director', 'ceo'],
+        'timeline': ['user', 'csm', 'director', 'ceo', 'cmo'],
+        'user-dashboard': ['user', 'csm', 'director', 'ceo', 'cmo'],
         'ceo-dashboard': ['ceo'],
+        'cmo-dashboard': ['cmo', 'ceo'],
         'director-dashboard': ['director', 'ceo'],
-        'cs-dashboard': ['csm', 'director', 'ceo']
+        'cs-dashboard': ['csm', 'director', 'ceo', 'cmo'],
+        'campaigns-dashboard': ['cmo', 'ceo']
       };
 
       if (!rolePermissions[viewName]?.includes(userRole)) {
@@ -4777,8 +5677,10 @@
         'timeline': document.getElementById('timelineView'),
         'user-dashboard': document.getElementById('userDashboardView'),
         'ceo-dashboard': document.getElementById('ceoDashboardView'),
+        'cmo-dashboard': document.getElementById('cmoDashboardView'),
         'director-dashboard': document.getElementById('directorDashboardView'),
-        'cs-dashboard': document.getElementById('csDashboardView')
+        'cs-dashboard': document.getElementById('csDashboardView'),
+        'campaigns-dashboard': document.getElementById('campaignsDashboardView')
       };
 
       // Check if the specific view element exists
@@ -4812,8 +5714,10 @@
         'timeline': 'Vista de línea de tiempo cargada',
         'user-dashboard': 'Mi Dashboard cargado',
         'ceo-dashboard': 'Dashboard ejecutivo cargado',
+        'cmo-dashboard': 'CMO Dashboard cargado',
         'director-dashboard': 'Dashboard de director cargado',
-        'cs-dashboard': 'Dashboard de Customer Success cargado'
+        'cs-dashboard': 'Dashboard de Customer Success cargado',
+        'campaigns-dashboard': 'Dashboard de Campañas cargado'
       };
       announceToScreenReader(viewNames[viewName] || 'Vista cambiada');
 
@@ -4831,12 +5735,18 @@
       } else if (viewName === 'ceo-dashboard') {
         viewElements['ceo-dashboard'].style.display = 'block';
         renderCEODashboard();
+      } else if (viewName === 'cmo-dashboard') {
+        viewElements['cmo-dashboard'].style.display = 'block';
+        renderCMODashboard();
       } else if (viewName === 'director-dashboard') {
         viewElements['director-dashboard'].style.display = 'block';
         renderDirectorDashboard();
       } else if (viewName === 'cs-dashboard') {
         viewElements['cs-dashboard'].style.display = 'block';
         renderCSDashboard();
+      } else if (viewName === 'campaigns-dashboard') {
+        viewElements['campaigns-dashboard'].style.display = 'block';
+        renderCampaignsDashboard();
       }
     }
 
@@ -5293,7 +6203,7 @@
         deptOKRBtn.addEventListener('click', openDepartmentOKRModal);
       }
       if (teamReviewBtn) {
-        teamReviewBtn.addEventListener('click', openTeamReview);
+        teamReviewBtn.addEventListener('click', openTeamReviewModal);
       }
 
       // Render sub-components
@@ -5473,13 +6383,6 @@
       return 'var(--danger)';
     }
 
-    function openDepartmentOKRModal() {
-      showToast('Department OKR creation coming soon', 'info');
-    }
-
-    function openTeamReview() {
-      showToast('Team review feature coming soon', 'info');
-    }
 
     // ================================================================
     // CUSTOMER SUCCESS DASHBOARD
@@ -5515,7 +6418,7 @@
         </div>
 
         <!-- OKR Contribution Banner -->
-        <div style="background: linear-gradient(135deg, rgba(236, 0, 140, 0.1), rgba(92, 194, 229, 0.1)); border: 1px solid var(--stroke); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-2xl);">
+        <div style="background: linear-gradient(135deg, rgba(156, 39, 176, 0.1), rgba(103, 58, 183, 0.1)); border: 1px solid var(--stroke); border-radius: var(--radius-lg); padding: var(--space-lg); margin-bottom: var(--space-2xl);">
           <div style="display: flex; align-items: center; gap: var(--space-md);">
             <div style="font-size: 32px;">🎯</div>
             <div style="flex: 1;">
@@ -5971,6 +6874,1085 @@
     };
 
     // ================================================================
+    // CAMPAIGN MANAGEMENT MODULE
+    // ================================================================
+
+    let allCampaigns = [];
+    let campaignFilterStatus = 'all';
+
+    // Load campaigns from Supabase
+    async function loadCampaigns() {
+      try {
+        const { data, error } = await supabase
+          .from('campaigns')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        // Load team members separately for each campaign
+        if (data && data.length > 0) {
+          for (const campaign of data) {
+            const { data: teamData } = await supabase
+              .from('campaign_team')
+              .select('user_id, role')
+              .eq('campaign_id', campaign.id);
+
+            campaign.campaign_team = teamData || [];
+          }
+        }
+
+        allCampaigns = data || [];
+        return allCampaigns;
+      } catch (error) {
+        console.error('Error loading campaigns:', error);
+        showToast('Error al cargar campañas', 'error');
+        return [];
+      }
+    }
+
+    // Render campaigns dashboard
+    async function renderCampaignsDashboard(forceReload = false) {
+      const container = document.getElementById('campaignsDashboardView');
+
+      if (!currentUser) {
+        safeSetHTML(container, '<p class="empty-state">Por favor, inicia sesión para ver el dashboard</p>');
+        return;
+      }
+
+      // Only load from Supabase if campaigns not loaded yet or force reload
+      if (forceReload || allCampaigns.length === 0) {
+        await loadCampaigns();
+      }
+
+      // Filter campaigns by status (in memory - fast!)
+      let filteredCampaigns = allCampaigns;
+      if (campaignFilterStatus !== 'all') {
+        filteredCampaigns = allCampaigns.filter(c => c.status === campaignFilterStatus);
+      }
+
+      const html = `
+        <!-- Campaign Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-lg);">
+          <div>
+            <h1 style="font-size: var(--font-size-h1); margin-bottom: 8px;">📊 Campaigns</h1>
+            <p style="color: var(--muted); font-size: 14px;">Gestiona tus campañas de marketing y su ROI</p>
+          </div>
+          <button class="btn btn-primary" data-action="openCampaignModal">
+            ➕ Nueva Campaña
+          </button>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div id="campaignFilters" style="display: flex; gap: 12px; margin-bottom: var(--space-xl); border-bottom: 1px solid var(--stroke); padding-bottom: 12px;">
+          <button
+            class="filter-tab ${campaignFilterStatus === 'all' ? 'active' : ''}"
+            data-filter="all"
+            style="padding: 8px 16px; background: ${campaignFilterStatus === 'all' ? 'var(--accent1)' : 'transparent'}; color: ${campaignFilterStatus === 'all' ? 'white' : 'var(--muted)'}; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s;"
+          >
+            Todas (${allCampaigns.length})
+          </button>
+          <button
+            class="filter-tab ${campaignFilterStatus === 'active' ? 'active' : ''}"
+            data-filter="active"
+            style="padding: 8px 16px; background: ${campaignFilterStatus === 'active' ? 'var(--accent1)' : 'transparent'}; color: ${campaignFilterStatus === 'active' ? 'white' : 'var(--muted)'}; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s;"
+          >
+            Activas (${allCampaigns.filter(c => c.status === 'active').length})
+          </button>
+          <button
+            class="filter-tab ${campaignFilterStatus === 'planning' ? 'active' : ''}"
+            data-filter="planning"
+            style="padding: 8px 16px; background: ${campaignFilterStatus === 'planning' ? 'var(--accent1)' : 'transparent'}; color: ${campaignFilterStatus === 'planning' ? 'white' : 'var(--muted)'}; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s;"
+          >
+            Planificación (${allCampaigns.filter(c => c.status === 'planning').length})
+          </button>
+          <button
+            class="filter-tab ${campaignFilterStatus === 'completed' ? 'active' : ''}"
+            data-filter="completed"
+            style="padding: 8px 16px; background: ${campaignFilterStatus === 'completed' ? 'var(--accent1)' : 'transparent'}; color: ${campaignFilterStatus === 'completed' ? 'white' : 'var(--muted)'}; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s;"
+          >
+            Completadas (${allCampaigns.filter(c => c.status === 'completed').length})
+          </button>
+        </div>
+
+        <!-- Campaign Grid -->
+        <div id="campaignsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--space-lg);">
+          ${filteredCampaigns.length === 0 ? `
+            <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: var(--space-2xl);">
+              <div style="font-size: 64px; margin-bottom: 16px;">📊</div>
+              <h3>No hay campañas ${campaignFilterStatus !== 'all' ? 'en este estado' : ''}</h3>
+              <p style="color: var(--muted); margin-bottom: 24px;">
+                ${campaignFilterStatus === 'all' ? 'Crea tu primera campaña de marketing para empezar a hacer seguimiento del presupuesto y ROI' : 'Las campañas aparecerán aquí cuando las crees'}
+              </p>
+              ${campaignFilterStatus === 'all' ? `
+                <button class="btn btn-primary" data-action="openCampaignModal">
+                  ➕ Crear Primera Campaña
+                </button>
+              ` : ''}
+            </div>
+          ` : filteredCampaigns.map(campaign => renderCampaignCard(campaign)).join('')}
+        </div>
+      `;
+
+      safeSetHTML(container, html);
+
+      // Add event listeners using event delegation
+      // Get fresh reference after safeSetHTML updates DOM
+      requestAnimationFrame(() => {
+        const updatedContainer = document.getElementById('campaignsDashboardView');
+        if (!updatedContainer) return;
+
+        // Remove old listener by cloning
+        const clone = updatedContainer.cloneNode(true);
+        updatedContainer.parentNode.replaceChild(clone, updatedContainer);
+
+        // Add new listener to the cloned container
+        clone.addEventListener('click', (e) => {
+          // Handle filter buttons first
+          const filterButton = e.target.closest('[data-filter]');
+          if (filterButton) {
+            const filter = filterButton.getAttribute('data-filter');
+            if (filter) {
+              filterCampaigns(filter);
+            }
+            return;
+          }
+
+          // Handle campaign actions
+          const actionButton = e.target.closest('[data-action]');
+          if (actionButton) {
+            const action = actionButton.getAttribute('data-action');
+            const campaignId = actionButton.getAttribute('data-campaign-id');
+
+            switch (action) {
+              case 'openCampaignModal':
+                openCampaignModal();
+                break;
+              case 'editCampaign':
+                if (campaignId) {
+                  e.stopPropagation();
+                  openEditCampaignModal(campaignId);
+                }
+                break;
+              case 'deleteCampaign':
+                if (campaignId) {
+                  e.stopPropagation();
+                  deleteCampaign(campaignId);
+                }
+                break;
+            }
+          }
+        });
+      });
+    }
+
+    // Render campaign card
+    function renderCampaignCard(campaign) {
+      const budgetAllocated = parseFloat(campaign.budget_allocated) || 0;
+      const budgetSpent = parseFloat(campaign.budget_spent) || 0;
+      const budgetRemaining = budgetAllocated - budgetSpent;
+      const budgetProgress = budgetAllocated > 0 ? (budgetSpent / budgetAllocated) * 100 : 0;
+      const roi = calculateROI(budgetAllocated, budgetSpent);
+
+      const statusConfig = {
+        'planning': { label: '📋 Planificación', color: 'var(--warning)' },
+        'active': { label: '✅ Activa', color: 'var(--success)' },
+        'paused': { label: '⏸️ Pausada', color: 'var(--muted)' },
+        'completed': { label: '✔️ Completada', color: 'var(--accent2)' },
+        'cancelled': { label: '❌ Cancelada', color: 'var(--danger)' }
+      };
+
+      const status = statusConfig[campaign.status] || statusConfig['planning'];
+
+      // Format dates
+      const startDate = campaign.start_date ? new Date(campaign.start_date).toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
+      const endDate = campaign.end_date ? new Date(campaign.end_date).toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
+
+      // Get team members
+      const teamMembers = campaign.campaign_team || [];
+      const teamAvatars = teamMembers.slice(0, 3).map(member => {
+        const userId = member.user_id || '';
+        const initials = userId.substring(0, 2).toUpperCase();
+        return `
+          <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--accent1); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; border: 2px solid var(--card);" title="Team Member">
+            ${initials}
+          </div>
+        `;
+      }).join('');
+
+      const moreTeamCount = teamMembers.length > 3 ? teamMembers.length - 3 : 0;
+
+      return `
+        <div style="background: var(--card); border-radius: 16px; padding: 24px; border: 1px solid var(--stroke); transition: all 0.2s; cursor: pointer;" onmouseover="this.style.borderColor='var(--accent1)'" onmouseout="this.style.borderColor='var(--stroke)'">
+          <!-- Campaign Header -->
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+            <div style="flex: 1;">
+              <h3 style="font-size: 18px; margin-bottom: 8px; color: var(--ink);">${DOMPurify.sanitize(campaign.name)}</h3>
+              <span style="display: inline-block; padding: 4px 12px; background: ${status.color}20; color: ${status.color}; border-radius: 12px; font-size: 12px; font-weight: 600;">
+                ${status.label}
+              </span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button
+                data-action="editCampaign"
+                data-campaign-id="${campaign.id}"
+                style="padding: 6px 10px; background: var(--neutral-700); color: var(--ink); border: none; border-radius: 6px; cursor: pointer; font-size: 12px;"
+                title="Editar"
+              >
+                ✏️
+              </button>
+              <button
+                data-action="deleteCampaign"
+                data-campaign-id="${campaign.id}"
+                style="padding: 6px 10px; background: var(--neutral-700); color: var(--danger); border: none; border-radius: 6px; cursor: pointer; font-size: 12px;"
+                title="Eliminar"
+              >
+                🗑️
+              </button>
+            </div>
+          </div>
+
+          <!-- Description -->
+          ${campaign.description ? `
+            <p style="color: var(--muted); font-size: 13px; margin-bottom: 16px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+              ${DOMPurify.sanitize(campaign.description)}
+            </p>
+          ` : ''}
+
+          <!-- Budget Progress -->
+          <div style="margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+              <span style="font-size: 13px; color: var(--muted);">Presupuesto</span>
+              <span style="font-size: 13px; font-weight: 600; color: var(--ink);">
+                €${budgetSpent.toLocaleString()} / €${budgetAllocated.toLocaleString()}
+              </span>
+            </div>
+            <div style="width: 100%; height: 8px; background: var(--neutral-700); border-radius: 4px; overflow: hidden;">
+              <div style="width: ${Math.min(budgetProgress, 100)}%; height: 100%; background: ${budgetProgress > 90 ? 'var(--danger)' : budgetProgress > 70 ? 'var(--warning)' : 'var(--success)'}; transition: width 0.3s;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+              <span style="font-size: 11px; color: var(--muted);">${budgetProgress.toFixed(1)}% gastado</span>
+              <span style="font-size: 11px; color: ${budgetRemaining >= 0 ? 'var(--success)' : 'var(--danger)'};">
+                €${budgetRemaining.toLocaleString()} restante
+              </span>
+            </div>
+          </div>
+
+          <!-- ROI Metric -->
+          <div style="padding: 12px; background: ${roi.value >= 0 ? 'var(--success)' : 'var(--danger)'}15; border-radius: 8px; margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 13px; color: var(--muted);">ROI</span>
+              <span style="font-size: 20px; font-weight: 700; color: ${roi.value >= 0 ? 'var(--success)' : 'var(--danger)'};">
+                ${roi.display}
+              </span>
+            </div>
+          </div>
+
+          <!-- Date Range -->
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding: 8px; background: var(--neutral-800); border-radius: 6px;">
+            <span style="font-size: 12px; color: var(--muted);">📅</span>
+            <span style="font-size: 12px; color: var(--ink);">${startDate} - ${endDate}</span>
+          </div>
+
+          <!-- Team Avatars -->
+          ${teamMembers.length > 0 ? `
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 12px; color: var(--muted);">Equipo:</span>
+              <div style="display: flex; align-items: center; gap: -8px;">
+                ${teamAvatars}
+                ${moreTeamCount > 0 ? `
+                  <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--neutral-700); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; border: 2px solid var(--card); color: var(--muted);">
+                    +${moreTeamCount}
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          ` : `
+            <div style="color: var(--muted); font-size: 12px;">Sin equipo asignado</div>
+          `}
+        </div>
+      `;
+    }
+
+    // Calculate ROI
+    function calculateROI(budgetAllocated, budgetSpent) {
+      const allocated = parseFloat(budgetAllocated) || 0;
+      const spent = parseFloat(budgetSpent) || 0;
+
+      if (allocated === 0) {
+        return { value: 0, display: '0%' };
+      }
+
+      // Simple ROI calculation: (Allocated - Spent) / Spent * 100
+      // Negative means overspent, positive means under budget
+      const roi = ((allocated - spent) / allocated) * 100;
+
+      return {
+        value: roi,
+        display: `${roi > 0 ? '+' : ''}${roi.toFixed(1)}%`
+      };
+    }
+
+    // Filter campaigns by status
+    function filterCampaigns(status) {
+      campaignFilterStatus = status;
+      renderCampaignsDashboard();
+
+      analytics.track('campaigns_filtered', {
+        filter: status,
+        campaign_count: allCampaigns.filter(c => status === 'all' || c.status === status).length
+      });
+    }
+
+    // Open campaign modal
+    async function openCampaignModal() {
+      const modal = document.getElementById('campaignModal');
+      const form = document.getElementById('campaignForm');
+      const titleEl = document.getElementById('campaignModalTitle');
+
+      // Reset form
+      form.reset();
+      document.getElementById('campaignEditId').value = '';
+      document.getElementById('campaignBudgetSpent').value = '0';
+      titleEl.textContent = '📊 Nueva Campaña';
+
+      // Populate dropdowns
+      await populateCampaignDropdowns();
+
+      modal.style.display = 'flex';
+
+      analytics.track('campaign_modal_opened', { mode: 'create' });
+    }
+
+    // Open edit campaign modal
+    async function openEditCampaignModal(campaignId) {
+      const modal = document.getElementById('campaignModal');
+      const form = document.getElementById('campaignForm');
+      const titleEl = document.getElementById('campaignModalTitle');
+
+      // Find campaign
+      const campaign = allCampaigns.find(c => c.id === campaignId);
+      if (!campaign) {
+        showToast('Campaña no encontrada', 'error');
+        return;
+      }
+
+      // Populate form
+      document.getElementById('campaignEditId').value = campaign.id;
+      document.getElementById('campaignName').value = campaign.name || '';
+      document.getElementById('campaignDescription').value = campaign.description || '';
+      document.getElementById('campaignBudgetAllocated').value = campaign.budget_allocated || 0;
+      document.getElementById('campaignBudgetSpent').value = campaign.budget_spent || 0;
+      document.getElementById('campaignStartDate').value = campaign.start_date || '';
+      document.getElementById('campaignEndDate').value = campaign.end_date || '';
+      document.getElementById('campaignStatus').value = campaign.status || 'planning';
+      document.getElementById('campaignLinkedOkr').value = campaign.linked_okr_id || '';
+      document.getElementById('campaignDepartment').value = campaign.department_id || '';
+
+      titleEl.textContent = '✏️ Editar Campaña';
+
+      // Populate dropdowns
+      await populateCampaignDropdowns();
+
+      // Select team members
+      const teamMemberIds = (campaign.campaign_team || []).map(t => t.user_id);
+      document.querySelectorAll('#campaignTeamMembersContainer input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = teamMemberIds.includes(checkbox.value);
+      });
+
+      modal.style.display = 'flex';
+
+      analytics.track('campaign_modal_opened', { mode: 'edit', campaign_id: campaignId });
+    }
+
+    // Close campaign modal
+    function closeCampaignModal() {
+      const modal = document.getElementById('campaignModal');
+      modal.style.display = 'none';
+    }
+
+    // Populate campaign dropdowns
+    async function populateCampaignDropdowns() {
+      try {
+        // Load OKRs
+        const { data: okrs } = await supabase
+          .from('company_okrs')
+          .select('id, objective')
+          .order('created_at', { ascending: false });
+
+        const okrSelect = document.getElementById('campaignLinkedOkr');
+        okrSelect.innerHTML = '<option value="">Sin enlazar</option>';
+        (okrs || []).forEach(okr => {
+          const option = document.createElement('option');
+          option.value = okr.id;
+          option.textContent = okr.objective;
+          okrSelect.appendChild(option);
+        });
+
+        // Load departments
+        const { data: departments } = await supabase
+          .from('departments')
+          .select('id, name')
+          .order('name');
+
+        const deptSelect = document.getElementById('campaignDepartment');
+        deptSelect.innerHTML = '<option value="">Sin asignar</option>';
+        (departments || []).forEach(dept => {
+          const option = document.createElement('option');
+          option.value = dept.id;
+          option.textContent = dept.name;
+          deptSelect.appendChild(option);
+        });
+
+        // Load users for team selection
+        const { data: users } = await supabase
+          .from('users')
+          .select('id, full_name, email')
+          .order('full_name');
+
+        const teamContainer = document.getElementById('campaignTeamMembersContainer');
+        teamContainer.innerHTML = '';
+
+        if (!users || users.length === 0) {
+          teamContainer.innerHTML = '<p style="color: var(--muted); text-align: center; padding: 20px; font-size: 14px;">No hay usuarios disponibles</p>';
+          return;
+        }
+
+        (users || []).forEach(user => {
+          const div = document.createElement('div');
+          div.style.cssText = 'display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 6px; transition: all 0.2s; margin-bottom: 4px; cursor: pointer;';
+          div.onmouseover = function() { this.style.background = 'rgba(156, 39, 176, 0.1)'; };
+          div.onmouseout = function() { this.style.background = 'transparent'; };
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.value = user.id;
+          checkbox.id = `team-member-${user.id}`;
+          checkbox.style.cssText = 'cursor: pointer; width: 18px; height: 18px; flex-shrink: 0;';
+
+          const label = document.createElement('label');
+          label.htmlFor = `team-member-${user.id}`;
+          label.style.cssText = 'cursor: pointer; flex: 1; font-size: 14px; color: var(--ink); user-select: none;';
+
+          const nameSpan = document.createElement('span');
+          nameSpan.style.cssText = 'display: block; font-weight: 500;';
+          nameSpan.textContent = user.full_name;
+
+          const emailSpan = document.createElement('span');
+          emailSpan.style.cssText = 'display: block; font-size: 12px; color: var(--muted); margin-top: 2px;';
+          emailSpan.textContent = user.email;
+
+          label.appendChild(nameSpan);
+          label.appendChild(emailSpan);
+
+          // Click on div also toggles checkbox
+          div.onclick = function(e) {
+            if (e.target !== checkbox) {
+              checkbox.checked = !checkbox.checked;
+            }
+          };
+
+          div.appendChild(checkbox);
+          div.appendChild(label);
+          teamContainer.appendChild(div);
+        });
+      } catch (error) {
+        console.error('Error populating dropdowns:', error);
+      }
+    }
+
+    // Save campaign
+    async function saveCampaign(event) {
+      event.preventDefault();
+
+      if (!currentUser) {
+        showToast('Debes iniciar sesión para guardar campañas', 'warning');
+        return;
+      }
+
+      const submitBtn = event.target.querySelector('button[type="submit"]');
+
+      try {
+        await withButtonLoading(submitBtn, async () => {
+          const campaignId = document.getElementById('campaignEditId').value;
+          const isEdit = !!campaignId;
+
+          // Collect form data
+          const campaignData = {
+            name: document.getElementById('campaignName').value.trim(),
+            description: document.getElementById('campaignDescription').value.trim() || null,
+            budget_allocated: parseFloat(document.getElementById('campaignBudgetAllocated').value) || 0,
+            budget_spent: parseFloat(document.getElementById('campaignBudgetSpent').value) || 0,
+            start_date: document.getElementById('campaignStartDate').value || null,
+            end_date: document.getElementById('campaignEndDate').value || null,
+            status: document.getElementById('campaignStatus').value,
+            linked_okr_id: document.getElementById('campaignLinkedOkr').value || null,
+            department_id: document.getElementById('campaignDepartment').value || null,
+            owner_id: currentUser.id,
+            updated_at: new Date().toISOString()
+          };
+
+          // Validate dates
+          if (campaignData.start_date && campaignData.end_date) {
+            const start = new Date(campaignData.start_date);
+            const end = new Date(campaignData.end_date);
+            if (end < start) {
+              showToast('La fecha de fin debe ser posterior a la fecha de inicio', 'error');
+              return;
+            }
+          }
+
+          // Get selected team members
+          const selectedTeamMembers = Array.from(
+            document.querySelectorAll('#campaignTeamMembersContainer input[type="checkbox"]:checked')
+          ).map(checkbox => checkbox.value);
+
+          let savedCampaignId;
+
+          if (isEdit) {
+            // Update existing campaign
+            const { error } = await supabase
+              .from('campaigns')
+              .update(campaignData)
+              .eq('id', campaignId);
+
+            if (error) throw error;
+
+            savedCampaignId = campaignId;
+
+            // Delete existing team members
+            await supabase
+              .from('campaign_team')
+              .delete()
+              .eq('campaign_id', campaignId);
+
+            analytics.track('campaign_updated', {
+              campaign_id: campaignId,
+              campaign_name: campaignData.name
+            });
+          } else {
+            // Create new campaign
+            campaignData.created_at = new Date().toISOString();
+
+            const { data, error } = await supabase
+              .from('campaigns')
+              .insert([campaignData])
+              .select()
+              .single();
+
+            if (error) throw error;
+
+            savedCampaignId = data.id;
+
+            analytics.track('campaign_created', {
+              campaign_id: savedCampaignId,
+              campaign_name: campaignData.name
+            });
+          }
+
+          // Insert team members
+          if (selectedTeamMembers.length > 0) {
+            const teamData = selectedTeamMembers.map(userId => ({
+              campaign_id: savedCampaignId,
+              user_id: userId,
+              role: 'member',
+              created_at: new Date().toISOString()
+            }));
+
+            const { error: teamError } = await supabase
+              .from('campaign_team')
+              .insert(teamData);
+
+            if (teamError) throw teamError;
+          }
+
+          // Log activity
+          const { error: activityError } = await supabase
+            .from('campaign_activities')
+            .insert([{
+              campaign_id: savedCampaignId,
+              user_id: currentUser.id,
+              activity_type: isEdit ? 'updated' : 'created',
+              description: isEdit ? `Campaña actualizada` : `Campaña creada`,
+              created_at: new Date().toISOString()
+            }]);
+
+          if (activityError) console.error('Error logging activity:', activityError);
+
+          showToast(`Campaña ${isEdit ? 'actualizada' : 'creada'} exitosamente`, 'success');
+          closeCampaignModal();
+          await renderCampaignsDashboard(true); // Force reload after save
+        });
+      } catch (error) {
+        console.error('Error saving campaign:', error);
+        showToast('Error al guardar la campaña: ' + error.message, 'error');
+      }
+    }
+
+    // Delete campaign
+    async function deleteCampaign(campaignId) {
+      const campaign = allCampaigns.find(c => c.id === campaignId);
+      if (!campaign) return;
+
+      const confirmed = confirm(`¿Estás seguro de que quieres eliminar la campaña "${campaign.name}"?\n\nEsta acción no se puede deshacer.`);
+      if (!confirmed) return;
+
+      try {
+        const { error } = await supabase
+          .from('campaigns')
+          .delete()
+          .eq('id', campaignId);
+
+        if (error) throw error;
+
+        showToast('Campaña eliminada exitosamente', 'success');
+        await renderCampaignsDashboard(true); // Force reload after delete
+
+        analytics.track('campaign_deleted', {
+          campaign_id: campaignId,
+          campaign_name: campaign.name
+        });
+      } catch (error) {
+        console.error('Error deleting campaign:', error);
+        showToast('Error al eliminar la campaña: ' + error.message, 'error');
+      }
+    }
+
+    // ================================================================
+    // CMO DASHBOARD - Marketing + Customer Success Command Center
+    // ================================================================
+
+    async function renderCMODashboard() {
+      const container = document.getElementById('cmoDashboardView');
+
+      if (!currentUser) {
+        safeSetHTML(container, '<p class="empty-state">Por favor, inicia sesión para ver el dashboard</p>');
+        return;
+      }
+
+      // Detect mobile viewport
+      const isMobile = window.innerWidth < 640;
+
+      // Load data in parallel for performance
+      const [campaigns, customers, companyOKRs] = await Promise.all([
+        loadCampaigns(),
+        loadAllCustomers(),
+        loadCompanyOKRs()
+      ]);
+
+      // Calculate key metrics
+      const activeCampaigns = allCampaigns.filter(c => c.status === 'active');
+      const scheduledCampaigns = allCampaigns.filter(c => c.status === 'planning');
+      const totalCustomers = allCustomers.length;
+      const healthyCustomers = allCustomers.filter(c => (c.health_score || 0) >= 70).length;
+      const atRiskCustomers = allCustomers.filter(c => (c.health_score || 0) < 50).length;
+      const avgHealthScore = totalCustomers > 0
+        ? Math.round(allCustomers.reduce((sum, c) => sum + (c.health_score || 0), 0) / totalCustomers)
+        : 0;
+
+      // Calculate marketing metrics
+      const totalBudgetAllocated = allCampaigns.reduce((sum, c) => sum + (parseFloat(c.budget_allocated) || 0), 0);
+      const totalBudgetSpent = allCampaigns.reduce((sum, c) => sum + (parseFloat(c.budget_spent) || 0), 0);
+      const avgOpenRate = 42; // Mock data - replace with real calculation
+      const activeSegments = 24; // Mock data
+
+      // Calculate churn rate (mock)
+      const churnRate = 3.2;
+      const churnImprovement = -0.5;
+
+      // Calculate MRR (mock - replace with real data)
+      const mrr = 125000;
+      const mrrGrowth = 12;
+
+      // Calculate average campaign ROI
+      const avgROI = 245;
+
+      // MOBILE PRIORITY VIEW - Only urgent/critical information
+      if (isMobile) {
+        const html = `
+          <!-- Mobile Header -->
+          <div style="margin-bottom: 24px;">
+            <h1 style="font-size: 24px; margin-bottom: 4px;">CMO Dashboard</h1>
+            <p style="color: var(--muted); font-size: 13px;">Priority View</p>
+          </div>
+
+          <!-- Critical KPIs Only (Top 3) -->
+          <div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px;">
+
+            <!-- MRR Card -->
+            <div class="kpi-card-cmo" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 12px; padding: 20px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="font-size: 28px;">💰</div>
+                <div style="flex: 1;">
+                  <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">MRR</div>
+                  <div style="font-size: 28px; font-weight: 700; color: var(--ink);">€${mrr.toLocaleString()}</div>
+                  <div style="font-size: 13px; font-weight: 500; color: var(--success);">+${mrrGrowth}%</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Churn Rate Card -->
+            <div class="kpi-card-cmo" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 12px; padding: 20px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="font-size: 28px;">📉</div>
+                <div style="flex: 1;">
+                  <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Churn Rate</div>
+                  <div style="font-size: 28px; font-weight: 700; color: var(--ink);">${churnRate}%</div>
+                  <div style="font-size: 13px; font-weight: 500; color: var(--success);">${churnImprovement}%</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active Campaigns Card -->
+            <div class="kpi-card-cmo" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 12px; padding: 20px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="font-size: 28px;">📧</div>
+                <div style="flex: 1;">
+                  <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Active Campaigns</div>
+                  <div style="font-size: 28px; font-weight: 700; color: var(--ink);">${activeCampaigns.length}</div>
+                  <div style="font-size: 13px; color: var(--muted);">${scheduledCampaigns.length} scheduled</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Critical Alerts -->
+          <div class="cmo-section" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+            <h2 style="font-size: 18px; margin: 0 0 16px 0;">⚠️ Urgent Alerts</h2>
+
+            ${atRiskCustomers > 0 ? `
+              <div class="alert-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; border-radius: 10px; margin-bottom: 10px; background: rgba(244, 67, 54, 0.1); border: 1px solid rgba(244, 67, 54, 0.3);">
+                <span style="font-size: 24px; flex-shrink: 0;">⚠️</span>
+                <div style="flex: 1;">
+                  <h3 style="font-size: 15px; font-weight: 600; margin: 0 0 4px 0; color: var(--danger);">${atRiskCustomers} customers at risk</h3>
+                  <p style="color: var(--muted); font-size: 13px; margin: 0 0 10px 0;">Health score < 50 • Need immediate attention</p>
+                  <button class="btn btn-primary" data-action="goToCS" style="width: 100%; padding: 10px; border-radius: 8px; cursor: pointer;">Review Now</button>
+                </div>
+              </div>
+            ` : ''}
+
+            <div class="alert-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; border-radius: 10px; margin-bottom: 10px; background: rgba(33, 150, 243, 0.1); border: 1px solid rgba(33, 150, 243, 0.3);">
+              <span style="font-size: 24px; flex-shrink: 0;">📊</span>
+              <div style="flex: 1;">
+                <h3 style="font-size: 15px; font-weight: 600; margin: 0 0 4px 0;">3 QBRs pending</h3>
+                <p style="color: var(--muted); font-size: 13px; margin: 0 0 10px 0;">Quarterly reviews to schedule</p>
+                <button class="btn btn-secondary" data-action="goToCS" style="width: 100%; padding: 10px; border-radius: 8px; cursor: pointer;">Schedule</button>
+              </div>
+            </div>
+
+            ${activeCampaigns.length > 0 ? `
+              <div class="alert-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; border-radius: 10px; background: rgba(156, 39, 176, 0.1); border: 1px solid rgba(156, 39, 176, 0.3);">
+                <span style="font-size: 24px; flex-shrink: 0;">📧</span>
+                <div style="flex: 1;">
+                  <h3 style="font-size: 15px; font-weight: 600; margin: 0 0 4px 0;">${activeCampaigns.length} active campaigns</h3>
+                  <p style="color: var(--muted); font-size: 13px; margin: 0 0 10px 0;">Monitor performance</p>
+                  <button class="btn btn-secondary" data-action="goToMarketing" style="width: 100%; padding: 10px; border-radius: 8px; cursor: pointer;">View Details</button>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="cmo-section" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 12px; padding: 20px;">
+            <h2 style="font-size: 18px; margin: 0 0 16px 0;">🚀 Quick Actions</h2>
+            <div style="display: grid; gap: 10px;">
+              <button class="btn btn-primary" data-action="goToMarketing" style="width: 100%; padding: 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <span>📧</span>
+                <span>View All Campaigns</span>
+              </button>
+              <button class="btn btn-primary" data-action="goToCS" style="width: 100%; padding: 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <span>🤝</span>
+                <span>View Customer Success</span>
+              </button>
+            </div>
+          </div>
+        `;
+
+        safeSetHTML(container, html);
+
+        // Add event listeners
+        requestAnimationFrame(() => {
+          const updated = document.getElementById('cmoDashboardView');
+          if (!updated) return;
+
+          const clone = updated.cloneNode(true);
+          updated.parentNode.replaceChild(clone, updated);
+
+          clone.addEventListener('click', (e) => {
+            const actionButton = e.target.closest('[data-action]');
+            if (!actionButton) return;
+
+            const action = actionButton.getAttribute('data-action');
+
+            switch(action) {
+              case 'goToMarketing':
+                switchView('campaigns-dashboard');
+                break;
+              case 'goToCS':
+                switchView('cs-dashboard');
+                break;
+            }
+          });
+        });
+
+        analytics.track('cmo_dashboard_viewed', {
+          viewport: 'mobile',
+          total_campaigns: allCampaigns.length,
+          at_risk_customers: atRiskCustomers
+        });
+
+        return;
+      }
+
+      // DESKTOP FULL VIEW - Complete toolset
+      const html = `
+        <!-- CMO Header -->
+        <div style="margin-bottom: 32px;">
+          <h1 style="font-size: var(--font-size-h1); margin-bottom: 8px;">CMO Dashboard</h1>
+          <p style="color: var(--muted); font-size: 14px;">Marketing + Customer Success Command Center</p>
+        </div>
+
+        <!-- KPI Cards Grid -->
+        <div class="cmo-kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 32px;">
+
+          <!-- KPI Card 1: MRR -->
+          <div class="kpi-card-cmo" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 16px; padding: 24px; transition: all 0.2s;">
+            <div style="font-size: 32px; margin-bottom: 12px;">💰</div>
+            <div style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">Monthly Recurring Revenue</div>
+            <div style="font-size: 36px; font-weight: 700; color: var(--ink); margin-bottom: 4px;">€${mrr.toLocaleString()}</div>
+            <div style="font-size: 14px; font-weight: 500; color: var(--success);">+${mrrGrowth}% vs last month</div>
+          </div>
+
+          <!-- KPI Card 2: Active Customers -->
+          <div class="kpi-card-cmo" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 16px; padding: 24px; transition: all 0.2s;">
+            <div style="font-size: 32px; margin-bottom: 12px;">🤝</div>
+            <div style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">Active Customers</div>
+            <div style="font-size: 36px; font-weight: 700; color: var(--ink); margin-bottom: 4px;">${totalCustomers}</div>
+            <div style="font-size: 14px; font-weight: 500; color: var(--success);">+28 this month</div>
+          </div>
+
+          <!-- KPI Card 3: Campaign ROI -->
+          <div class="kpi-card-cmo" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 16px; padding: 24px; transition: all 0.2s;">
+            <div style="font-size: 32px; margin-bottom: 12px;">📈</div>
+            <div style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">Average Campaign ROI</div>
+            <div style="font-size: 36px; font-weight: 700; color: var(--ink); margin-bottom: 4px;">+${avgROI}%</div>
+            <div style="font-size: 14px; font-weight: 500; color: var(--success);">Best: Summer Fest</div>
+          </div>
+
+          <!-- KPI Card 4: Churn Rate -->
+          <div class="kpi-card-cmo" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 16px; padding: 24px; transition: all 0.2s;">
+            <div style="font-size: 32px; margin-bottom: 12px;">📉</div>
+            <div style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">Churn Rate</div>
+            <div style="font-size: 36px; font-weight: 700; color: var(--ink); margin-bottom: 4px;">${churnRate}%</div>
+            <div style="font-size: 14px; font-weight: 500; color: var(--success);">${churnImprovement}% improvement</div>
+          </div>
+
+        </div>
+
+        <!-- Two Column Layout: Marketing + CS -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 32px;">
+
+          <!-- Marketing Column -->
+          <div class="cmo-section" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 16px; padding: 24px;">
+
+            <!-- Section Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+              <h2 style="font-size: var(--font-size-h2); margin: 0;">📧 Marketing Activity</h2>
+              <button class="btn btn-secondary" data-action="goToMarketing" style="padding: 8px 16px; border-radius: 8px; cursor: pointer;">View All</button>
+            </div>
+
+            <!-- Active Campaigns List -->
+            <div class="activity-list" style="margin-bottom: 20px;">
+              ${activeCampaigns.slice(0, 2).map(campaign => `
+                <div class="activity-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border-radius: 12px; margin-bottom: 12px; background: rgba(156, 39, 176, 0.1);">
+                  <span style="width: 12px; height: 12px; border-radius: 50%; background: var(--success); flex-shrink: 0; margin-top: 4px;"></span>
+                  <div style="flex: 1;">
+                    <h3 style="font-size: 15px; font-weight: 600; margin: 0 0 4px 0;">${campaign.name}</h3>
+                    <p style="color: var(--muted); font-size: 13px; margin: 0 0 8px 0;">Active • ${campaign.end_date ? new Date(campaign.end_date).toLocaleDateString() : 'Ongoing'}</p>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted);">
+                      <span>Budget: €${(parseFloat(campaign.budget_allocated) || 0).toLocaleString()}</span>
+                      <span>Spent: €${(parseFloat(campaign.budget_spent) || 0).toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+
+              ${scheduledCampaigns.slice(0, 1).map(campaign => `
+                <div class="activity-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border-radius: 12px; margin-bottom: 12px; background: rgba(255, 193, 7, 0.1);">
+                  <span style="width: 12px; height: 12px; border-radius: 50%; background: var(--warning); flex-shrink: 0; margin-top: 4px;"></span>
+                  <div style="flex: 1;">
+                    <h3 style="font-size: 15px; font-weight: 600; margin: 0 0 4px 0;">${campaign.name}</h3>
+                    <p style="color: var(--muted); font-size: 13px; margin: 0 0 8px 0;">Scheduled • ${campaign.start_date ? new Date(campaign.start_date).toLocaleDateString() : 'TBD'}</p>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted);">
+                      <span>Budget: €${(parseFloat(campaign.budget_allocated) || 0).toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+
+              ${activeCampaigns.length === 0 && scheduledCampaigns.length === 0 ? `
+                <div style="text-align: center; padding: 32px; color: var(--muted);">
+                  <div style="font-size: 48px; margin-bottom: 12px;">📧</div>
+                  <p>No hay campañas activas</p>
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- Quick Stats -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding-top: 20px; border-top: 1px solid var(--stroke);">
+              <div style="text-align: center;">
+                <span style="display: block; font-size: 24px; font-weight: 700; color: var(--accent1);">${allCampaigns.filter(c => c.status === 'active').length}</span>
+                <span style="display: block; font-size: 12px; color: var(--muted); margin-top: 4px;">Active Campaigns</span>
+              </div>
+              <div style="text-align: center;">
+                <span style="display: block; font-size: 24px; font-weight: 700; color: var(--accent1);">${activeSegments}</span>
+                <span style="display: block; font-size: 12px; color: var(--muted); margin-top: 4px;">Segments</span>
+              </div>
+              <div style="text-align: center;">
+                <span style="display: block; font-size: 24px; font-weight: 700; color: var(--accent1);">${avgOpenRate}%</span>
+                <span style="display: block; font-size: 12px; color: var(--muted); margin-top: 4px;">Avg Open Rate</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Customer Success Column -->
+          <div class="cmo-section" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 16px; padding: 24px;">
+
+            <!-- Section Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+              <h2 style="font-size: var(--font-size-h2); margin: 0;">🤝 Customer Success</h2>
+              <button class="btn btn-secondary" data-action="goToCS" style="padding: 8px 16px; border-radius: 8px; cursor: pointer;">View All</button>
+            </div>
+
+            <!-- Alerts List -->
+            <div class="alert-list" style="margin-bottom: 20px;">
+
+              <!-- At Risk Alert -->
+              ${atRiskCustomers > 0 ? `
+                <div class="alert-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border-radius: 12px; margin-bottom: 12px; background: rgba(244, 67, 54, 0.1);">
+                  <span style="font-size: 20px; flex-shrink: 0;">⚠️</span>
+                  <div style="flex: 1;">
+                    <h3 style="font-size: 15px; font-weight: 600; margin: 0 0 4px 0;">${atRiskCustomers} customers at risk</h3>
+                    <p style="color: var(--muted); font-size: 13px; margin: 0;">Health score < 50 • Need attention</p>
+                  </div>
+                  <button class="btn-link" data-action="goToCS" style="padding: 4px 8px; font-size: 13px; cursor: pointer; background: transparent; border: none; color: var(--accent1); text-decoration: underline;">Review</button>
+                </div>
+              ` : ''}
+
+              <!-- QBR Pending -->
+              <div class="alert-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border-radius: 12px; margin-bottom: 12px; background: rgba(33, 150, 243, 0.1);">
+                <span style="font-size: 20px; flex-shrink: 0;">📊</span>
+                <div style="flex: 1;">
+                  <h3 style="font-size: 15px; font-weight: 600; margin: 0 0 4px 0;">3 QBRs pending</h3>
+                  <p style="color: var(--muted); font-size: 13px; margin: 0;">Quarterly reviews to schedule</p>
+                </div>
+                <button class="btn-link" data-action="goToCS" style="padding: 4px 8px; font-size: 13px; cursor: pointer; background: transparent; border: none; color: var(--accent1); text-decoration: underline;">Schedule</button>
+              </div>
+
+              <!-- Success Alert -->
+              <div class="alert-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border-radius: 12px; margin-bottom: 12px; background: rgba(76, 175, 80, 0.1);">
+                <span style="font-size: 20px; flex-shrink: 0;">✅</span>
+                <div style="flex: 1;">
+                  <h3 style="font-size: 15px; font-weight: 600; margin: 0 0 4px 0;">2 onboardings completed</h3>
+                  <p style="color: var(--muted); font-size: 13px; margin: 0;">This week</p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Quick Stats -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding-top: 20px; border-top: 1px solid var(--stroke);">
+              <div style="text-align: center;">
+                <span style="display: block; font-size: 24px; font-weight: 700; color: var(--success);">${healthyCustomers > 0 ? Math.round((healthyCustomers / totalCustomers) * 100) : 0}%</span>
+                <span style="display: block; font-size: 12px; color: var(--muted); margin-top: 4px;">Healthy</span>
+              </div>
+              <div style="text-align: center;">
+                <span style="display: block; font-size: 24px; font-weight: 700; color: var(--danger);">${atRiskCustomers}</span>
+                <span style="display: block; font-size: 12px; color: var(--muted); margin-top: 4px;">At Risk</span>
+              </div>
+              <div style="text-align: center;">
+                <span style="display: block; font-size: 24px; font-weight: 700; color: var(--accent1);">${avgHealthScore}</span>
+                <span style="display: block; font-size: 12px; color: var(--muted); margin-top: 4px;">NPS Score</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- OKRs Section -->
+        <div class="cmo-section" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 16px; padding: 24px;">
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="font-size: var(--font-size-h2); margin: 0;">🎯 Active OKRs</h2>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+
+            <!-- Marketing OKR -->
+            <div class="okr-card" style="background: rgba(156, 39, 176, 0.05); border: 1px solid rgba(156, 39, 176, 0.2); border-radius: 12px; padding: 20px;">
+              <h3 style="font-size: 16px; font-weight: 600; margin: 0 0 12px 0;">Aumentar MRR 30%</h3>
+              <div style="background: rgba(0,0,0,0.1); border-radius: 8px; height: 8px; overflow: hidden; margin-bottom: 8px;">
+                <div style="width: 78%; height: 100%; background: var(--accent1); border-radius: 8px; transition: width 0.3s;"></div>
+              </div>
+              <span style="font-size: 13px; color: var(--muted);">78% complete</span>
+            </div>
+
+            <!-- CS OKR -->
+            <div class="okr-card" style="background: rgba(76, 175, 80, 0.05); border: 1px solid rgba(76, 175, 80, 0.2); border-radius: 12px; padding: 20px;">
+              <h3 style="font-size: 16px; font-weight: 600; margin: 0 0 12px 0;">Reducir Churn a 3%</h3>
+              <div style="background: rgba(0,0,0,0.1); border-radius: 8px; height: 8px; overflow: hidden; margin-bottom: 8px;">
+                <div style="width: 93%; height: 100%; background: var(--success); border-radius: 8px; transition: width 0.3s;"></div>
+              </div>
+              <span style="font-size: 13px; color: var(--muted);">93% complete (3.2% actual)</span>
+            </div>
+
+          </div>
+
+        </div>
+      `;
+
+      safeSetHTML(container, html);
+
+      // Add event listeners using event delegation
+      requestAnimationFrame(() => {
+        const updated = document.getElementById('cmoDashboardView');
+        if (!updated) return;
+
+        // Remove old listeners by cloning
+        const clone = updated.cloneNode(true);
+        updated.parentNode.replaceChild(clone, updated);
+
+        // Add new listener to the cloned container
+        clone.addEventListener('click', (e) => {
+          const actionButton = e.target.closest('[data-action]');
+          if (!actionButton) return;
+
+          const action = actionButton.getAttribute('data-action');
+
+          switch(action) {
+            case 'goToMarketing':
+              switchView('campaigns-dashboard');
+              break;
+            case 'goToCS':
+              switchView('cs-dashboard');
+              break;
+          }
+        });
+      });
+
+      // Track analytics
+      analytics.track('cmo_dashboard_viewed', {
+        viewport: 'desktop',
+        total_campaigns: allCampaigns.length,
+        active_campaigns: activeCampaigns.length,
+        total_customers: totalCustomers,
+        at_risk_customers: atRiskCustomers
+      });
+    }
+
+    // ================================================================
     // VIEW AS USER SYSTEM (Multi-Tenant Interno)
     // ================================================================
 
@@ -6350,6 +8332,7 @@
       setupOfflineDetection();
       initializeRoleBasedNav();
       initializeKeyboardNavigation();
+      setupResponsiveHandlers();
 
       // Show welcome message when user logs in successfully
       const urlParams = new URLSearchParams(window.location.search);
@@ -6364,6 +8347,38 @@
         }, 500);
       }
     });
+
+    // Handle responsive re-rendering for mobile/desktop transitions
+    function setupResponsiveHandlers() {
+      let lastWidth = window.innerWidth;
+      let resizeTimer;
+
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          const currentWidth = window.innerWidth;
+          const wasMobile = lastWidth < 640;
+          const isMobile = currentWidth < 640;
+
+          // Only re-render if we crossed the mobile/desktop threshold
+          if (wasMobile !== isMobile) {
+            lastWidth = currentWidth;
+
+            // Re-render CMO Dashboard if it's the active view
+            const cmoDashboardView = document.getElementById('cmoDashboardView');
+            if (cmoDashboardView && cmoDashboardView.style.display !== 'none') {
+              renderCMODashboard();
+            }
+
+            // Re-render campaigns dashboard if it's the active view
+            const campaignsView = document.getElementById('campaignsDashboardView');
+            if (campaignsView && campaignsView.style.display !== 'none') {
+              renderCampaignsDashboard();
+            }
+          }
+        }, 250); // Debounce 250ms
+      });
+    }
 
     function initializeRoleBasedNav() {
       // Role-based navigation with proper permission checks
@@ -6393,16 +8408,27 @@
         }
       }
 
-      // Show CS Dashboard to CSMs, Directors, and CEOs
+      // Show CS Dashboard to CSMs, Directors, CMOs and CEOs
       const csmTab = document.querySelector('[data-required-role="csm"]');
       if (csmTab) {
-        if (userRole === 'csm' || userRole === 'director' || userRole === 'ceo') {
+        if (userRole === 'csm' || userRole === 'director' || userRole === 'ceo' || userRole === 'cmo') {
           csmTab.setAttribute('data-user-has-role', 'true');
           csmTab.style.display = 'flex';
         } else {
           csmTab.style.display = 'none';
         }
       }
+
+      // Show CMO Dashboard to CMOs and CEOs
+      const cmoTabs = document.querySelectorAll('[data-required-role="cmo"]');
+      cmoTabs.forEach(tab => {
+        if (userRole === 'cmo' || userRole === 'ceo') {
+          tab.setAttribute('data-user-has-role', 'true');
+          tab.style.display = 'flex';
+        } else {
+          tab.style.display = 'none';
+        }
+      });
     }
   </script>
 </body>

@@ -2010,6 +2010,315 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* ================================================================
+       CMO DASHBOARD STYLES - Mobile-First Responsive
+       ================================================================ */
+
+    /* CMO Dashboard Container - Proper mobile margins */
+    #cmoDashboardView {
+      padding: 16px;
+    }
+
+    @media (min-width: 768px) {
+      #cmoDashboardView {
+        padding: 24px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      #cmoDashboardView {
+        padding: 32px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+    }
+
+    /* KPI Cards with hover effect */
+    .kpi-card-cmo {
+      transition: all 0.2s ease;
+    }
+
+    .kpi-card-cmo:hover {
+      border-color: var(--accent1);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(156, 39, 176, 0.2);
+    }
+
+    /* Mobile-first responsive grid for KPI cards */
+    .cmo-kpi-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .cmo-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .cmo-kpi-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    /* CMO Section Cards */
+    .cmo-section {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      padding: 16px;
+      transition: all 0.2s;
+    }
+
+    @media (min-width: 768px) {
+      .cmo-section {
+        padding: 24px;
+      }
+    }
+
+    /* Activity and Alert Items */
+    .activity-item,
+    .alert-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    @media (min-width: 768px) {
+      .activity-item,
+      .alert-item {
+        padding: 16px;
+      }
+    }
+
+    .activity-item:hover,
+    .alert-item:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Status dots */
+    .status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    .status-dot.green {
+      background: var(--success);
+    }
+
+    .status-dot.yellow {
+      background: var(--warning);
+    }
+
+    .status-dot.red {
+      background: var(--danger);
+    }
+
+    /* Quick Stats responsive grid */
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .quick-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .quick-stats > div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        background: rgba(156, 39, 176, 0.05);
+        border-radius: 8px;
+      }
+    }
+
+    /* OKR Cards */
+    .okr-card {
+      padding: 16px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    @media (min-width: 768px) {
+      .okr-card {
+        padding: 20px;
+      }
+    }
+
+    .okr-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Progress bars */
+    .progress-bar-container {
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      height: 8px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 8px;
+      transition: width 0.5s ease-in-out;
+    }
+
+    /* Button styles for CMO dashboard */
+    .btn-link {
+      padding: 4px 8px;
+      font-size: 13px;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      color: var(--accent1);
+      text-decoration: underline;
+      transition: all 0.2s;
+      min-height: 44px; /* Touch target */
+    }
+
+    .btn-link:hover {
+      color: var(--accent1-light);
+      transform: translateX(2px);
+    }
+
+    /* Mobile optimizations for CMO Dashboard */
+    @media (max-width: 640px) {
+      /* Reduce KPI card padding on mobile */
+      .kpi-card-cmo {
+        padding: 20px !important;
+      }
+
+      /* Reduce font sizes on mobile for better readability */
+      .kpi-card-cmo > div:nth-child(3) {
+        font-size: 28px !important;
+      }
+
+      /* Stack section headers vertically */
+      .cmo-section > div:first-child {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px;
+      }
+
+      /* Full width buttons on mobile */
+      .cmo-section button.btn {
+        width: 100%;
+      }
+
+      /* Reduce activity item padding */
+      .activity-list,
+      .alert-list {
+        margin-bottom: 16px;
+      }
+
+      /* Better mobile typography */
+      h1 {
+        font-size: 28px !important;
+      }
+
+      h2 {
+        font-size: 20px !important;
+      }
+
+      h3 {
+        font-size: 16px !important;
+      }
+
+      /* Touch-friendly margins */
+      .cmo-kpi-grid,
+      .cmo-section {
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      /* Ensure no horizontal scroll */
+      .view-content.cmo-dashboard {
+        overflow-x: hidden;
+        padding: 16px;
+      }
+    }
+
+    /* Tablet optimizations */
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .cmo-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .kpi-card-cmo {
+        padding: 20px !important;
+      }
+
+      .kpi-card-cmo > div:nth-child(3) {
+        font-size: 32px !important;
+      }
+    }
+
+    /* Desktop optimizations */
+    @media (min-width: 1025px) {
+      .view-content.cmo-dashboard {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+    }
+
+    /* Accessibility - Focus states */
+    .kpi-card-cmo:focus-within,
+    .activity-item:focus-within,
+    .alert-item:focus-within,
+    .okr-card:focus-within {
+      outline: 2px solid var(--accent1);
+      outline-offset: 2px;
+    }
+
+    /* Loading state for CMO dashboard */
+    .cmo-loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 400px;
+      color: var(--muted);
+    }
+
+    /* Empty state styling */
+    .cmo-empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--muted);
+    }
+
+    .cmo-empty-state h3 {
+      margin-bottom: 12px;
+      color: var(--ink);
+    }
+
+    /* Animation for metrics updates */
+    @keyframes pulse-cmo {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    .kpi-card-cmo.updating {
+      animation: pulse-cmo 1s ease-in-out;
+    }
   </style>
 </head>
 <body>
@@ -2172,6 +2481,28 @@
             <span class="tab-label">Director Dashboard</span>
           </button>
           <button class="nav-tab"
+                  data-view="cmo-dashboard"
+                  data-required-role="cmo"
+                  onclick="switchView('cmo-dashboard')"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="cmo-dashboard-panel"
+                  aria-label="CMO Dashboard - Marketing y Customer Success Command Center">
+            <span class="tab-icon">📊</span>
+            <span class="tab-label">CMO Dashboard</span>
+          </button>
+          <button class="nav-tab"
+                  data-view="campaigns-dashboard"
+                  data-required-role="cmo"
+                  onclick="switchView('campaigns-dashboard')"
+                  role="tab"
+                  aria-selected="false"
+                  aria-controls="campaigns-dashboard-panel"
+                  aria-label="Dashboard de Campañas de Marketing">
+            <span class="tab-icon">📧</span>
+            <span class="tab-label">Marketing</span>
+          </button>
+          <button class="nav-tab"
                   data-view="cs-dashboard"
                   data-required-role="csm"
                   onclick="switchView('cs-dashboard')"
@@ -2181,16 +2512,6 @@
                   aria-label="Dashboard de Customer Success con gestión de clientes">
             <span class="tab-icon">🤝</span>
             <span class="tab-label">Customer Success</span>
-          </button>
-          <button class="nav-tab"
-                  data-view="campaigns-dashboard"
-                  onclick="switchView('campaigns-dashboard')"
-                  role="tab"
-                  aria-selected="false"
-                  aria-controls="campaigns-dashboard-panel"
-                  aria-label="Dashboard de Campañas de Marketing">
-            <span class="tab-icon">📊</span>
-            <span class="tab-label">Campaigns</span>
           </button>
         </div>
       </nav>
@@ -2236,6 +2557,11 @@
       <!-- Customer Success Dashboard -->
       <div id="csDashboardView" class="view-content cs-dashboard" style="display: none;">
         <!-- CS Dashboard will be populated by JavaScript -->
+      </div>
+
+      <!-- CMO Dashboard View -->
+      <div id="cmoDashboardView" class="view-content cmo-dashboard" style="display: none;">
+        <!-- CMO Dashboard will be populated by JavaScript -->
       </div>
 
       <!-- Campaigns Dashboard -->
@@ -5333,12 +5659,13 @@
       // Check role-based permissions
       const userRole = currentUser.role || 'user';
       const rolePermissions = {
-        'timeline': ['user', 'csm', 'director', 'ceo'],
-        'user-dashboard': ['user', 'csm', 'director', 'ceo'],
+        'timeline': ['user', 'csm', 'director', 'ceo', 'cmo'],
+        'user-dashboard': ['user', 'csm', 'director', 'ceo', 'cmo'],
         'ceo-dashboard': ['ceo'],
+        'cmo-dashboard': ['cmo', 'ceo'],
         'director-dashboard': ['director', 'ceo'],
-        'cs-dashboard': ['csm', 'director', 'ceo'],
-        'campaigns-dashboard': ['user', 'csm', 'director', 'ceo']
+        'cs-dashboard': ['csm', 'director', 'ceo', 'cmo'],
+        'campaigns-dashboard': ['cmo', 'ceo']
       };
 
       if (!rolePermissions[viewName]?.includes(userRole)) {
@@ -5350,6 +5677,7 @@
         'timeline': document.getElementById('timelineView'),
         'user-dashboard': document.getElementById('userDashboardView'),
         'ceo-dashboard': document.getElementById('ceoDashboardView'),
+        'cmo-dashboard': document.getElementById('cmoDashboardView'),
         'director-dashboard': document.getElementById('directorDashboardView'),
         'cs-dashboard': document.getElementById('csDashboardView'),
         'campaigns-dashboard': document.getElementById('campaignsDashboardView')
@@ -5386,6 +5714,7 @@
         'timeline': 'Vista de línea de tiempo cargada',
         'user-dashboard': 'Mi Dashboard cargado',
         'ceo-dashboard': 'Dashboard ejecutivo cargado',
+        'cmo-dashboard': 'CMO Dashboard cargado',
         'director-dashboard': 'Dashboard de director cargado',
         'cs-dashboard': 'Dashboard de Customer Success cargado',
         'campaigns-dashboard': 'Dashboard de Campañas cargado'
@@ -5406,6 +5735,9 @@
       } else if (viewName === 'ceo-dashboard') {
         viewElements['ceo-dashboard'].style.display = 'block';
         renderCEODashboard();
+      } else if (viewName === 'cmo-dashboard') {
+        viewElements['cmo-dashboard'].style.display = 'block';
+        renderCMODashboard();
       } else if (viewName === 'director-dashboard') {
         viewElements['director-dashboard'].style.display = 'block';
         renderDirectorDashboard();
@@ -5871,7 +6203,7 @@
         deptOKRBtn.addEventListener('click', openDepartmentOKRModal);
       }
       if (teamReviewBtn) {
-        teamReviewBtn.addEventListener('click', openTeamReview);
+        teamReviewBtn.addEventListener('click', openTeamReviewModal);
       }
 
       // Render sub-components
@@ -7187,6 +7519,440 @@
     }
 
     // ================================================================
+    // CMO DASHBOARD - Marketing + Customer Success Command Center
+    // ================================================================
+
+    async function renderCMODashboard() {
+      const container = document.getElementById('cmoDashboardView');
+
+      if (!currentUser) {
+        safeSetHTML(container, '<p class="empty-state">Por favor, inicia sesión para ver el dashboard</p>');
+        return;
+      }
+
+      // Detect mobile viewport
+      const isMobile = window.innerWidth < 640;
+
+      // Load data in parallel for performance
+      const [campaigns, customers, companyOKRs] = await Promise.all([
+        loadCampaigns(),
+        loadAllCustomers(),
+        loadCompanyOKRs()
+      ]);
+
+      // Calculate key metrics
+      const activeCampaigns = allCampaigns.filter(c => c.status === 'active');
+      const scheduledCampaigns = allCampaigns.filter(c => c.status === 'planning');
+      const totalCustomers = allCustomers.length;
+      const healthyCustomers = allCustomers.filter(c => (c.health_score || 0) >= 70).length;
+      const atRiskCustomers = allCustomers.filter(c => (c.health_score || 0) < 50).length;
+      const avgHealthScore = totalCustomers > 0
+        ? Math.round(allCustomers.reduce((sum, c) => sum + (c.health_score || 0), 0) / totalCustomers)
+        : 0;
+
+      // Calculate marketing metrics
+      const totalBudgetAllocated = allCampaigns.reduce((sum, c) => sum + (parseFloat(c.budget_allocated) || 0), 0);
+      const totalBudgetSpent = allCampaigns.reduce((sum, c) => sum + (parseFloat(c.budget_spent) || 0), 0);
+      const avgOpenRate = 42; // Mock data - replace with real calculation
+      const activeSegments = 24; // Mock data
+
+      // Calculate churn rate (mock)
+      const churnRate = 3.2;
+      const churnImprovement = -0.5;
+
+      // Calculate MRR (mock - replace with real data)
+      const mrr = 125000;
+      const mrrGrowth = 12;
+
+      // Calculate average campaign ROI
+      const avgROI = 245;
+
+      // MOBILE PRIORITY VIEW - Only urgent/critical information
+      if (isMobile) {
+        const html = `
+          <!-- Mobile Header -->
+          <div style="margin-bottom: 24px;">
+            <h1 style="font-size: 24px; margin-bottom: 4px;">CMO Dashboard</h1>
+            <p style="color: var(--muted); font-size: 13px;">Priority View</p>
+          </div>
+
+          <!-- Critical KPIs Only (Top 3) -->
+          <div style="display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px;">
+
+            <!-- MRR Card -->
+            <div class="kpi-card-cmo" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 12px; padding: 20px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="font-size: 28px;">💰</div>
+                <div style="flex: 1;">
+                  <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">MRR</div>
+                  <div style="font-size: 28px; font-weight: 700; color: var(--ink);">€${mrr.toLocaleString()}</div>
+                  <div style="font-size: 13px; font-weight: 500; color: var(--success);">+${mrrGrowth}%</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Churn Rate Card -->
+            <div class="kpi-card-cmo" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 12px; padding: 20px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="font-size: 28px;">📉</div>
+                <div style="flex: 1;">
+                  <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Churn Rate</div>
+                  <div style="font-size: 28px; font-weight: 700; color: var(--ink);">${churnRate}%</div>
+                  <div style="font-size: 13px; font-weight: 500; color: var(--success);">${churnImprovement}%</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active Campaigns Card -->
+            <div class="kpi-card-cmo" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 12px; padding: 20px;">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="font-size: 28px;">📧</div>
+                <div style="flex: 1;">
+                  <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Active Campaigns</div>
+                  <div style="font-size: 28px; font-weight: 700; color: var(--ink);">${activeCampaigns.length}</div>
+                  <div style="font-size: 13px; color: var(--muted);">${scheduledCampaigns.length} scheduled</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Critical Alerts -->
+          <div class="cmo-section" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+            <h2 style="font-size: 18px; margin: 0 0 16px 0;">⚠️ Urgent Alerts</h2>
+
+            ${atRiskCustomers > 0 ? `
+              <div class="alert-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; border-radius: 10px; margin-bottom: 10px; background: rgba(244, 67, 54, 0.1); border: 1px solid rgba(244, 67, 54, 0.3);">
+                <span style="font-size: 24px; flex-shrink: 0;">⚠️</span>
+                <div style="flex: 1;">
+                  <h3 style="font-size: 15px; font-weight: 600; margin: 0 0 4px 0; color: var(--danger);">${atRiskCustomers} customers at risk</h3>
+                  <p style="color: var(--muted); font-size: 13px; margin: 0 0 10px 0;">Health score < 50 • Need immediate attention</p>
+                  <button class="btn btn-primary" data-action="goToCS" style="width: 100%; padding: 10px; border-radius: 8px; cursor: pointer;">Review Now</button>
+                </div>
+              </div>
+            ` : ''}
+
+            <div class="alert-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; border-radius: 10px; margin-bottom: 10px; background: rgba(33, 150, 243, 0.1); border: 1px solid rgba(33, 150, 243, 0.3);">
+              <span style="font-size: 24px; flex-shrink: 0;">📊</span>
+              <div style="flex: 1;">
+                <h3 style="font-size: 15px; font-weight: 600; margin: 0 0 4px 0;">3 QBRs pending</h3>
+                <p style="color: var(--muted); font-size: 13px; margin: 0 0 10px 0;">Quarterly reviews to schedule</p>
+                <button class="btn btn-secondary" data-action="goToCS" style="width: 100%; padding: 10px; border-radius: 8px; cursor: pointer;">Schedule</button>
+              </div>
+            </div>
+
+            ${activeCampaigns.length > 0 ? `
+              <div class="alert-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 14px; border-radius: 10px; background: rgba(156, 39, 176, 0.1); border: 1px solid rgba(156, 39, 176, 0.3);">
+                <span style="font-size: 24px; flex-shrink: 0;">📧</span>
+                <div style="flex: 1;">
+                  <h3 style="font-size: 15px; font-weight: 600; margin: 0 0 4px 0;">${activeCampaigns.length} active campaigns</h3>
+                  <p style="color: var(--muted); font-size: 13px; margin: 0 0 10px 0;">Monitor performance</p>
+                  <button class="btn btn-secondary" data-action="goToMarketing" style="width: 100%; padding: 10px; border-radius: 8px; cursor: pointer;">View Details</button>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="cmo-section" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 12px; padding: 20px;">
+            <h2 style="font-size: 18px; margin: 0 0 16px 0;">🚀 Quick Actions</h2>
+            <div style="display: grid; gap: 10px;">
+              <button class="btn btn-primary" data-action="goToMarketing" style="width: 100%; padding: 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <span>📧</span>
+                <span>View All Campaigns</span>
+              </button>
+              <button class="btn btn-primary" data-action="goToCS" style="width: 100%; padding: 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <span>🤝</span>
+                <span>View Customer Success</span>
+              </button>
+            </div>
+          </div>
+        `;
+
+        safeSetHTML(container, html);
+
+        // Add event listeners
+        requestAnimationFrame(() => {
+          const updated = document.getElementById('cmoDashboardView');
+          if (!updated) return;
+
+          const clone = updated.cloneNode(true);
+          updated.parentNode.replaceChild(clone, updated);
+
+          clone.addEventListener('click', (e) => {
+            const actionButton = e.target.closest('[data-action]');
+            if (!actionButton) return;
+
+            const action = actionButton.getAttribute('data-action');
+
+            switch(action) {
+              case 'goToMarketing':
+                switchView('campaigns-dashboard');
+                break;
+              case 'goToCS':
+                switchView('cs-dashboard');
+                break;
+            }
+          });
+        });
+
+        analytics.track('cmo_dashboard_viewed', {
+          viewport: 'mobile',
+          total_campaigns: allCampaigns.length,
+          at_risk_customers: atRiskCustomers
+        });
+
+        return;
+      }
+
+      // DESKTOP FULL VIEW - Complete toolset
+      const html = `
+        <!-- CMO Header -->
+        <div style="margin-bottom: 32px;">
+          <h1 style="font-size: var(--font-size-h1); margin-bottom: 8px;">CMO Dashboard</h1>
+          <p style="color: var(--muted); font-size: 14px;">Marketing + Customer Success Command Center</p>
+        </div>
+
+        <!-- KPI Cards Grid -->
+        <div class="cmo-kpi-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 32px;">
+
+          <!-- KPI Card 1: MRR -->
+          <div class="kpi-card-cmo" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 16px; padding: 24px; transition: all 0.2s;">
+            <div style="font-size: 32px; margin-bottom: 12px;">💰</div>
+            <div style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">Monthly Recurring Revenue</div>
+            <div style="font-size: 36px; font-weight: 700; color: var(--ink); margin-bottom: 4px;">€${mrr.toLocaleString()}</div>
+            <div style="font-size: 14px; font-weight: 500; color: var(--success);">+${mrrGrowth}% vs last month</div>
+          </div>
+
+          <!-- KPI Card 2: Active Customers -->
+          <div class="kpi-card-cmo" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 16px; padding: 24px; transition: all 0.2s;">
+            <div style="font-size: 32px; margin-bottom: 12px;">🤝</div>
+            <div style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">Active Customers</div>
+            <div style="font-size: 36px; font-weight: 700; color: var(--ink); margin-bottom: 4px;">${totalCustomers}</div>
+            <div style="font-size: 14px; font-weight: 500; color: var(--success);">+28 this month</div>
+          </div>
+
+          <!-- KPI Card 3: Campaign ROI -->
+          <div class="kpi-card-cmo" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 16px; padding: 24px; transition: all 0.2s;">
+            <div style="font-size: 32px; margin-bottom: 12px;">📈</div>
+            <div style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">Average Campaign ROI</div>
+            <div style="font-size: 36px; font-weight: 700; color: var(--ink); margin-bottom: 4px;">+${avgROI}%</div>
+            <div style="font-size: 14px; font-weight: 500; color: var(--success);">Best: Summer Fest</div>
+          </div>
+
+          <!-- KPI Card 4: Churn Rate -->
+          <div class="kpi-card-cmo" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 16px; padding: 24px; transition: all 0.2s;">
+            <div style="font-size: 32px; margin-bottom: 12px;">📉</div>
+            <div style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">Churn Rate</div>
+            <div style="font-size: 36px; font-weight: 700; color: var(--ink); margin-bottom: 4px;">${churnRate}%</div>
+            <div style="font-size: 14px; font-weight: 500; color: var(--success);">${churnImprovement}% improvement</div>
+          </div>
+
+        </div>
+
+        <!-- Two Column Layout: Marketing + CS -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-bottom: 32px;">
+
+          <!-- Marketing Column -->
+          <div class="cmo-section" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 16px; padding: 24px;">
+
+            <!-- Section Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+              <h2 style="font-size: var(--font-size-h2); margin: 0;">📧 Marketing Activity</h2>
+              <button class="btn btn-secondary" data-action="goToMarketing" style="padding: 8px 16px; border-radius: 8px; cursor: pointer;">View All</button>
+            </div>
+
+            <!-- Active Campaigns List -->
+            <div class="activity-list" style="margin-bottom: 20px;">
+              ${activeCampaigns.slice(0, 2).map(campaign => `
+                <div class="activity-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border-radius: 12px; margin-bottom: 12px; background: rgba(156, 39, 176, 0.1);">
+                  <span style="width: 12px; height: 12px; border-radius: 50%; background: var(--success); flex-shrink: 0; margin-top: 4px;"></span>
+                  <div style="flex: 1;">
+                    <h3 style="font-size: 15px; font-weight: 600; margin: 0 0 4px 0;">${campaign.name}</h3>
+                    <p style="color: var(--muted); font-size: 13px; margin: 0 0 8px 0;">Active • ${campaign.end_date ? new Date(campaign.end_date).toLocaleDateString() : 'Ongoing'}</p>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted);">
+                      <span>Budget: €${(parseFloat(campaign.budget_allocated) || 0).toLocaleString()}</span>
+                      <span>Spent: €${(parseFloat(campaign.budget_spent) || 0).toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+
+              ${scheduledCampaigns.slice(0, 1).map(campaign => `
+                <div class="activity-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border-radius: 12px; margin-bottom: 12px; background: rgba(255, 193, 7, 0.1);">
+                  <span style="width: 12px; height: 12px; border-radius: 50%; background: var(--warning); flex-shrink: 0; margin-top: 4px;"></span>
+                  <div style="flex: 1;">
+                    <h3 style="font-size: 15px; font-weight: 600; margin: 0 0 4px 0;">${campaign.name}</h3>
+                    <p style="color: var(--muted); font-size: 13px; margin: 0 0 8px 0;">Scheduled • ${campaign.start_date ? new Date(campaign.start_date).toLocaleDateString() : 'TBD'}</p>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted);">
+                      <span>Budget: €${(parseFloat(campaign.budget_allocated) || 0).toLocaleString()}</span>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+
+              ${activeCampaigns.length === 0 && scheduledCampaigns.length === 0 ? `
+                <div style="text-align: center; padding: 32px; color: var(--muted);">
+                  <div style="font-size: 48px; margin-bottom: 12px;">📧</div>
+                  <p>No hay campañas activas</p>
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- Quick Stats -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding-top: 20px; border-top: 1px solid var(--stroke);">
+              <div style="text-align: center;">
+                <span style="display: block; font-size: 24px; font-weight: 700; color: var(--accent1);">${allCampaigns.filter(c => c.status === 'active').length}</span>
+                <span style="display: block; font-size: 12px; color: var(--muted); margin-top: 4px;">Active Campaigns</span>
+              </div>
+              <div style="text-align: center;">
+                <span style="display: block; font-size: 24px; font-weight: 700; color: var(--accent1);">${activeSegments}</span>
+                <span style="display: block; font-size: 12px; color: var(--muted); margin-top: 4px;">Segments</span>
+              </div>
+              <div style="text-align: center;">
+                <span style="display: block; font-size: 24px; font-weight: 700; color: var(--accent1);">${avgOpenRate}%</span>
+                <span style="display: block; font-size: 12px; color: var(--muted); margin-top: 4px;">Avg Open Rate</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Customer Success Column -->
+          <div class="cmo-section" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 16px; padding: 24px;">
+
+            <!-- Section Header -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+              <h2 style="font-size: var(--font-size-h2); margin: 0;">🤝 Customer Success</h2>
+              <button class="btn btn-secondary" data-action="goToCS" style="padding: 8px 16px; border-radius: 8px; cursor: pointer;">View All</button>
+            </div>
+
+            <!-- Alerts List -->
+            <div class="alert-list" style="margin-bottom: 20px;">
+
+              <!-- At Risk Alert -->
+              ${atRiskCustomers > 0 ? `
+                <div class="alert-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border-radius: 12px; margin-bottom: 12px; background: rgba(244, 67, 54, 0.1);">
+                  <span style="font-size: 20px; flex-shrink: 0;">⚠️</span>
+                  <div style="flex: 1;">
+                    <h3 style="font-size: 15px; font-weight: 600; margin: 0 0 4px 0;">${atRiskCustomers} customers at risk</h3>
+                    <p style="color: var(--muted); font-size: 13px; margin: 0;">Health score < 50 • Need attention</p>
+                  </div>
+                  <button class="btn-link" data-action="goToCS" style="padding: 4px 8px; font-size: 13px; cursor: pointer; background: transparent; border: none; color: var(--accent1); text-decoration: underline;">Review</button>
+                </div>
+              ` : ''}
+
+              <!-- QBR Pending -->
+              <div class="alert-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border-radius: 12px; margin-bottom: 12px; background: rgba(33, 150, 243, 0.1);">
+                <span style="font-size: 20px; flex-shrink: 0;">📊</span>
+                <div style="flex: 1;">
+                  <h3 style="font-size: 15px; font-weight: 600; margin: 0 0 4px 0;">3 QBRs pending</h3>
+                  <p style="color: var(--muted); font-size: 13px; margin: 0;">Quarterly reviews to schedule</p>
+                </div>
+                <button class="btn-link" data-action="goToCS" style="padding: 4px 8px; font-size: 13px; cursor: pointer; background: transparent; border: none; color: var(--accent1); text-decoration: underline;">Schedule</button>
+              </div>
+
+              <!-- Success Alert -->
+              <div class="alert-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border-radius: 12px; margin-bottom: 12px; background: rgba(76, 175, 80, 0.1);">
+                <span style="font-size: 20px; flex-shrink: 0;">✅</span>
+                <div style="flex: 1;">
+                  <h3 style="font-size: 15px; font-weight: 600; margin: 0 0 4px 0;">2 onboardings completed</h3>
+                  <p style="color: var(--muted); font-size: 13px; margin: 0;">This week</p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Quick Stats -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding-top: 20px; border-top: 1px solid var(--stroke);">
+              <div style="text-align: center;">
+                <span style="display: block; font-size: 24px; font-weight: 700; color: var(--success);">${healthyCustomers > 0 ? Math.round((healthyCustomers / totalCustomers) * 100) : 0}%</span>
+                <span style="display: block; font-size: 12px; color: var(--muted); margin-top: 4px;">Healthy</span>
+              </div>
+              <div style="text-align: center;">
+                <span style="display: block; font-size: 24px; font-weight: 700; color: var(--danger);">${atRiskCustomers}</span>
+                <span style="display: block; font-size: 12px; color: var(--muted); margin-top: 4px;">At Risk</span>
+              </div>
+              <div style="text-align: center;">
+                <span style="display: block; font-size: 24px; font-weight: 700; color: var(--accent1);">${avgHealthScore}</span>
+                <span style="display: block; font-size: 12px; color: var(--muted); margin-top: 4px;">NPS Score</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- OKRs Section -->
+        <div class="cmo-section" style="background: var(--card); border: 1px solid var(--stroke); border-radius: 16px; padding: 24px;">
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="font-size: var(--font-size-h2); margin: 0;">🎯 Active OKRs</h2>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+
+            <!-- Marketing OKR -->
+            <div class="okr-card" style="background: rgba(156, 39, 176, 0.05); border: 1px solid rgba(156, 39, 176, 0.2); border-radius: 12px; padding: 20px;">
+              <h3 style="font-size: 16px; font-weight: 600; margin: 0 0 12px 0;">Aumentar MRR 30%</h3>
+              <div style="background: rgba(0,0,0,0.1); border-radius: 8px; height: 8px; overflow: hidden; margin-bottom: 8px;">
+                <div style="width: 78%; height: 100%; background: var(--accent1); border-radius: 8px; transition: width 0.3s;"></div>
+              </div>
+              <span style="font-size: 13px; color: var(--muted);">78% complete</span>
+            </div>
+
+            <!-- CS OKR -->
+            <div class="okr-card" style="background: rgba(76, 175, 80, 0.05); border: 1px solid rgba(76, 175, 80, 0.2); border-radius: 12px; padding: 20px;">
+              <h3 style="font-size: 16px; font-weight: 600; margin: 0 0 12px 0;">Reducir Churn a 3%</h3>
+              <div style="background: rgba(0,0,0,0.1); border-radius: 8px; height: 8px; overflow: hidden; margin-bottom: 8px;">
+                <div style="width: 93%; height: 100%; background: var(--success); border-radius: 8px; transition: width 0.3s;"></div>
+              </div>
+              <span style="font-size: 13px; color: var(--muted);">93% complete (3.2% actual)</span>
+            </div>
+
+          </div>
+
+        </div>
+      `;
+
+      safeSetHTML(container, html);
+
+      // Add event listeners using event delegation
+      requestAnimationFrame(() => {
+        const updated = document.getElementById('cmoDashboardView');
+        if (!updated) return;
+
+        // Remove old listeners by cloning
+        const clone = updated.cloneNode(true);
+        updated.parentNode.replaceChild(clone, updated);
+
+        // Add new listener to the cloned container
+        clone.addEventListener('click', (e) => {
+          const actionButton = e.target.closest('[data-action]');
+          if (!actionButton) return;
+
+          const action = actionButton.getAttribute('data-action');
+
+          switch(action) {
+            case 'goToMarketing':
+              switchView('campaigns-dashboard');
+              break;
+            case 'goToCS':
+              switchView('cs-dashboard');
+              break;
+          }
+        });
+      });
+
+      // Track analytics
+      analytics.track('cmo_dashboard_viewed', {
+        viewport: 'desktop',
+        total_campaigns: allCampaigns.length,
+        active_campaigns: activeCampaigns.length,
+        total_customers: totalCustomers,
+        at_risk_customers: atRiskCustomers
+      });
+    }
+
+    // ================================================================
     // VIEW AS USER SYSTEM (Multi-Tenant Interno)
     // ================================================================
 
@@ -7566,6 +8332,7 @@
       setupOfflineDetection();
       initializeRoleBasedNav();
       initializeKeyboardNavigation();
+      setupResponsiveHandlers();
 
       // Show welcome message when user logs in successfully
       const urlParams = new URLSearchParams(window.location.search);
@@ -7580,6 +8347,38 @@
         }, 500);
       }
     });
+
+    // Handle responsive re-rendering for mobile/desktop transitions
+    function setupResponsiveHandlers() {
+      let lastWidth = window.innerWidth;
+      let resizeTimer;
+
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          const currentWidth = window.innerWidth;
+          const wasMobile = lastWidth < 640;
+          const isMobile = currentWidth < 640;
+
+          // Only re-render if we crossed the mobile/desktop threshold
+          if (wasMobile !== isMobile) {
+            lastWidth = currentWidth;
+
+            // Re-render CMO Dashboard if it's the active view
+            const cmoDashboardView = document.getElementById('cmoDashboardView');
+            if (cmoDashboardView && cmoDashboardView.style.display !== 'none') {
+              renderCMODashboard();
+            }
+
+            // Re-render campaigns dashboard if it's the active view
+            const campaignsView = document.getElementById('campaignsDashboardView');
+            if (campaignsView && campaignsView.style.display !== 'none') {
+              renderCampaignsDashboard();
+            }
+          }
+        }, 250); // Debounce 250ms
+      });
+    }
 
     function initializeRoleBasedNav() {
       // Role-based navigation with proper permission checks
@@ -7609,16 +8408,27 @@
         }
       }
 
-      // Show CS Dashboard to CSMs, Directors, and CEOs
+      // Show CS Dashboard to CSMs, Directors, CMOs and CEOs
       const csmTab = document.querySelector('[data-required-role="csm"]');
       if (csmTab) {
-        if (userRole === 'csm' || userRole === 'director' || userRole === 'ceo') {
+        if (userRole === 'csm' || userRole === 'director' || userRole === 'ceo' || userRole === 'cmo') {
           csmTab.setAttribute('data-user-has-role', 'true');
           csmTab.style.display = 'flex';
         } else {
           csmTab.style.display = 'none';
         }
       }
+
+      // Show CMO Dashboard to CMOs and CEOs
+      const cmoTabs = document.querySelectorAll('[data-required-role="cmo"]');
+      cmoTabs.forEach(tab => {
+        if (userRole === 'cmo' || userRole === 'ceo') {
+          tab.setAttribute('data-user-has-role', 'true');
+          tab.style.display = 'flex';
+        } else {
+          tab.style.display = 'none';
+        }
+      });
     }
   </script>
 </body>
