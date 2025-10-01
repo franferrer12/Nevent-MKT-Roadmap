@@ -6022,7 +6022,7 @@
         const roleClass = `role-${user.role}`;
 
         return `
-          <div class="user-item ${isActive ? 'active' : ''}" onclick="switchToUser('${user.id}')">
+          <div class="user-item ${isActive ? 'active' : ''}" data-user-id="${user.id}">
             <div class="user-item-icon">${roleIcon}</div>
             <div class="user-item-info">
               <div class="user-item-name">${sanitizeHTML(user.full_name || user.email.split('@')[0])}</div>
