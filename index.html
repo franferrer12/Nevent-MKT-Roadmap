@@ -3510,7 +3510,7 @@
         key_results: keyResults,
         progress: avgProgress,
         status,
-        deadline,
+        end_date: deadline,  // Database uses end_date, not deadline
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
@@ -4280,7 +4280,7 @@
             <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
               <div style="flex: 1;">
                 <h4 style="margin: 0 0 4px 0;">${sanitizeHTML(okr.title)}</h4>
-                <span style="font-size: 13px; color: var(--muted);">${sanitizeHTML(okr.quarter)} • ${sanitizeHTML(okr.deadline || 'Sin deadline')}</span>
+                <span style="font-size: 13px; color: var(--muted);">${sanitizeHTML(okr.quarter)} • ${sanitizeHTML(okr.end_date || 'Sin fecha fin')}</span>
               </div>
               <span style="padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 500; background: ${statusColor}20; color: ${statusColor};">
                 ${statusText}
