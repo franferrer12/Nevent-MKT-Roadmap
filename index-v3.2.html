@@ -6603,37 +6603,37 @@
             <h1 style="font-size: var(--font-size-h1); margin-bottom: 8px;">📊 Campaigns</h1>
             <p style="color: var(--muted); font-size: 14px;">Gestiona tus campañas de marketing y su ROI</p>
           </div>
-          <button class="btn btn-primary" onclick="openCampaignModal()">
+          <button class="btn btn-primary" data-action="openCampaignModal">
             ➕ Nueva Campaña
           </button>
         </div>
 
         <!-- Filter Tabs -->
-        <div style="display: flex; gap: 12px; margin-bottom: var(--space-xl); border-bottom: 1px solid var(--stroke); padding-bottom: 12px;">
+        <div id="campaignFilters" style="display: flex; gap: 12px; margin-bottom: var(--space-xl); border-bottom: 1px solid var(--stroke); padding-bottom: 12px;">
           <button
             class="filter-tab ${campaignFilterStatus === 'all' ? 'active' : ''}"
-            onclick="filterCampaigns('all')"
+            data-filter="all"
             style="padding: 8px 16px; background: ${campaignFilterStatus === 'all' ? 'var(--accent1)' : 'transparent'}; color: ${campaignFilterStatus === 'all' ? 'white' : 'var(--muted)'}; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s;"
           >
             Todas (${allCampaigns.length})
           </button>
           <button
             class="filter-tab ${campaignFilterStatus === 'active' ? 'active' : ''}"
-            onclick="filterCampaigns('active')"
+            data-filter="active"
             style="padding: 8px 16px; background: ${campaignFilterStatus === 'active' ? 'var(--accent1)' : 'transparent'}; color: ${campaignFilterStatus === 'active' ? 'white' : 'var(--muted)'}; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s;"
           >
             Activas (${allCampaigns.filter(c => c.status === 'active').length})
           </button>
           <button
             class="filter-tab ${campaignFilterStatus === 'planning' ? 'active' : ''}"
-            onclick="filterCampaigns('planning')"
+            data-filter="planning"
             style="padding: 8px 16px; background: ${campaignFilterStatus === 'planning' ? 'var(--accent1)' : 'transparent'}; color: ${campaignFilterStatus === 'planning' ? 'white' : 'var(--muted)'}; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s;"
           >
             Planificación (${allCampaigns.filter(c => c.status === 'planning').length})
           </button>
           <button
             class="filter-tab ${campaignFilterStatus === 'completed' ? 'active' : ''}"
-            onclick="filterCampaigns('completed')"
+            data-filter="completed"
             style="padding: 8px 16px; background: ${campaignFilterStatus === 'completed' ? 'var(--accent1)' : 'transparent'}; color: ${campaignFilterStatus === 'completed' ? 'white' : 'var(--muted)'}; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s;"
           >
             Completadas (${allCampaigns.filter(c => c.status === 'completed').length})
@@ -6650,7 +6650,7 @@
                 ${campaignFilterStatus === 'all' ? 'Crea tu primera campaña de marketing para empezar a hacer seguimiento del presupuesto y ROI' : 'Las campañas aparecerán aquí cuando las crees'}
               </p>
               ${campaignFilterStatus === 'all' ? `
-                <button class="btn btn-primary" onclick="openCampaignModal()">
+                <button class="btn btn-primary" data-action="openCampaignModal">
                   ➕ Crear Primera Campaña
                 </button>
               ` : ''}
@@ -6660,6 +6660,43 @@
       `;
 
       safeSetHTML(container, html);
+
+      // Add event listeners for all buttons (after safeSetHTML with event delegation)
+      container.addEventListener('click', (e) => {
+        const action = e.target.getAttribute('data-action') || e.target.closest('[data-action]')?.getAttribute('data-action');
+
+        if (!action) return;
+
+        // Handle filter buttons
+        if (e.target.classList.contains('filter-tab')) {
+          const filter = e.target.getAttribute('data-filter');
+          if (filter) {
+            filterCampaigns(filter);
+          }
+          return;
+        }
+
+        // Handle campaign actions
+        const campaignId = e.target.getAttribute('data-campaign-id') || e.target.closest('[data-campaign-id]')?.getAttribute('data-campaign-id');
+
+        switch (action) {
+          case 'openCampaignModal':
+            openCampaignModal();
+            break;
+          case 'editCampaign':
+            if (campaignId) {
+              e.stopPropagation();
+              openEditCampaignModal(campaignId);
+            }
+            break;
+          case 'deleteCampaign':
+            if (campaignId) {
+              e.stopPropagation();
+              deleteCampaign(campaignId);
+            }
+            break;
+        }
+      });
     }
 
     // Render campaign card
@@ -6710,14 +6747,16 @@
             </div>
             <div style="display: flex; gap: 8px;">
               <button
-                onclick="event.stopPropagation(); openEditCampaignModal('${campaign.id}')"
+                data-action="editCampaign"
+                data-campaign-id="${campaign.id}"
                 style="padding: 6px 10px; background: var(--neutral-700); color: var(--ink); border: none; border-radius: 6px; cursor: pointer; font-size: 12px;"
                 title="Editar"
               >
                 ✏️
               </button>
               <button
-                onclick="event.stopPropagation(); deleteCampaign('${campaign.id}')"
+                data-action="deleteCampaign"
+                data-campaign-id="${campaign.id}"
                 style="padding: 6px 10px; background: var(--neutral-700); color: var(--danger); border: none; border-radius: 6px; cursor: pointer; font-size: 12px;"
                 title="Eliminar"
               >
