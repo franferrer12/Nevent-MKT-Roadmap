@@ -6580,7 +6580,7 @@
     }
 
     // Render campaigns dashboard
-    async function renderCampaignsDashboard() {
+    async function renderCampaignsDashboard(forceReload = false) {
       const container = document.getElementById('campaignsDashboardView');
 
       if (!currentUser) {
@@ -6588,9 +6588,12 @@
         return;
       }
 
-      await loadCampaigns();
+      // Only load from Supabase if campaigns not loaded yet or force reload
+      if (forceReload || allCampaigns.length === 0) {
+        await loadCampaigns();
+      }
 
-      // Filter campaigns by status
+      // Filter campaigns by status (in memory - fast!)
       let filteredCampaigns = allCampaigns;
       if (campaignFilterStatus !== 'all') {
         filteredCampaigns = allCampaigns.filter(c => c.status === campaignFilterStatus);
@@ -7123,7 +7126,7 @@
 
           showToast(`Campaña ${isEdit ? 'actualizada' : 'creada'} exitosamente`, 'success');
           closeCampaignModal();
-          await renderCampaignsDashboard();
+          await renderCampaignsDashboard(true); // Force reload after save
         });
       } catch (error) {
         console.error('Error saving campaign:', error);
@@ -7148,7 +7151,7 @@
         if (error) throw error;
 
         showToast('Campaña eliminada exitosamente', 'success');
-        await renderCampaignsDashboard();
+        await renderCampaignsDashboard(true); // Force reload after delete
 
         analytics.track('campaign_deleted', {
           campaign_id: campaignId,
