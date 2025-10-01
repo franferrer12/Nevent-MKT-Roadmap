@@ -5670,6 +5670,17 @@
         tab.addEventListener('click', () => filterCustomerSegment(segment));
       });
 
+      // Add event listeners for action buttons
+      const syncBtn = container.querySelector('.btn.btn-secondary');
+      const newCustomerBtn = container.querySelector('.btn.btn-primary');
+
+      if (syncBtn) {
+        syncBtn.addEventListener('click', syncCSMetricsToCompanyOKRsManual);
+      }
+      if (newCustomerBtn) {
+        newCustomerBtn.addEventListener('click', openCustomerModal);
+      }
+
       renderCustomerList(customers, 'all');
     }
 
