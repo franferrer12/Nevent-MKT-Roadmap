@@ -1,0 +1,686 @@
+/* ============================================
+   🎨 Nevent Platform - Professional Design System v3.2.1
+
+   Basado en análisis UX profesional y manual corporativo Nevent
+
+   PRINCIPIOS APLICADOS:
+   ✅ Jerarquía visual clara
+   ✅ Sistema de espaciado rígido (8px base)
+   ✅ Paleta corporativa estricta (#9C27B0, #673AB7)
+   ✅ Border-radius consistente (8px/16px)
+   ✅ Estados interactivos visibles
+   ✅ Tipografía Poppins jerárquica
+   ============================================ */
+
+/* Import Poppins font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* ============================================
+   CSS VARIABLES - Sistema Profesional
+   ============================================ */
+:root {
+  /* ===== COLORES NEVENT (Manual Corporativo) ===== */
+  --nevent-purple: #9C27B0;      /* Morado principal */
+  --nevent-violet: #673AB7;      /* Violeta secundario */
+  --nevent-gradient: linear-gradient(120deg, #9C27B0, #673AB7);
+
+  /* Neutros */
+  --nevent-black: #0D0D0D;
+  --nevent-white: #FFFFFF;
+  --nevent-gray-light: #F5F5F5;
+  --nevent-gray: #CCCCCC;
+  --nevent-gray-medium: #999999;
+  --nevent-gray-dark: #666666;
+
+  /* Fondos */
+  --bg-primary: #0D0D0D;         /* Fondo principal */
+  --bg-card: #1A1A1A;            /* Cards */
+  --bg-card-hover: #262626;      /* Hover cards */
+
+  /* Texto */
+  --text-primary: #FFFFFF;       /* Texto principal */
+  --text-secondary: #CCCCCC;     /* Texto secundario */
+  --text-tertiary: #666666;      /* Texto terciario */
+
+  /* Bordes */
+  --border-color: rgba(156, 39, 176, 0.2);
+  --border-color-hover: rgba(156, 39, 176, 0.5);
+  --stroke: #333333;
+
+  /* Estados */
+  --status-success: #4CAF50;     /* Verde */
+  --status-success-bg: rgba(76, 175, 80, 0.1);
+  --status-warning: #FF9800;     /* Ámbar */
+  --status-warning-bg: rgba(255, 152, 0, 0.1);
+  --status-error: #F44336;       /* Rojo */
+  --status-error-bg: rgba(244, 67, 54, 0.1);
+  --status-info: #673AB7;        /* Violeta corporativo */
+  --status-info-bg: rgba(103, 58, 183, 0.1);
+
+  /* ===== TIPOGRAFÍA JERÁRQUICA ===== */
+  --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Tamaños */
+  --font-h1: 32px;               /* Título página */
+  --font-h2: 24px;               /* Secciones */
+  --font-h3: 18px;               /* Cards */
+  --font-metric-large: 48px;     /* Métrica grande (reducido de 80px) */
+  --font-metric-small: 32px;     /* Métrica pequeña */
+  --font-body: 14px;             /* Body */
+  --font-label: 12px;            /* Labels */
+  --font-small: 11px;            /* Small */
+
+  /* Pesos */
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* ===== ESPACIADO RÍGIDO (Base 8px) ===== */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 40px;
+  --space-6: 48px;
+
+  /* ===== BORDER RADIUS CONSISTENTE ===== */
+  --radius-button: 8px;          /* Botones */
+  --radius-card-small: 12px;     /* Cards pequeñas */
+  --radius-card: 16px;           /* Cards grandes */
+  --radius-special: 20px;        /* Contenedores especiales */
+
+  /* ===== SOMBRAS PROFESIONALES ===== */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.16);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --shadow-purple: 0 8px 24px rgba(156, 39, 176, 0.4);
+  --shadow-purple-lg: 0 12px 32px rgba(156, 39, 176, 0.15);
+
+  /* ===== TRANSICIONES SUTILES ===== */
+  --transition: 0.2s ease;
+  --transition-slow: 0.3s ease;
+}
+
+/* ============================================
+   RESET Y BASE
+   ============================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family) !important;
+  font-size: var(--font-body);
+  font-weight: var(--weight-regular);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   TIPOGRAFÍA JERÁRQUICA
+   ============================================ */
+h1, .h1 {
+  font-size: var(--font-h1) !important;
+  font-weight: var(--weight-bold) !important;
+  line-height: 1.2;
+  margin-bottom: var(--space-3);
+}
+
+h2, .h2 {
+  font-size: var(--font-h2) !important;
+  font-weight: var(--weight-bold) !important;
+  line-height: 1.3;
+  margin-bottom: var(--space-2);
+}
+
+h3, .h3 {
+  font-size: var(--font-h3) !important;
+  font-weight: var(--weight-semibold) !important;
+  line-height: 1.4;
+  margin-bottom: var(--space-2);
+}
+
+/* ============================================
+   BOTONES - SISTEMA PROFESIONAL
+   ============================================ */
+
+/* Botón Primario */
+.btn-primary,
+.btn.btn-primary {
+  background: var(--nevent-gradient) !important;
+  color: var(--nevent-white) !important;
+  padding: 12px 24px !important;
+  border-radius: var(--radius-button) !important;
+  font-size: var(--font-body) !important;
+  font-weight: var(--weight-semibold) !important;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition) !important;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 44px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-purple) !important;
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Botón Secundario */
+.btn-secondary,
+.btn.btn-secondary {
+  background: rgba(156, 39, 176, 0.12) !important;
+  border: 1px solid var(--nevent-purple) !important;
+  color: var(--nevent-purple) !important;
+  padding: 12px 24px !important;
+  border-radius: var(--radius-button) !important;
+  font-size: var(--font-body) !important;
+  font-weight: var(--weight-semibold) !important;
+  cursor: pointer;
+  transition: all var(--transition) !important;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 44px;
+}
+
+.btn-secondary:hover {
+  background: rgba(156, 39, 176, 0.2) !important;
+  transform: translateY(-2px);
+}
+
+/* Botón Ghost (Terciario) */
+.btn-ghost,
+.btn.btn-ghost {
+  background: transparent !important;
+  border: 1px solid var(--stroke) !important;
+  color: var(--text-secondary) !important;
+  padding: 12px 24px !important;
+  border-radius: var(--radius-button) !important;
+  font-size: var(--font-body) !important;
+  font-weight: var(--weight-medium) !important;
+  cursor: pointer;
+  transition: all var(--transition) !important;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.btn-ghost:hover {
+  border-color: var(--nevent-purple) !important;
+  color: var(--nevent-purple) !important;
+}
+
+/* ============================================
+   CARDS - SISTEMA UNIFICADO
+   ============================================ */
+.card,
+.card-metric,
+.metric-card,
+.kpi-card {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: var(--radius-card) !important;
+  padding: var(--space-4) !important; /* 32px consistente */
+  transition: all var(--transition-slow) !important;
+}
+
+.card:hover,
+.card-metric:hover,
+.metric-card:hover,
+.kpi-card:hover {
+  border-color: var(--border-color-hover) !important;
+  background: var(--bg-card-hover) !important;
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-purple-lg) !important;
+}
+
+/* ============================================
+   KPI/MÉTRICAS - JERARQUÍA VISUAL CLARA
+   ============================================ */
+.kpi-value,
+.metric-value {
+  font-size: var(--font-metric-large) !important; /* 48px (reducido de 80px) */
+  font-weight: var(--weight-bold) !important;
+  line-height: 1.1;
+  margin-bottom: var(--space-1) !important; /* Proximidad */
+  color: var(--nevent-purple) !important; /* Color sólido por defecto */
+}
+
+/* Gradiente SOLO en métricas hero */
+.kpi-value.hero,
+.metric-value.hero {
+  background: var(--nevent-gradient) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+.kpi-label,
+.metric-label {
+  font-size: var(--font-label) !important; /* 12px */
+  font-weight: var(--weight-medium) !important;
+  color: var(--text-tertiary) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: var(--space-1);
+}
+
+.kpi-subtitle,
+.metric-subtitle {
+  font-size: var(--font-small) !important; /* 11px */
+  color: var(--text-tertiary) !important;
+  margin-top: var(--space-1);
+}
+
+/* ============================================
+   PROGRESS BARS - GRADIENTE CORPORATIVO
+   ============================================ */
+.progress-bar {
+  height: 8px !important;
+  background: var(--stroke) !important;
+  border-radius: 4px !important;
+  overflow: hidden;
+  margin: var(--space-2) 0 !important;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--nevent-gradient) !important;
+  border-radius: 4px !important;
+  transition: width 0.4s ease !important;
+}
+
+/* ============================================
+   STATUS BADGES - SISTEMA DE ESTADOS
+   ============================================ */
+.status-badge,
+.badge {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px !important;
+  border-radius: 12px !important;
+  font-size: var(--font-small) !important;
+  font-weight: var(--weight-semibold) !important;
+  text-transform: capitalize;
+}
+
+/* Estados semánticos */
+.status-success,
+.status-on-track,
+.status-completed {
+  background: var(--status-success-bg) !important;
+  color: var(--status-success) !important;
+}
+
+.status-warning,
+.status-at-risk {
+  background: var(--status-warning-bg) !important;
+  color: var(--status-warning) !important;
+}
+
+.status-error,
+.status-behind,
+.status-delayed {
+  background: var(--status-error-bg) !important;
+  color: var(--status-error) !important;
+}
+
+.status-info,
+.status-not-started {
+  background: var(--status-info-bg) !important;
+  color: var(--status-info) !important;
+}
+
+/* ============================================
+   LAYOUT - HEADER
+   ============================================ */
+header,
+.dashboard-header {
+  height: 80px !important; /* Reducido de ~100px */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-4);
+  border-bottom: 1px solid var(--stroke);
+  position: sticky;
+  top: 0;
+  background: var(--bg-primary);
+  z-index: 100;
+}
+
+.header-actions {
+  display: flex;
+  gap: var(--space-2); /* 16px gap entre botones */
+}
+
+/* ============================================
+   TABS DE NAVEGACIÓN - BLOQUES ELEVADOS (Dimensional)
+   ============================================ */
+.nav-tabs {
+  display: flex;
+  gap: 12px; /* 12px entre tabs (aumentado de 8px) */
+  align-items: center;
+  padding: var(--space-3) var(--space-4); /* 24px vertical, 32px horizontal */
+  border-bottom: none; /* Sin línea clásica */
+}
+
+.nav-tab {
+  padding: 10px 24px !important; /* Padding horizontal aumentado */
+  background: transparent !important; /* Transparente por defecto */
+  border: none;
+  border-radius: 9999px !important; /* Pills completamente redondeadas */
+  color: var(--text-tertiary);
+  font-size: var(--font-body);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease !important; /* Transición más rápida */
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Gap entre icon y texto */
+  position: relative;
+}
+
+/* Hover para tabs inactivos */
+.nav-tab:not(.active):hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: var(--text-secondary);
+  transform: translateY(-1px); /* Ligera elevación */
+}
+
+.nav-tab.active {
+  background: var(--nevent-gradient) !important; /* Gradiente corporativo */
+  color: var(--nevent-white) !important;
+  font-weight: var(--weight-semibold) !important;
+  padding: 10px 24px !important; /* Mismo padding que inactivo */
+  box-shadow: 0 8px 24px rgba(156, 39, 176, 0.35) !important; /* Sombra más profunda */
+}
+
+/* Icon en tabs (emoji o SVG) */
+.nav-tab .tab-icon {
+  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Label del tab */
+.nav-tab .tab-label {
+  font-size: var(--font-body);
+  white-space: nowrap;
+}
+
+/* ============================================
+   GRIDS - SISTEMA CONSISTENTE
+   ============================================ */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-3) !important; /* 24px gap */
+  padding: var(--space-4);
+}
+
+.kpi-grid,
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3) !important; /* 24px gap consistente */
+  margin-bottom: var(--space-4);
+}
+
+/* ============================================
+   CONTAINER
+   ============================================ */
+.container {
+  padding: var(--space-4) !important; /* 32px consistente */
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dashboard-section {
+  margin-bottom: var(--space-4) !important; /* 32px consistente */
+}
+
+.section-title {
+  font-size: var(--font-h2) !important;
+  font-weight: var(--weight-bold) !important;
+  color: var(--nevent-purple) !important;
+  margin-bottom: var(--space-3) !important; /* 24px */
+}
+
+/* ============================================
+   FORMS
+   ============================================ */
+.form-group {
+  margin-bottom: var(--space-3) !important;
+}
+
+.form-label {
+  display: block;
+  font-size: var(--font-label) !important;
+  font-weight: var(--weight-medium) !important;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-1) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: 12px var(--space-2) !important;
+  min-height: 44px;
+  background: var(--bg-card) !important;
+  border: 1px solid var(--stroke) !important;
+  border-radius: var(--radius-button) !important;
+  color: var(--text-primary) !important;
+  font-size: var(--font-body) !important;
+  font-family: var(--font-family) !important;
+  transition: all var(--transition) !important;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  outline: none;
+  border-color: var(--nevent-purple) !important;
+  box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.1) !important;
+}
+
+/* ============================================
+   MODALS
+   ============================================ */
+.modal-backdrop {
+  background: rgba(13, 13, 13, 0.9) !important;
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background: var(--bg-card) !important;
+  border-radius: var(--radius-special) !important;
+  box-shadow: var(--shadow-lg) !important;
+  padding: var(--space-6) !important;
+  max-width: 600px;
+  margin: var(--space-6) auto;
+  border: 1px solid var(--border-color);
+}
+
+.modal-header {
+  margin-bottom: var(--space-4) !important;
+  padding-bottom: var(--space-3) !important;
+  border-bottom: 1px solid var(--stroke);
+}
+
+.modal-title {
+  font-size: var(--font-h2) !important;
+  font-weight: var(--weight-bold) !important;
+  color: var(--nevent-purple) !important;
+}
+
+.modal-footer {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: flex-end;
+  padding-top: var(--space-3) !important;
+  border-top: 1px solid var(--stroke);
+  margin-top: var(--space-4) !important;
+}
+
+/* ============================================
+   RESPONSIVE - MOBILE FIRST
+   ============================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .container {
+    padding: var(--space-3) !important;
+  }
+
+  .kpi-grid,
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .kpi-value,
+  .metric-value {
+    font-size: 40px !important;
+  }
+
+  h1, .h1 {
+    font-size: 28px !important;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .container {
+    padding: var(--space-2) !important;
+  }
+
+  .dashboard-section {
+    margin-bottom: var(--space-3) !important;
+  }
+
+  .kpi-grid,
+  .metrics-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .kpi-value,
+  .metric-value {
+    font-size: 36px !important;
+  }
+
+  h1, .h1 {
+    font-size: 24px !important;
+  }
+
+  h2, .h2 {
+    font-size: 20px !important;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost {
+    width: 100%;
+    justify-content: center;
+  }
+
+  header,
+  .dashboard-header {
+    height: 64px !important;
+  }
+
+  .nav-tab {
+    padding: 12px 16px !important;
+    font-size: 13px !important;
+  }
+
+  .modal-content {
+    margin: var(--space-2);
+    padding: var(--space-4) !important;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+*:focus-visible {
+  outline: 2px solid var(--nevent-purple);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   UTILITIES
+   ============================================ */
+.text-center { text-align: center !important; }
+.text-gradient {
+  background: var(--nevent-gradient) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* Spacing utilities */
+.mb-1 { margin-bottom: var(--space-1) !important; }
+.mb-2 { margin-bottom: var(--space-2) !important; }
+.mb-3 { margin-bottom: var(--space-3) !important; }
+.mb-4 { margin-bottom: var(--space-4) !important; }
+
+.mt-1 { margin-top: var(--space-1) !important; }
+.mt-2 { margin-top: var(--space-2) !important; }
+.mt-3 { margin-top: var(--space-3) !important; }
+
+.p-2 { padding: var(--space-2) !important; }
+.p-3 { padding: var(--space-3) !important; }
+.p-4 { padding: var(--space-4) !important; }
+
+/* Text colors */
+.text-primary { color: var(--text-primary) !important; }
+.text-secondary { color: var(--text-secondary) !important; }
+.text-tertiary { color: var(--text-tertiary) !important; }
+.text-purple { color: var(--nevent-purple) !important; }
+
+/* Font weights */
+.fw-regular { font-weight: var(--weight-regular) !important; }
+.fw-medium { font-weight: var(--weight-medium) !important; }
+.fw-semibold { font-weight: var(--weight-semibold) !important; }
+.fw-bold { font-weight: var(--weight-bold) !important; }
+
+/* ============================================
+   END OF v3.2.1 PROFESSIONAL STYLES
+
+   ✅ Jerarquía visual clara (H1:32px, H2:24px, Métrica:48px)
+   ✅ Border-radius consistente (8px/16px)
+   ✅ Espaciado rígido base 8px (8/16/24/32/40/48px)
+   ✅ Paleta corporativa estricta (#9C27B0, #673AB7)
+   ✅ Cards con padding 32px consistente
+   ✅ Gap 24px en grids
+   ✅ Estados hover visibles (translateY, shadow)
+   ✅ Transiciones sutiles (0.2-0.3s)
+   ============================================ */
